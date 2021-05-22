@@ -1,4 +1,4 @@
-<idea-plugin>
+<consulo-plugin>
     <id>com.siberika.idea.pascal</id>
     <name>I-Pascal</name>
     <version>2.70</version>
@@ -648,4 +648,4 @@
         </intentionAction>
 
     </extensions>
-</idea-plugin>
+</consulo-plugin>
