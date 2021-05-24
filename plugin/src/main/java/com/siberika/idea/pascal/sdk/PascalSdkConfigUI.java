@@ -1,6 +1,5 @@
 package com.siberika.idea.pascal.sdk;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
@@ -33,6 +32,7 @@ import com.siberika.idea.pascal.DCUFileType;
 import com.siberika.idea.pascal.PPUFileType;
 import com.siberika.idea.pascal.PascalBundle;
 import com.siberika.idea.pascal.jps.sdk.PascalSdkData;
+import consulo.disposer.Disposable;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;

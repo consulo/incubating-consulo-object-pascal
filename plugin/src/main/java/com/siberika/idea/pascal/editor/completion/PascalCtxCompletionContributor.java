@@ -1,22 +1,12 @@
 package com.siberika.idea.pascal.editor.completion;
 
-import com.intellij.codeInsight.completion.CompletionContributor;
-import com.intellij.codeInsight.completion.CompletionInitializationContext;
-import com.intellij.codeInsight.completion.CompletionParameters;
-import com.intellij.codeInsight.completion.CompletionProvider;
-import com.intellij.codeInsight.completion.CompletionResultSet;
-import com.intellij.codeInsight.completion.CompletionType;
-import com.intellij.codeInsight.completion.PrioritizedLookupElement;
+import com.intellij.codeInsight.completion.*;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.patterns.PlatformPatterns;
-import com.intellij.psi.PsiComment;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
-import com.intellij.psi.PsiWhiteSpace;
+import com.intellij.psi.*;
 import com.intellij.psi.impl.source.tree.LeafPsiElement;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
@@ -29,29 +19,7 @@ import com.siberika.idea.pascal.editor.ContextAwareVirtualFile;
 import com.siberika.idea.pascal.editor.refactoring.PascalNameSuggestionProvider;
 import com.siberika.idea.pascal.lang.context.Context;
 import com.siberika.idea.pascal.lang.parser.NamespaceRec;
-import com.siberika.idea.pascal.lang.psi.PasClassField;
-import com.siberika.idea.pascal.lang.psi.PasClassProperty;
-import com.siberika.idea.pascal.lang.psi.PasConstDeclaration;
-import com.siberika.idea.pascal.lang.psi.PasEntityScope;
-import com.siberika.idea.pascal.lang.psi.PasExportedRoutine;
-import com.siberika.idea.pascal.lang.psi.PasFormalParameter;
-import com.siberika.idea.pascal.lang.psi.PasFullyQualifiedIdent;
-import com.siberika.idea.pascal.lang.psi.PasFunctionDirective;
-import com.siberika.idea.pascal.lang.psi.PasLibraryModuleHead;
-import com.siberika.idea.pascal.lang.psi.PasModule;
-import com.siberika.idea.pascal.lang.psi.PasPackageModuleHead;
-import com.siberika.idea.pascal.lang.psi.PasProgramModuleHead;
-import com.siberika.idea.pascal.lang.psi.PasRecordDecl;
-import com.siberika.idea.pascal.lang.psi.PasRoutineImplDecl;
-import com.siberika.idea.pascal.lang.psi.PasStatement;
-import com.siberika.idea.pascal.lang.psi.PasSubIdent;
-import com.siberika.idea.pascal.lang.psi.PasTypeDecl;
-import com.siberika.idea.pascal.lang.psi.PasTypes;
-import com.siberika.idea.pascal.lang.psi.PasUnitModuleHead;
-import com.siberika.idea.pascal.lang.psi.PascalModule;
-import com.siberika.idea.pascal.lang.psi.PascalNamedElement;
-import com.siberika.idea.pascal.lang.psi.PascalRoutine;
-import com.siberika.idea.pascal.lang.psi.PascalStructType;
+import com.siberika.idea.pascal.lang.psi.*;
 import com.siberika.idea.pascal.lang.psi.impl.HasUniqueName;
 import com.siberika.idea.pascal.lang.psi.impl.PasField;
 import com.siberika.idea.pascal.lang.references.PasReferenceUtil;
@@ -64,42 +32,12 @@ import com.siberika.idea.pascal.lang.search.GotoSuper;
 import com.siberika.idea.pascal.lang.stub.PascalUnitSymbolIndex;
 import com.siberika.idea.pascal.util.DocUtil;
 import com.siberika.idea.pascal.util.PsiUtil;
+import consulo.codeInsight.completion.CompletionProvider;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collection;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
-import static com.siberika.idea.pascal.lang.context.CodePlace.ASSIGN_LEFT;
-import static com.siberika.idea.pascal.lang.context.CodePlace.CONST_EXPRESSION;
-import static com.siberika.idea.pascal.lang.context.CodePlace.DECL_CONST;
-import static com.siberika.idea.pascal.lang.context.CodePlace.DECL_FIELD;
-import static com.siberika.idea.pascal.lang.context.CodePlace.DECL_PROPERTY;
-import static com.siberika.idea.pascal.lang.context.CodePlace.DECL_TYPE;
-import static com.siberika.idea.pascal.lang.context.CodePlace.DECL_VAR;
-import static com.siberika.idea.pascal.lang.context.CodePlace.EXPR;
-import static com.siberika.idea.pascal.lang.context.CodePlace.FIRST_IN_EXPR;
-import static com.siberika.idea.pascal.lang.context.CodePlace.FIRST_IN_NAME;
-import static com.siberika.idea.pascal.lang.context.CodePlace.GLOBAL;
-import static com.siberika.idea.pascal.lang.context.CodePlace.GLOBAL_DECLARATION;
-import static com.siberika.idea.pascal.lang.context.CodePlace.INTERFACE;
-import static com.siberika.idea.pascal.lang.context.CodePlace.LOCAL;
-import static com.siberika.idea.pascal.lang.context.CodePlace.LOCAL_DECLARATION;
-import static com.siberika.idea.pascal.lang.context.CodePlace.MODULE_HEADER;
-import static com.siberika.idea.pascal.lang.context.CodePlace.PROPERTY_SPECIFIER;
-import static com.siberika.idea.pascal.lang.context.CodePlace.STATEMENT;
-import static com.siberika.idea.pascal.lang.context.CodePlace.STMT_CASE_ITEM;
-import static com.siberika.idea.pascal.lang.context.CodePlace.STMT_EXCEPT;
-import static com.siberika.idea.pascal.lang.context.CodePlace.STMT_FOR;
-import static com.siberika.idea.pascal.lang.context.CodePlace.STMT_IF_THEN;
-import static com.siberika.idea.pascal.lang.context.CodePlace.STMT_REPEAT;
-import static com.siberika.idea.pascal.lang.context.CodePlace.STMT_TRY;
-import static com.siberika.idea.pascal.lang.context.CodePlace.STMT_WHILE;
-import static com.siberika.idea.pascal.lang.context.CodePlace.TYPE_ID;
-import static com.siberika.idea.pascal.lang.context.CodePlace.UNKNOWN;
-import static com.siberika.idea.pascal.lang.context.CodePlace.USES;
+import static com.siberika.idea.pascal.lang.context.CodePlace.*;
 
 public class PascalCtxCompletionContributor extends CompletionContributor {
 
@@ -118,9 +56,9 @@ public class PascalCtxCompletionContributor extends CompletionContributor {
 
     @SuppressWarnings("unchecked")
     public PascalCtxCompletionContributor() {
-        extend(CompletionType.BASIC, PlatformPatterns.psiElement().withLanguage(PascalLanguage.INSTANCE), new CompletionProvider<CompletionParameters>() {
+        extend(CompletionType.BASIC, PlatformPatterns.psiElement().withLanguage(PascalLanguage.INSTANCE), new CompletionProvider() {
             @Override
-            protected void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context, @NotNull CompletionResultSet result) {
+            public void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context, @NotNull CompletionResultSet result) {
                 Context ctx = new Context(parameters.getOriginalPosition(), parameters.getPosition(), parameters.getOriginalFile());
 
                 EntityCompletionContext completionContext = new EntityCompletionContext(ctx, parameters);

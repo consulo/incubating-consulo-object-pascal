@@ -1,11 +1,7 @@
 package com.siberika.idea.pascal.sdk;
 
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.projectRoots.AdditionalDataConfigurable;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.projectRoots.SdkModel;
-import com.intellij.openapi.projectRoots.SdkModificator;
-import com.intellij.openapi.projectRoots.SdkType;
+import com.intellij.openapi.projectRoots.*;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
@@ -14,22 +10,19 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.SmartHashSet;
 import com.siberika.idea.pascal.PascalException;
 import com.siberika.idea.pascal.PascalIcons;
-import com.siberika.idea.pascal.jps.model.JpsPascalModelSerializerExtension;
 import com.siberika.idea.pascal.jps.sdk.PascalCompilerFamily;
 import com.siberika.idea.pascal.jps.sdk.PascalSdkData;
 import com.siberika.idea.pascal.jps.sdk.PascalSdkUtil;
 import com.siberika.idea.pascal.jps.util.SysUtils;
-import org.apache.commons.lang.SystemUtils;
-import org.apache.commons.lang.text.StrBuilder;
+import consulo.platform.Platform;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 import java.io.File;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Author: George Bakhtadze
@@ -42,17 +35,19 @@ public class FPCSdkType extends BasePascalSdkType {
 
     @NotNull
     public static FPCSdkType getInstance() {
-        return SdkType.findInstance(FPCSdkType.class);
+        return SdkType.EP_NAME.findExtensionOrFail(FPCSdkType.class);
     }
 
     public FPCSdkType() {
-        super(JpsPascalModelSerializerExtension.FPC_SDK_TYPE_ID, PascalCompilerFamily.FPC);
+        super("FPCSdkType", PascalCompilerFamily.FPC);
         loadResources("fpc");
     }
 
-    @Nullable
+    @Nonnull
     @Override
-    public String suggestHomePath() {
+    public Collection<String> suggestHomePaths() {
+        Collection<String> result = new ArrayList<>();
+
         List<String> paths = Arrays.asList("/usr/lib/codetyphon/fpc/fpc32", "/usr/lib/codetyphon/fpc",
                 "/usr/lib/fpc", "/usr/share/fpc", "/usr/local/lib/fpc");
         if (SystemInfo.isWindows) {
@@ -60,23 +55,17 @@ public class FPCSdkType extends BasePascalSdkType {
         }
         for (String path : paths) {
             if (new File(path).isDirectory()) {
-                return path;
+                result.add(path);
             }
         }
 
-        return null;
+        return result;
     }
 
     @NotNull
     @Override
-    public Icon getIcon() {
+    public Image getIcon() {
         return PascalIcons.GENERAL;
-    }
-
-    @NotNull
-    @Override
-    public Icon getIconForAddAction() {
-        return getIcon();
     }
 
     @Override
@@ -136,12 +125,13 @@ public class FPCSdkType extends BasePascalSdkType {
         super.configureOptions(sdk, data, target);
         File file = PascalSdkUtil.getPPUDumpExecutable(sdk.getHomePath() != null ? sdk.getHomePath() : "");
         data.setValue(PascalSdkData.Keys.DECOMPILER_COMMAND.getKey(), file.getAbsolutePath());
-        StrBuilder sb = new StrBuilder("-Sa -gl -O3 ");
-        if (SystemUtils.IS_OS_WINDOWS) {
+        StringBuilder sb = new StringBuilder("-Sa -gl -O3 ");
+        Platform.OperatingSystem operatingSystem = Platform.current().os();
+        if (operatingSystem.isWindows()) {
             sb.append("-dMSWINDOWS ");
         } else {
             sb.append("-dPOSIX ");
-            if (SystemUtils.IS_OS_MAC_OSX) {
+            if (operatingSystem.isMac()) {
                 sb.append("-dMACOS ");
             } else {
                 sb.append("-dLINUX ");

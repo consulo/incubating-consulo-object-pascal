@@ -27,6 +27,7 @@ import com.siberika.idea.pascal.jps.sdk.PascalSdkData;
 import com.siberika.idea.pascal.lang.psi.PasTypes;
 import com.siberika.idea.pascal.module.ModuleService;
 import com.siberika.idea.pascal.sdk.BasePascalSdkType;
+import consulo.object.pascal.module.extension.ObjectPascalModuleExtension;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -46,7 +47,7 @@ public class PascalExternalAnnotator extends ExternalAnnotator<PascalAnnotatorIn
             return null;
         }
         Module module = ModuleUtilCore.findModuleForFile(file);
-        Sdk sdk = module != null ? ModuleRootManager.getInstance(module).getSdk() : null;
+        Sdk sdk = module != null ? ModuleUtilCore.getSdk(module, ObjectPascalModuleExtension.class) : null;
         final PascalSdkData sdkData = isPascalSdk(sdk) ? BasePascalSdkType.getAdditionalData(sdk) : null;
         if (null == sdkData) {
             return null;
@@ -61,7 +62,7 @@ public class PascalExternalAnnotator extends ExternalAnnotator<PascalAnnotatorIn
         if (null == module) {
             return null;
         }
-        Sdk sdk = ModuleRootManager.getInstance(module).getSdk();
+        Sdk sdk = ModuleUtilCore.getSdk(module, ObjectPascalModuleExtension.class);
         final PascalSdkData sdkData = isPascalSdk(sdk) ? BasePascalSdkType.getAdditionalData(sdk) : null;
         String family = sdkData != null ? sdkData.getString(PascalSdkData.Keys.COMPILER_FAMILY) : null;
         PascalBackendCompiler compiler = family != null ? PascalBackendCompiler.getCompiler(PascalCompilerFamily.of(family), CompilerMessager.NO_OP_MESSAGER) : null;

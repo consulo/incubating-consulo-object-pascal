@@ -14,24 +14,17 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.siberika.idea.pascal.PascalIcons;
 import com.siberika.idea.pascal.editor.linemarker.PascalMarker;
 import com.siberika.idea.pascal.ide.actions.SectionToggle;
-import com.siberika.idea.pascal.lang.psi.PasClassTypeDecl;
-import com.siberika.idea.pascal.lang.psi.PasRecordDecl;
-import com.siberika.idea.pascal.lang.psi.PasUnitInterface;
-import com.siberika.idea.pascal.lang.psi.PasUnitModuleHead;
-import com.siberika.idea.pascal.lang.psi.PasUsesClause;
-import com.siberika.idea.pascal.lang.psi.PascalNamedElement;
-import com.siberika.idea.pascal.lang.psi.PascalRoutine;
-import com.siberika.idea.pascal.lang.psi.PascalStructType;
+import com.siberika.idea.pascal.lang.psi.*;
 import com.siberika.idea.pascal.lang.psi.impl.PasExportedRoutineImpl;
 import com.siberika.idea.pascal.lang.psi.impl.PasRoutineImplDeclImpl;
 import com.siberika.idea.pascal.lang.search.GotoSuper;
 import com.siberika.idea.pascal.lang.search.Helper;
 import com.siberika.idea.pascal.lang.search.UsedBy;
 import com.siberika.idea.pascal.util.PsiUtil;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
 import java.util.Collection;
 import java.util.List;
 
@@ -80,7 +73,7 @@ public class PascalLineMarkerProvider implements LineMarkerProvider {
         }
     }
 
-    static LineMarkerInfo<PsiElement> createLineMarkerInfo(@NotNull PsiElement element, Icon icon, @NotNull PascalMarker marker) {
+    static LineMarkerInfo<PsiElement> createLineMarkerInfo(@NotNull PsiElement element, Image icon, @NotNull PascalMarker marker) {
         PsiElement el = getLeaf(element);
         return new LineMarkerInfo<PsiElement>(el, el.getTextRange(),
                 icon, Pass.LINE_MARKERS,

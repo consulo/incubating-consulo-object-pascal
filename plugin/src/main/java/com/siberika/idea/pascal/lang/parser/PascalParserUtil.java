@@ -48,6 +48,7 @@ import com.siberika.idea.pascal.lang.references.ResolveUtil;
 import com.siberika.idea.pascal.lang.stub.PasIdentStub;
 import com.siberika.idea.pascal.sdk.BuiltinsParser;
 import com.siberika.idea.pascal.util.PsiUtil;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -236,7 +237,7 @@ public class PascalParserUtil extends GeneratedParserUtilBase {
 
             @Nullable
             @Override
-            public Icon getIcon(boolean unused) {
+            public Image getIcon(boolean unused) {
                 if (element instanceof PascalIdentDeclImpl) {
                     PasIdentStub stub = ((PascalIdentDeclImpl) element).retrieveStub();
                     PasField.FieldType type = stub != null ? stub.getType() : PsiUtil.getFieldType(element);

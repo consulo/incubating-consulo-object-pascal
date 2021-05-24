@@ -1,12 +1,12 @@
 package com.siberika.idea.pascal.sdk;
 
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.io.StreamUtil;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.testFramework.LightVirtualFile;
 import com.siberika.idea.pascal.PascalFileType;
 import com.siberika.idea.pascal.lang.psi.PascalModule;
-import org.apache.xmlbeans.impl.common.IOUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,7 +24,7 @@ public class BuiltinsParser {
         LightVirtualFile res = new LightVirtualFile(UNIT_NAME_BUILTINS, PascalFileType.INSTANCE, "Error occured while preparing builtins");
         InputStream data = BuiltinsParser.class.getResourceAsStream("/builtins.pas");
         try {
-            IOUtil.copyCompletely(data, res.getOutputStream(null));
+            StreamUtil.copyStreamContent(data, res.getOutputStream(null));
         } catch (IOException e) {
         }
         return res;

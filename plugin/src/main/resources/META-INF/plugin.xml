@@ -463,11 +463,6 @@
         <action id="Pascal.OverrideMethod" class="com.siberika.idea.pascal.ide.actions.ActionImplement"
                 text="Override Pascal Methods" description="Override methods from a superclass/interface">
         </action>
-
-        <action id="Pascal.SDKSwitch" class="com.siberika.idea.pascal.ui.SdkSwitchAction"
-                text="Switch SDK" description="Allows to switch project SDK" icon="AllIcons.General.AddJdk">
-            <add-to-group group-id="ToolbarRunGroup" anchor="first" />
-        </action>
     </actions>
 
     <extensions defaultExtensionNs="com.intellij">
@@ -534,7 +529,7 @@
         <lang.findUsagesProvider language="Pascal" implementationClass="com.siberika.idea.pascal.lang.references.PascalFindUsagesProvider"/>
         <usageTypeProvider implementation="com.siberika.idea.pascal.lang.references.PascalUsageTypeProvider"/>
         <referencesSearch implementation="com.siberika.idea.pascal.lang.references.PascalReferencesSearcher"/>
-        <targetElementEvaluator language="Pascal" implementationClass="com.siberika.idea.pascal.lang.references.PascalTargetElementEvaluator"/>
+        <targetElementUtilEx implementation="com.siberika.idea.pascal.lang.references.PascalTargetElementEvaluator"/>
 
         <gotoSymbolContributor implementation="com.siberika.idea.pascal.lang.references.PascalChooseByNameContributor"/>
         <gotoClassContributor implementation="com.siberika.idea.pascal.lang.references.PascalClassByNameContributor"/>
@@ -592,9 +587,6 @@
 
         <codeStyleSettingsProvider implementation="com.siberika.idea.pascal.editor.settings.PascalCodeStyleSettingsProvider"/>
         <langCodeStyleSettingsProvider implementation="com.siberika.idea.pascal.editor.settings.PascalLanguageCodeStyleSettingsProvider"/>
-
-        <compileServer.plugin classpath="jps-plugin.jar"/>
-        <postStartupActivity implementation="com.siberika.idea.pascal.PostStartupActivity"/>
 
         <stubElementTypeHolder class="com.siberika.idea.pascal.lang.psi.PasTypes"/>
         <stubIndex implementation="com.siberika.idea.pascal.lang.stub.PascalModuleIndex"/>

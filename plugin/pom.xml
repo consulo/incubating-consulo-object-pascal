@@ -59,6 +59,8 @@
 						<id>gen</id>
 						<phase>generate-sources</phase>
 						<goals>
+							<goal>generate-lexers</goal>
+							<goal>generate-parsers</goal>
 							<goal>generate-icon</goal>
 						</goals>
 					</execution>

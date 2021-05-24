@@ -12,7 +12,6 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.impl.DirectoryIndex;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
@@ -22,6 +21,7 @@ import com.siberika.idea.pascal.sdk.BasePascalSdkType;
 import com.siberika.idea.pascal.sdk.Define;
 import com.siberika.idea.pascal.sdk.Directive;
 import com.siberika.idea.pascal.util.DocUtil;
+import consulo.object.pascal.module.extension.ObjectPascalModuleExtension;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -114,7 +114,7 @@ class PascalCompletionInComment {
 
     private static Map<String, Directive> retrieveDirectives(PsiElement comment) {
         Module module = ModuleUtilCore.findModuleForPsiElement(comment);
-        Sdk sdk = module != null ? ModuleRootManager.getInstance(module).getSdk() : null;
+        Sdk sdk = module != null ? ModuleUtilCore.getSdk(module, ObjectPascalModuleExtension.class) : null;
         return sdk != null ? BasePascalSdkType.getDirectives(sdk, sdk.getVersionString()) : Collections.<String, Directive>emptyMap();
     }
 

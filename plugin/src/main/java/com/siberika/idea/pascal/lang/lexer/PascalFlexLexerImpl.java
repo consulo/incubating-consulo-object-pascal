@@ -18,22 +18,19 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.SmartList;
-import com.intellij.util.containers.HashMap;
 import com.intellij.util.io.BaseInputStreamReader;
 import com.siberika.idea.pascal.lang.psi.PasTypes;
 import com.siberika.idea.pascal.sdk.BasePascalSdkType;
 import com.siberika.idea.pascal.sdk.Define;
 import com.siberika.idea.pascal.util.StrUtil;
+import consulo.util.dataholder.Key;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 
 /**
@@ -156,7 +153,7 @@ public class PascalFlexLexerImpl extends _PascalLexer {
         }
     }
 
-    private <T> T getData(String s) {
+    private <T> T getData(Key<T> s) {
         DataContext dataContext = getDataContext();
         if (dataContext != null) {
             return (T) dataContext.getData(s);
@@ -182,7 +179,7 @@ public class PascalFlexLexerImpl extends _PascalLexer {
         if (isValidProject(project) || !incremental) {
             return project;
         }
-        project = getData(PlatformDataKeys.PROJECT.getName());
+        project = getData(PlatformDataKeys.PROJECT);
         if (!isValidProject(project)) {
             project = null;
         }
@@ -193,7 +190,7 @@ public class PascalFlexLexerImpl extends _PascalLexer {
         if ((virtualFile != null) || !incremental) {
             return virtualFile;
         }
-        virtualFile = getData(PlatformDataKeys.VIRTUAL_FILE.getName());
+        virtualFile = getData(PlatformDataKeys.VIRTUAL_FILE);
         if (!isValidFile(virtualFile)) {
             virtualFile = null;
         }

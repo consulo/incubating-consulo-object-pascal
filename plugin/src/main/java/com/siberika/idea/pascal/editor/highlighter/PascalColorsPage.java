@@ -54,11 +54,6 @@ public class PascalColorsPage implements ColorSettingsPage {
         return PascalBundle.message("color.settings.name");
     }
 
-    @Nullable
-    public Icon getIcon() {
-        return PascalIcons.GENERAL;
-    }
-
     @NotNull
     public AttributesDescriptor[] getAttributeDescriptors() {
         return ATTRS;

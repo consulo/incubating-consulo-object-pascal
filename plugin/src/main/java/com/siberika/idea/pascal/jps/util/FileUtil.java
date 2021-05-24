@@ -7,7 +7,6 @@ import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
@@ -36,12 +35,7 @@ public class FileUtil {
     }
 
     public static File[] listDirs(@NotNull File baseDir) {
-        return baseDir.listFiles(new FileFilter() {
-            @Override
-            public boolean accept(File pathname) {
-                return pathname.isDirectory();
-            }
-        });
+        return baseDir.listFiles(File::isDirectory);
     }
 
     @NotNull

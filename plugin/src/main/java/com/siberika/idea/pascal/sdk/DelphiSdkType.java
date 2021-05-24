@@ -2,32 +2,25 @@ package com.siberika.idea.pascal.sdk;
 
 import com.google.common.collect.ImmutableMap;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.projectRoots.AdditionalDataConfigurable;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.projectRoots.SdkModel;
-import com.intellij.openapi.projectRoots.SdkModificator;
-import com.intellij.openapi.projectRoots.SdkType;
+import com.intellij.openapi.projectRoots.*;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.siberika.idea.pascal.PascalException;
 import com.siberika.idea.pascal.PascalIcons;
 import com.siberika.idea.pascal.jps.compiler.DelphiBackendCompiler;
-import com.siberika.idea.pascal.jps.model.JpsPascalModelSerializerExtension;
 import com.siberika.idea.pascal.jps.sdk.PascalCompilerFamily;
 import com.siberika.idea.pascal.jps.sdk.PascalSdkData;
 import com.siberika.idea.pascal.jps.sdk.PascalSdkUtil;
 import com.siberika.idea.pascal.jps.util.SysUtils;
-import org.apache.commons.lang.text.StrBuilder;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 import java.io.File;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -55,27 +48,29 @@ public class DelphiSdkType extends BasePascalSdkType {
 
     @NotNull
     public static DelphiSdkType getInstance() {
-        return SdkType.findInstance(DelphiSdkType.class);
+        return SdkType.EP_NAME.findExtensionOrFail(DelphiSdkType.class);
     }
 
     public DelphiSdkType() {
-        super(JpsPascalModelSerializerExtension.DELPHI_SDK_TYPE_ID, PascalCompilerFamily.DELPHI);
+        super("DelphiSdkType", PascalCompilerFamily.DELPHI);
         loadResources("delphi");
     }
 
-    @Nullable
+    @Nonnull
     @Override
-    public String suggestHomePath() {
+    public Collection<String> suggestHomePaths() {
+        List<String> result = new ArrayList<>();
+
         List<String> dirs = Arrays.asList("", "program files", "embarcadero", "program files/embarcadero");
         for (File drive : File.listRoots()) {
             if (drive.isDirectory()) {
                 for (String dir : dirs) {
                     String s = checkDir(new File(drive, dir));
-                    if (s != null) return s;
+                    if (s != null) result.add(s);
                 }
             }
         }
-        return null;
+        return result;
     }
 
     private String checkDir(@NotNull File file) {
@@ -92,14 +87,8 @@ public class DelphiSdkType extends BasePascalSdkType {
 
     @NotNull
     @Override
-    public Icon getIcon() {
+    public Image getIcon() {
         return PascalIcons.GENERAL;
-    }
-
-    @NotNull
-    @Override
-    public Icon getIconForAddAction() {
-        return getIcon();
     }
 
     @Override
@@ -204,7 +193,7 @@ public class DelphiSdkType extends BasePascalSdkType {
     @Override
     protected void configureOptions(@NotNull Sdk sdk, PascalSdkData data, String target) {
         super.configureOptions(sdk, data, target);
-        StrBuilder sb = new StrBuilder();
+        StringBuilder sb = new StringBuilder();
         sb.append("-dWINDOWS ");
         sb.append("-dMSWINDOWS ");
         sb.append("-dWIN32 ");

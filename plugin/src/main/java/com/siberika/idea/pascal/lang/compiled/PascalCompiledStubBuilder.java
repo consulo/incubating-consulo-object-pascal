@@ -6,8 +6,10 @@ import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.compiled.ClsStubBuilder;
+import com.intellij.psi.stubs.BinaryFileStubBuilder;
 import com.intellij.psi.stubs.PsiFileStub;
 import com.intellij.util.indexing.FileContent;
+import com.siberika.idea.pascal.DCUFileType;
 import com.siberika.idea.pascal.PPUFileType;
 import com.siberika.idea.pascal.PascalLanguage;
 import com.siberika.idea.pascal.lang.parser.PascalFileElementType;
@@ -15,11 +17,16 @@ import com.siberika.idea.pascal.module.ModuleService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class PascalCompiledStubBuilder extends ClsStubBuilder {
+public class PascalCompiledStubBuilder implements BinaryFileStubBuilder {
 
     private static final Logger LOG = Logger.getInstance(PascalCompiledStubBuilder.class);
 
     static final ClsStubBuilder INSTANCE = new PascalCompiledStubBuilder();
+
+    @Override
+    public boolean acceptsFile(VirtualFile virtualFile) {
+        return virtualFile == PPUFileType.INSTANCE || virtualFile == DCUFileType.INSTANCE;
+    }
 
     @Override
     public int getStubVersion() {

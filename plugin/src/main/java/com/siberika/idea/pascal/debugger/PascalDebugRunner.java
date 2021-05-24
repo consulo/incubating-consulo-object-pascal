@@ -9,14 +9,15 @@ import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.runners.GenericProgramRunner;
 import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.xdebugger.XDebugProcess;
 import com.intellij.xdebugger.XDebugProcessStarter;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.XDebuggerManager;
 import com.siberika.idea.pascal.run.PascalRunConfiguration;
 import com.siberika.idea.pascal.sdk.FPCSdkType;
+import consulo.object.pascal.module.extension.ObjectPascalModuleExtension;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -48,7 +49,7 @@ public class PascalDebugRunner extends GenericProgramRunner {
     public boolean canRun(@NotNull String executorId, @NotNull RunProfile profile) {
         if (profile instanceof PascalRunConfiguration) {
             Module module = ((PascalRunConfiguration) profile).getConfigurationModule().getModule();
-            Sdk sdk = module != null ? ModuleRootManager.getInstance(module).getSdk() : null;
+            Sdk sdk = module != null ? ModuleUtilCore.getSdk(module, ObjectPascalModuleExtension.class) : null;
             return ((null == sdk) || (sdk.getSdkType() instanceof FPCSdkType)) &&
                     executorId.equals(DefaultDebugExecutor.EXECUTOR_ID);
         } else {

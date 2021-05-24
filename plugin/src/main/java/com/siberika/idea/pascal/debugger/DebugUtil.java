@@ -4,6 +4,7 @@ import com.intellij.execution.configurations.RunProfile;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ProjectRootManager;
@@ -11,6 +12,7 @@ import com.siberika.idea.pascal.debugger.gdb.parser.GdbMiLine;
 import com.siberika.idea.pascal.jps.sdk.PascalSdkData;
 import com.siberika.idea.pascal.run.PascalRunConfiguration;
 import com.siberika.idea.pascal.sdk.BasePascalSdkType;
+import consulo.object.pascal.module.extension.ObjectPascalModuleExtension;
 
 public class DebugUtil {
 
@@ -26,11 +28,11 @@ public class DebugUtil {
         RunProfile conf = environment.getRunProfile();
         if (conf instanceof PascalRunConfiguration) {
             Module module = ((PascalRunConfiguration) conf).getConfigurationModule().getModule();
-            sdk = module != null ? ModuleRootManager.getInstance(module).getSdk() : null;
+            sdk = module != null ? ModuleUtilCore.getSdk(module, ObjectPascalModuleExtension.class) : null;
         } else {
             LOG.warn("Invalid run configuration class: " + (conf != null ? conf.getClass().getName() : "<null>"));
         }
-        return sdk != null ? sdk : ProjectRootManager.getInstance(environment.getProject()).getProjectSdk();
+        return sdk;
     }
 
     public static PascalSdkData getData(Sdk sdk) {

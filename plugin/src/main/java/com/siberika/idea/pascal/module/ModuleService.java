@@ -3,7 +3,6 @@ package com.siberika.idea.pascal.module;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleComponent;
 import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.project.DumbService;
@@ -27,7 +26,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class ModuleService implements ModuleComponent {
+public class ModuleService {
 
     private static final Logger LOG = Logger.getInstance(ModuleService.class);
 
@@ -42,8 +41,7 @@ public class ModuleService implements ModuleComponent {
     private long lastClearTimeNameFile = 0;
     private File syntaxCheckTempDir;
 
-    @Override
-    public void initComponent() {
+    ModuleService() {
         syntaxCheckTempDir = SysUtils.createTempDir("ipassynck");
     }
 

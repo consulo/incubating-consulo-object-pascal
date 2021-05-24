@@ -2,26 +2,19 @@ package com.siberika.idea.pascal.run;
 
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.Executor;
-import com.intellij.execution.configurations.ConfigurationFactory;
-import com.intellij.execution.configurations.ModuleBasedConfiguration;
-import com.intellij.execution.configurations.RunConfiguration;
-import com.intellij.execution.configurations.RunConfigurationModule;
-import com.intellij.execution.configurations.RunConfigurationWithSuppressedDefaultDebugAction;
-import com.intellij.execution.configurations.RunProfileState;
-import com.intellij.execution.configurations.SearchScopeProvider;
+import com.intellij.execution.configurations.*;
 import com.intellij.execution.executors.DefaultDebugExecutor;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.runners.RunConfigurationWithSuppressedDefaultRunAction;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.ModuleRootManager;
-import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.WriteExternalException;
-import com.intellij.psi.search.GlobalSearchScope;
 import com.siberika.idea.pascal.module.PascalModuleType;
+import consulo.object.pascal.module.extension.ObjectPascalModuleExtension;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -33,7 +26,7 @@ import java.util.Collection;
  * Date: 06/01/2013
  */
 public class PascalRunConfiguration extends ModuleBasedConfiguration<RunConfigurationModule>
-        implements PascalRunConfigurationParams, RunConfigurationWithSuppressedDefaultRunAction, RunConfigurationWithSuppressedDefaultDebugAction {
+        implements PascalRunConfigurationParams, RunConfigurationWithSuppressedDefaultRunAction {
 
     private static final String ATTR_PROGRAM_FILE_NAME = "program_file_name";
 
@@ -142,15 +135,9 @@ public class PascalRunConfiguration extends ModuleBasedConfiguration<RunConfigur
         this.programFileName = programFileName;
     }
 
-    // 2016.3 compatibility
-    public GlobalSearchScope getSearchScope() {
-        return SearchScopeProvider.createSearchScope(getModules());
-    }
-
     public Sdk getSdk() {
-        return getConfigurationModule().getModule() != null ?
-                ModuleRootManager.getInstance(getConfigurationModule().getModule()).getSdk() :
-                ProjectRootManager.getInstance(project).getProjectSdk();
+        Module module = getConfigurationModule().getModule();
+        return module != null ? ModuleUtilCore.getSdk(module, ObjectPascalModuleExtension.class) : null;
     }
 
     public void readExternal(@NotNull Element element) throws InvalidDataException {

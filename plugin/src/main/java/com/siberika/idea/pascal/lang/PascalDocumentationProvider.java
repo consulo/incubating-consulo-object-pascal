@@ -4,35 +4,16 @@ import com.intellij.lang.documentation.DocumentationMarkup;
 import com.intellij.lang.documentation.DocumentationProvider;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.PsiComment;
-import com.intellij.psi.PsiCompiledFile;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.SmartList;
 import com.siberika.idea.pascal.ide.actions.SectionToggle;
 import com.siberika.idea.pascal.lang.compiled.CompiledFileImpl;
-import com.siberika.idea.pascal.lang.psi.PasAssignPart;
-import com.siberika.idea.pascal.lang.psi.PasClassProperty;
-import com.siberika.idea.pascal.lang.psi.PasConstExpression;
-import com.siberika.idea.pascal.lang.psi.PasFormalParameter;
-import com.siberika.idea.pascal.lang.psi.PasGenericTypeIdent;
-import com.siberika.idea.pascal.lang.psi.PasInlineConstDeclaration;
-import com.siberika.idea.pascal.lang.psi.PasInlineVarDeclaration;
-import com.siberika.idea.pascal.lang.psi.PasNamedIdentDecl;
-import com.siberika.idea.pascal.lang.psi.PasParamType;
-import com.siberika.idea.pascal.lang.psi.PasTypeDecl;
-import com.siberika.idea.pascal.lang.psi.PascalExportedRoutine;
-import com.siberika.idea.pascal.lang.psi.PascalIdentDecl;
-import com.siberika.idea.pascal.lang.psi.PascalInlineDeclaration;
-import com.siberika.idea.pascal.lang.psi.PascalNamedElement;
-import com.siberika.idea.pascal.lang.psi.PascalRoutine;
+import com.siberika.idea.pascal.lang.psi.*;
 import com.siberika.idea.pascal.lang.psi.impl.HasUniqueName;
 import com.siberika.idea.pascal.lang.psi.impl.PasField;
 import com.siberika.idea.pascal.util.PsiUtil;
-import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -61,7 +42,7 @@ public class PascalDocumentationProvider implements DocumentationProvider {
         if (element instanceof PascalNamedElement) {
             PasField.FieldType fieldType = ((PascalNamedElement) element).getType();
             if ((fieldType == PasField.FieldType.ROUTINE) && (element instanceof PascalRoutine)) {
-                if (StringUtils.isEmpty(((PascalRoutine) element).getFunctionTypeStr())) {
+                if (StringUtil.isEmpty(((PascalRoutine) element).getFunctionTypeStr())) {
                     kind = "procedure";
                 } else {
                     kind = "function";
@@ -104,10 +85,10 @@ public class PascalDocumentationProvider implements DocumentationProvider {
             }
         }
         sb.append(kind).append(" ").append(name.replace("<", "&lt;"));
-        if (!StringUtils.isEmpty(type)) {
+        if (!StringUtil.isEmpty(type)) {
             sb.append(": ").append(type.replace("<", "&lt;"));
         }
-        if (!StringUtils.isEmpty(value)) {
+        if (!StringUtil.isEmpty(value)) {
             sb.append(" = ").append(value);
         }
         return sb.toString();

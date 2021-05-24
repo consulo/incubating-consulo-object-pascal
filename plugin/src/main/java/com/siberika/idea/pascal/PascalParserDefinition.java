@@ -18,6 +18,7 @@ import com.siberika.idea.pascal.lang.parser.PascalParser;
 import com.siberika.idea.pascal.lang.parser.impl.PascalFileImpl;
 import com.siberika.idea.pascal.lang.psi.PasTypes;
 import com.siberika.idea.pascal.module.PascalProjectService;
+import consulo.lang.LanguageVersion;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -32,7 +33,7 @@ public class PascalParserDefinition implements ParserDefinition {
 
     @NotNull
     @Override
-    public Lexer createLexer(Project project) {
+    public Lexer createLexer(LanguageVersion languageVersion) {
         PascalProjectService service = project.getComponent(PascalProjectService.class);
         Object parsing = service.getData(PascalProjectService.KEY_PARSING);
         service.remove(PascalProjectService.KEY_PARSING);
@@ -40,7 +41,7 @@ public class PascalParserDefinition implements ParserDefinition {
     }
 
     @Override
-    public PsiParser createParser(Project project) {
+    public PsiParser createParser(LanguageVersion languageVersion) {
         return new PascalParser();
     }
 
@@ -51,19 +52,19 @@ public class PascalParserDefinition implements ParserDefinition {
 
     @NotNull
     @Override
-    public TokenSet getWhitespaceTokens() {
+    public TokenSet getWhitespaceTokens(LanguageVersion languageVersion) {
         return WS;
     }
 
     @NotNull
     @Override
-    public TokenSet getCommentTokens() {
+    public TokenSet getCommentTokens(LanguageVersion languageVersion) {
         return PascalLexer.COMMENTS;
     }
 
     @NotNull
     @Override
-    public TokenSet getStringLiteralElements() {
+    public TokenSet getStringLiteralElements(LanguageVersion languageVersion){
         return LITERALS;
     }
 

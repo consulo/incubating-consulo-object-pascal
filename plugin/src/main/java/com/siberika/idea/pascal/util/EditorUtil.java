@@ -15,6 +15,7 @@ import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.editor.actionSystem.EditorActionManager;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.NavigatablePsiElement;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
@@ -23,7 +24,7 @@ import com.intellij.ui.awt.RelativePoint;
 import com.siberika.idea.pascal.lang.psi.PasEntityScope;
 import com.siberika.idea.pascal.lang.psi.PascalNamedElement;
 import com.siberika.idea.pascal.lang.references.ResolveUtil;
-import org.apache.commons.lang.StringUtils;
+import consulo.awt.TargetAWT;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -48,7 +49,7 @@ public class EditorUtil {
         if (!targets.isEmpty()) {
             PsiElementListNavigator.openTargets(event, targets.toArray(new NavigatablePsiElement[targets.size()]),
                     title, null, new MyPsiElementCellRenderer());
-        } else if (!StringUtils.isEmpty(emptyTitle)) {
+        } else if (!StringUtil.isEmpty(emptyTitle)) {
             showErrorHint(emptyTitle, new RelativePoint(event));
         }
     }
@@ -56,7 +57,7 @@ public class EditorUtil {
     public static void showErrorHint(String title, RelativePoint relativePoint) {
         final JLabel label = new JLabel(title);
         label.setBorder(HintUtil.createHintBorder());
-        label.setBackground(HintUtil.getErrorColor());
+        label.setBackground(TargetAWT.to(HintUtil.getErrorColor()));
         label.setOpaque(true);
         HintManager.getInstance().showHint(label, relativePoint, 0, NO_ITEMS_HINT_TIMEOUT_MS);
     }

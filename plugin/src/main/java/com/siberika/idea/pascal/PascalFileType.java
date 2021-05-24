@@ -1,9 +1,9 @@
 package com.siberika.idea.pascal;
 
 import com.intellij.openapi.fileTypes.LanguageFileType;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
 import java.util.Arrays;
 import java.util.List;
 
@@ -23,7 +23,7 @@ public class PascalFileType extends LanguageFileType {
 
     @NotNull
     @Override
-    public String getName() {
+    public String getId() {
         return "Pascal";
     }
 
@@ -40,7 +40,7 @@ public class PascalFileType extends LanguageFileType {
     }
 
     @Override
-    public Icon getIcon() {
+    public Image getIcon() {
         return PascalIcons.UNIT;
     }
 

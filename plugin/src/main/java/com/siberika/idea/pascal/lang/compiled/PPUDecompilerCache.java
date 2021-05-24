@@ -5,9 +5,9 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.siberika.idea.pascal.PascalBundle;
@@ -20,6 +20,7 @@ import com.siberika.idea.pascal.sdk.BasePascalSdkType;
 import com.siberika.idea.pascal.sdk.FPCSdkType;
 import com.siberika.idea.pascal.util.DocUtil;
 import com.siberika.idea.pascal.util.StrUtil;
+import consulo.object.pascal.module.extension.ObjectPascalModuleExtension;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -47,7 +48,7 @@ public class PPUDecompilerCache implements PascalCachingUnitDecompiler {
 
     PPUDecompilerCache(@NotNull Module module, @Nullable Sdk sdk) {
         this.module = module;
-        this.sdk = sdk != null ? sdk : ModuleRootManager.getInstance(module).getSdk();
+        this.sdk = sdk != null ? sdk : ModuleUtilCore.getSdk(module, ObjectPascalModuleExtension.class);
         this.cache = CacheBuilder.newBuilder().expireAfterAccess(2, TimeUnit.HOURS).build(new Loader());
     }
 

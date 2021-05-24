@@ -2,16 +2,17 @@ package com.siberika.idea.pascal.lang.compiled;
 
 import com.intellij.openapi.fileTypes.BinaryFileDecompiler;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.siberika.idea.pascal.PascalBundle;
 import com.siberika.idea.pascal.jps.sdk.PascalSdkData;
 import com.siberika.idea.pascal.module.ModuleService;
 import com.siberika.idea.pascal.sdk.BasePascalSdkType;
 import com.siberika.idea.pascal.util.ModuleUtil;
+import consulo.object.pascal.module.extension.ObjectPascalModuleExtension;
 
 /**
  * Author: George Bakhtadze
@@ -34,7 +35,7 @@ abstract class PascalUnitDecompiler implements BinaryFileDecompiler {
     }
 
     private String decompile(Module module, VirtualFile file) {
-        Sdk sdk = ModuleRootManager.getInstance(module).getSdk();
+        Sdk sdk = ModuleUtilCore.getSdk(module, ObjectPascalModuleExtension.class);
         if (null == sdk) {
             return PascalBundle.message("decompile.wrong.sdk");
         }

@@ -1,22 +1,14 @@
 package com.siberika.idea.pascal.compiler;
 
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.compiler.CompilationStatusListener;
-import com.intellij.openapi.compiler.CompileContext;
-import com.intellij.openapi.compiler.CompileTask;
-import com.intellij.openapi.compiler.CompilerManager;
-import com.intellij.openapi.compiler.CompilerMessage;
-import com.intellij.openapi.compiler.CompilerMessageCategory;
+import com.intellij.openapi.compiler.*;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.Navigatable;
 import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.search.GlobalSearchScope;
-import com.siberika.idea.pascal.PascalBundle;
 import com.siberika.idea.pascal.PascalFileType;
-import com.siberika.idea.pascal.module.PascalModuleType;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -35,20 +27,20 @@ public class Task implements CompileTask {
     }
 
     private void checkMainFile(CompileContext context) {
-        Project prj = context.getProject();
-        Collection<Module> modules = com.intellij.openapi.module.ModuleUtil.getModulesOfType(prj, PascalModuleType.getInstance());
-        for (Module module : modules) {
-            if (null == PascalModuleType.getMainFile(module)) {
-                msg(context, PascalBundle.message("compile.no.mainfile", module.getName()));
-                VirtualFile file = retrieveMainFile(module);
-                if (file != null) {
-                    PascalModuleType.setMainFile(module, file);
-                    msg(context, PascalBundle.message("compile.mainfile.found", file.getName()));
-                } else {
-                    msg(context, PascalBundle.message("compile.mainfile.notfound"));
-                }
-            }
-        }
+//        Project prj = context.getProject();
+//        Collection<Module> modules = com.intellij.openapi.module.ModuleUtil.getModulesOfType(prj, PascalModuleType.getInstance());
+//        for (Module module : modules) {
+//            if (null == PascalModuleType.getMainFile(module)) {
+//                msg(context, PascalBundle.message("compile.no.mainfile", module.getName()));
+//                VirtualFile file = retrieveMainFile(module);
+//                if (file != null) {
+//                    PascalModuleType.setMainFile(module, file);
+//                    msg(context, PascalBundle.message("compile.mainfile.found", file.getName()));
+//                } else {
+//                    msg(context, PascalBundle.message("compile.mainfile.notfound"));
+//                }
+//            }
+//        }
     }
 
     private void msg(CompileContext context, String message) {
@@ -89,11 +81,6 @@ public class Task implements CompileTask {
                     }
                 }
             });
-        }
-
-        @Override
-        public void fileGenerated(String outputRoot, String relativePath) {
-
         }
     }
 }

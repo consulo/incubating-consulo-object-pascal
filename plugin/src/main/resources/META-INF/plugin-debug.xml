@@ -1,4 +1,4 @@
-<idea-plugin>
+<consulo-plugin>
     <extensions defaultExtensionNs="com.intellij">
         <programRunner implementation="com.siberika.idea.pascal.debugger.PascalDebugRunner"/>
         <xdebugger.breakpointType implementation="com.siberika.idea.pascal.debugger.PascalLineBreakpointType"/>
@@ -7,4 +7,4 @@
         <applicationService serviceImplementation="com.siberika.idea.pascal.debugger.settings.PascalDebuggerViewSettings"/>
         <applicationService serviceImplementation="com.siberika.idea.pascal.debugger.settings.PascalTypeRenderers"/>
     </extensions>
-</idea-plugin>
+</consulo-plugin>

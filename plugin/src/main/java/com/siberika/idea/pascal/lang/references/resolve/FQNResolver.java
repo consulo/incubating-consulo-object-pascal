@@ -1,6 +1,7 @@
 package com.siberika.idea.pascal.lang.references.resolve;
 
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.SmartPsiElementPointer;
@@ -8,16 +9,7 @@ import com.intellij.psi.stubs.StubElement;
 import com.intellij.util.Processor;
 import com.siberika.idea.pascal.lang.parser.NamespaceRec;
 import com.siberika.idea.pascal.lang.parser.PascalFile;
-import com.siberika.idea.pascal.lang.psi.PasEntityScope;
-import com.siberika.idea.pascal.lang.psi.PasExpr;
-import com.siberika.idea.pascal.lang.psi.PasExpression;
-import com.siberika.idea.pascal.lang.psi.PasWithStatement;
-import com.siberika.idea.pascal.lang.psi.PascalClassDecl;
-import com.siberika.idea.pascal.lang.psi.PascalHelperDecl;
-import com.siberika.idea.pascal.lang.psi.PascalNamedElement;
-import com.siberika.idea.pascal.lang.psi.PascalRecordDecl;
-import com.siberika.idea.pascal.lang.psi.PascalStructType;
-import com.siberika.idea.pascal.lang.psi.PascalStubElement;
+import com.siberika.idea.pascal.lang.psi.*;
 import com.siberika.idea.pascal.lang.psi.impl.PasField;
 import com.siberika.idea.pascal.lang.psi.impl.PascalExpression;
 import com.siberika.idea.pascal.lang.psi.impl.PascalModuleImpl;
@@ -26,7 +18,6 @@ import com.siberika.idea.pascal.lang.references.ResolveUtil;
 import com.siberika.idea.pascal.lang.search.Helper;
 import com.siberika.idea.pascal.util.ModuleUtil;
 import com.siberika.idea.pascal.util.PsiUtil;
-import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -119,7 +110,7 @@ abstract class FQNResolver {
             PasEntityScope unit = unitPtr.getElement();
             if ((unit != null) && (context.includeLibrary || !PsiUtil.isFromLibrary(unit))) {
                 // Add unit scopes to sorted units list
-                if (!StringUtils.isEmpty(unit.getName())) {
+                if (!StringUtil.isEmpty(unit.getName())) {
                     sortedUnits.add(unit);
                 }
             }
@@ -192,7 +183,7 @@ abstract class FQNResolver {
             return false;
         }
         if (context.scope instanceof PascalModuleImpl) {
-            if (!StringUtils.isEmpty(context.scope.getName())) {
+            if (!StringUtil.isEmpty(context.scope.getName())) {
                 sortedUnits.add(context.scope);
             }
             if (implAffects) {

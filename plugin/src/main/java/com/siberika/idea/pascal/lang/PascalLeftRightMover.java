@@ -19,7 +19,7 @@ import com.siberika.idea.pascal.lang.psi.PasUsesClause;
 import com.siberika.idea.pascal.lang.psi.PasVarDeclaration;
 import org.jetbrains.annotations.NotNull;
 
-public class PascalLeftRightMover extends MoveElementLeftRightHandler {
+public class PascalLeftRightMover implements MoveElementLeftRightHandler {
     @NotNull
     @Override
     public PsiElement[] getMovableSubElements(@NotNull PsiElement element) {

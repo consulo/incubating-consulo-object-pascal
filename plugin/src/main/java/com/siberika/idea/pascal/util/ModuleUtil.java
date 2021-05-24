@@ -9,9 +9,7 @@ import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkAdditionalData;
-import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ProjectFileIndex;
-import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.text.StringUtil;
@@ -27,15 +25,12 @@ import com.intellij.util.indexing.FileBasedIndex;
 import com.siberika.idea.pascal.jps.sdk.PascalSdkData;
 import com.siberika.idea.pascal.jps.util.FileUtil;
 import com.siberika.idea.pascal.module.PascalModuleType;
+import consulo.object.pascal.module.extension.ObjectPascalModuleExtension;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Author: George Bakhtadze
@@ -152,8 +147,8 @@ public class ModuleUtil {
 
     public static Sdk getSdk(Project project, VirtualFile virtualFile) {
         Module module = virtualFile != null ? com.intellij.openapi.module.ModuleUtil.findModuleForFile(virtualFile, project) : null;
-        Sdk sdk = module != null ? ModuleRootManager.getInstance(module).getSdk() : null;
-        return sdk != null ? sdk : ProjectRootManager.getInstance(project).getProjectSdk();
+        Sdk sdk = module != null ? ModuleUtilCore.getSdk(module, ObjectPascalModuleExtension.class) : null;
+        return sdk;
     }
 
     public static boolean hasPascalModules(Project project) {
@@ -215,7 +210,7 @@ public class ModuleUtil {
 
     // TODO: cache at SDK
     public static List<String> retrieveUnitNamespaces(@Nullable Module module, Project project) {
-        Sdk sdk = module != null ? ModuleRootManager.getInstance(module).getSdk() : ProjectRootManager.getInstance(project).getProjectSdk();
+        Sdk sdk = module != null ? ModuleUtilCore.getSdk(module, ObjectPascalModuleExtension.class) : null;
         if (sdk != null) {
             final SdkAdditionalData data = sdk.getSdkAdditionalData();
             if (data instanceof PascalSdkData) {

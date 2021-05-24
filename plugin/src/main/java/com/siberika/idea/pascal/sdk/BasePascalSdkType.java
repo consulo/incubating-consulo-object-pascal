@@ -4,16 +4,12 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.intellij.codeInspection.SmartHashMap;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.projectRoots.SdkAdditionalData;
-import com.intellij.openapi.projectRoots.SdkModificator;
-import com.intellij.openapi.projectRoots.SdkType;
-import com.intellij.openapi.projectRoots.SdkTypeId;
+import com.intellij.openapi.projectRoots.*;
+import com.intellij.openapi.util.text.StringUtil;
 import com.siberika.idea.pascal.jps.sdk.PascalCompilerFamily;
 import com.siberika.idea.pascal.jps.sdk.PascalSdkData;
 import com.siberika.idea.pascal.jps.util.SysUtils;
 import com.siberika.idea.pascal.util.StrUtil;
-import org.apache.commons.lang.StringUtils;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -70,7 +66,7 @@ public abstract class BasePascalSdkType extends SdkType {
     public static File getDecompilerCommand(@NotNull Sdk sdk, File defaultDecompilerCommand) {
         File res;
         String command = (String) getAdditionalData(sdk).getValue(PascalSdkData.Keys.DECOMPILER_COMMAND.getKey());
-        if (StringUtils.isEmpty(command)) {
+        if (StringUtil.isEmpty(command)) {
             res = defaultDecompilerCommand;
         } else {
             res = new File(command);
@@ -83,7 +79,7 @@ public abstract class BasePascalSdkType extends SdkType {
 
     public static String getDebuggerCommand(@Nullable Sdk sdk, String defaultDebuggerCommand) {
         String command = sdk != null ? (String) getAdditionalData(sdk).getValue(PascalSdkData.Keys.DEBUGGER_COMMAND.getKey()) : null;
-        if (StringUtils.isEmpty(command)) {
+        if (StringUtil.isEmpty(command)) {
             return defaultDebuggerCommand;
         } else {
             return command;
@@ -201,7 +197,7 @@ public abstract class BasePascalSdkType extends SdkType {
 
     @Nullable
     @Override
-    public SdkAdditionalData loadAdditionalData(Element additional) {
+    public SdkAdditionalData loadAdditionalData(Sdk currentSdk, Element additional) {
         PascalSdkData result = new PascalSdkData();
         if (additional != null) {
             for (PascalSdkData.Keys key : PascalSdkData.Keys.values()) {

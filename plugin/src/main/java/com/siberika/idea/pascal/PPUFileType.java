@@ -1,11 +1,8 @@
 package com.siberika.idea.pascal;
 
 import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import javax.swing.*;
 
 /**
  * User: George Bakhtadze
@@ -19,7 +16,7 @@ public class PPUFileType implements FileType {
 
     @NotNull
     @Override
-    public String getName() {
+    public String getId() {
         return "FPC_PPU";
     }
 
@@ -36,7 +33,7 @@ public class PPUFileType implements FileType {
     }
 
     @Override
-    public Icon getIcon() {
+    public Image getIcon() {
         return PascalIcons.COMPILED;
     }
 
@@ -49,11 +46,4 @@ public class PPUFileType implements FileType {
     public boolean isReadOnly() {
         return false;
     }
-
-    @Nullable
-    @Override
-    public String getCharset(@NotNull VirtualFile file, @NotNull byte[] content) {
-        return null;
-    }
-
 }

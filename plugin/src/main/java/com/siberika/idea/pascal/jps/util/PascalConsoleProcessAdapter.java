@@ -2,7 +2,7 @@ package com.siberika.idea.pascal.jps.util;
 
 import com.intellij.execution.process.ProcessAdapter;
 import com.intellij.execution.process.ProcessEvent;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class PascalConsoleProcessAdapter extends ProcessAdapter {

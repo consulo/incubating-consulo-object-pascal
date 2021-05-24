@@ -1,12 +1,8 @@
 package com.siberika.idea.pascal.jps.model;
 
-import com.intellij.openapi.util.Key;
-import com.siberika.idea.pascal.jps.util.ParamMap;
-import org.jetbrains.jps.model.JpsSimpleElement;
-import org.jetbrains.jps.model.ex.JpsElementTypeBase;
-import org.jetbrains.jps.model.module.JpsModuleType;
+import consulo.util.dataholder.Key;
 
-public class JpsPascalModuleType extends JpsElementTypeBase<JpsSimpleElement<ParamMap>> implements JpsModuleType<JpsSimpleElement<ParamMap>> {
+public class JpsPascalModuleType {
     public static final JpsPascalModuleType INSTANCE = new JpsPascalModuleType();
 
     public static final String MODULE_TYPE_ID = "PASCAL_MODULE";

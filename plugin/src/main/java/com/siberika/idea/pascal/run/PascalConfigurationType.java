@@ -1,16 +1,11 @@
 package com.siberika.idea.pascal.run;
 
-import com.intellij.execution.configurations.ConfigurationFactory;
-import com.intellij.execution.configurations.ConfigurationType;
-import com.intellij.execution.configurations.ConfigurationTypeUtil;
-import com.intellij.execution.configurations.RunConfiguration;
-import com.intellij.execution.configurations.RunConfigurationModule;
+import com.intellij.execution.configurations.*;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.siberika.idea.pascal.PascalIcons;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NotNull;
-
-import javax.swing.*;
 
 /**
  * Author: George Bakhtadze
@@ -26,12 +21,6 @@ public class PascalConfigurationType implements ConfigurationType, DumbAware {
             public RunConfiguration createTemplateConfiguration(@NotNull Project project) {
                 return new PascalRunConfiguration(getDisplayName(), new RunConfigurationModule(project), this);
             }
-
-            @NotNull
-            @Override
-            public String getId() {
-                return getDisplayName();
-            }
         };
     }
 
@@ -44,7 +33,7 @@ public class PascalConfigurationType implements ConfigurationType, DumbAware {
         return "Pascal run configuration";
     }
 
-    public Icon getIcon() {
+    public Image getIcon() {
         return PascalIcons.GENERAL;
     }
 
@@ -59,9 +48,5 @@ public class PascalConfigurationType implements ConfigurationType, DumbAware {
 
     public ConfigurationFactory[] getConfigurationFactories() {
         return new ConfigurationFactory[]{myFactory};
-    }
-
-    public boolean isDumbAware() {
-        return true;
     }
 }

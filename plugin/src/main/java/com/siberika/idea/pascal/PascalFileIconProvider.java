@@ -10,16 +10,18 @@ import com.intellij.util.Processors;
 import com.intellij.util.SmartList;
 import com.siberika.idea.pascal.lang.psi.PascalModule;
 import com.siberika.idea.pascal.lang.stub.PascalModuleIndex;
+import consulo.ide.IconDescriptorUpdater;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.Collection;
 
-public class PascalFileIconProvider implements FileIconProvider {
+public class PascalFileIconProvider implements IconDescriptorUpdater {
     @Nullable
     @Override
-    public Icon getIcon(@NotNull VirtualFile file, int flags, @Nullable Project project) {
+    public void getIcon(@NotNull VirtualFile file, int flags, @Nullable Project project) {
         String ext = FileUtilRt.getExtension(file.getName());
         if (PascalFileType.PROGRAM_EXTENSIONS.contains(ext)) {
             return PascalIcons.FILE_PROGRAM;
