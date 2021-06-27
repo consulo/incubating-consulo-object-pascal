@@ -4,10 +4,12 @@ import com.intellij.execution.configurations.RunProfile;
 import com.intellij.execution.executors.DefaultRunExecutor;
 import com.intellij.execution.runners.DefaultProgramRunner;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.roots.CompilerModuleExtension;
 import com.intellij.openapi.util.text.StringUtil;
-import com.siberika.idea.pascal.jps.model.JpsPascalModuleType;
+import com.intellij.openapi.vfs.VfsUtil;
 import com.siberika.idea.pascal.jps.util.FileUtil;
+import com.siberika.idea.pascal.module.PascalModuleType;
+import consulo.compiler.ModuleCompilerPathsManager;
+import consulo.roots.impl.ProductionContentFolderTypeProvider;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -32,12 +34,10 @@ public class PascalRunner extends DefaultProgramRunner {
         if (null == programFileName) {
             return null;
         }
-        String path = module.getOptionValue(JpsPascalModuleType.USERDATA_KEY_EXE_OUTPUT_PATH.toString());
+        String path = PascalModuleType.getExeOutputPath(module);
         if (StringUtil.isEmpty(path)) {
-            CompilerModuleExtension compilerModuleExtension = CompilerModuleExtension.getInstance(module);
-            if ((compilerModuleExtension != null) && (compilerModuleExtension.getCompilerOutputPath() != null)) {
-                path = compilerModuleExtension.getCompilerOutputPath().getPath();
-            }
+            ModuleCompilerPathsManager compilerModuleExtension = ModuleCompilerPathsManager.getInstance(module);
+            path = VfsUtil.urlToPath(compilerModuleExtension.getCompilerOutputUrl(ProductionContentFolderTypeProvider.getInstance()));
         }
         return FileUtil.getExecutable(new File(path != null ? path : ""), programFileName).getPath();
     }

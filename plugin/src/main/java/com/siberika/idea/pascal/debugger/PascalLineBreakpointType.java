@@ -5,7 +5,6 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
 import com.intellij.xdebugger.breakpoints.XLineBreakpointType;
 import com.intellij.xdebugger.breakpoints.ui.XBreakpointCustomPropertiesPanel;
-import com.siberika.idea.pascal.PascalFileType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -19,12 +18,6 @@ public class PascalLineBreakpointType extends XLineBreakpointType<PascalLineBrea
 
     protected PascalLineBreakpointType() {
         super(ID, NAME);
-    }
-
-    @Override
-    public boolean canPutAt(@NotNull VirtualFile file, int line, @NotNull Project project) {
-        if (file.getFileType() != PascalFileType.INSTANCE) return false;
-        return true;
     }
 
     @Nullable

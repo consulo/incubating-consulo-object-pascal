@@ -26,7 +26,7 @@ import com.siberika.idea.pascal.lang.psi.PascalRoutine;
 import com.siberika.idea.pascal.util.DocUtil;
 import com.siberika.idea.pascal.util.PsiUtil;
 import com.siberika.idea.pascal.util.StrUtil;
-import org.apache.commons.lang.StringUtils;
+import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -108,7 +108,7 @@ public class GdbStackFrame extends XStackFrame {
                         name = String.format("%s(%s)", name, scope.getName());
                     }
                 }
-                if (StringUtils.isEmpty(name) || "??".equals(name)) {
+                if (StringUtil.isEmpty(name) || "??".equals(name)) {
                     String addr = frame.getString("addr");
                     name = String.format("?? (%s)", addr != null ? addr : "-");
                 }

@@ -6,7 +6,6 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.siberika.idea.pascal.jps.JpsPascalBundle;
-import com.siberika.idea.pascal.jps.model.JpsPascalModuleType;
 import com.siberika.idea.pascal.jps.sdk.PascalCompilerFamily;
 import com.siberika.idea.pascal.jps.sdk.PascalSdkData;
 import com.siberika.idea.pascal.jps.util.ParamMap;
@@ -112,12 +111,14 @@ public abstract class PascalBackendCompiler {
     }
 
     public static File getMainFile(ParamMap moduleData) {
-        String fileName = moduleData != null ? moduleData.get(JpsPascalModuleType.USERDATA_KEY_MAIN_FILE.toString()) : null;
-        return fileName != null ? new File(fileName) : null;
+//        String fileName = moduleData != null ? moduleData.get(JpsPascalModuleType.USERDATA_KEY_MAIN_FILE.toString()) : null;
+//        return fileName != null ? new File(fileName) : null;
+        return null;
     }
 
     public static String getExeOutputPath(ParamMap moduleData) {
-        return moduleData != null ? moduleData.get(JpsPascalModuleType.USERDATA_KEY_EXE_OUTPUT_PATH.toString()) : null;
+        //return moduleData != null ? moduleData.get(JpsPascalModuleType.USERDATA_KEY_EXE_OUTPUT_PATH.toString()) : null;
+        return null;
     }
 
     protected static void addLibPathToCmdLine(final ArrayList<String> commandLine, File sourceRoot,

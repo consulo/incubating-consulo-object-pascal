@@ -10,7 +10,6 @@ import com.intellij.codeInsight.template.Template;
 import com.intellij.codeInsight.template.TemplateEditingListener;
 import com.intellij.codeInsight.template.TemplateManager;
 import com.intellij.codeInsight.template.impl.TemplateState;
-import com.intellij.codeInspection.SmartHashMap;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.WriteCommandAction;
@@ -37,48 +36,13 @@ import com.siberika.idea.pascal.PascalBundle;
 import com.siberika.idea.pascal.ide.actions.SectionToggle;
 import com.siberika.idea.pascal.lang.PascalDocumentationProvider;
 import com.siberika.idea.pascal.lang.context.ContextUtil;
-import com.siberika.idea.pascal.lang.psi.PasArgumentList;
-import com.siberika.idea.pascal.lang.psi.PasAssignPart;
-import com.siberika.idea.pascal.lang.psi.PasBlockBody;
-import com.siberika.idea.pascal.lang.psi.PasBlockGlobal;
-import com.siberika.idea.pascal.lang.psi.PasBlockLocal;
-import com.siberika.idea.pascal.lang.psi.PasClassProperty;
-import com.siberika.idea.pascal.lang.psi.PasClassPropertySpecifier;
-import com.siberika.idea.pascal.lang.psi.PasCompoundStatement;
-import com.siberika.idea.pascal.lang.psi.PasConstDeclaration;
-import com.siberika.idea.pascal.lang.psi.PasConstSection;
-import com.siberika.idea.pascal.lang.psi.PasEnumType;
-import com.siberika.idea.pascal.lang.psi.PasExpr;
-import com.siberika.idea.pascal.lang.psi.PasFormalParameter;
-import com.siberika.idea.pascal.lang.psi.PasFormalParameterSection;
-import com.siberika.idea.pascal.lang.psi.PasFullyQualifiedIdent;
-import com.siberika.idea.pascal.lang.psi.PasImplDeclSection;
-import com.siberika.idea.pascal.lang.psi.PasInterfaceTypeDecl;
-import com.siberika.idea.pascal.lang.psi.PasReferenceExpr;
-import com.siberika.idea.pascal.lang.psi.PasRoutineImplDecl;
-import com.siberika.idea.pascal.lang.psi.PasTypeDeclaration;
-import com.siberika.idea.pascal.lang.psi.PasTypeSection;
-import com.siberika.idea.pascal.lang.psi.PasTypes;
-import com.siberika.idea.pascal.lang.psi.PasUnitInterface;
-import com.siberika.idea.pascal.lang.psi.PasVarSection;
-import com.siberika.idea.pascal.lang.psi.PascalNamedElement;
-import com.siberika.idea.pascal.lang.psi.PascalRoutine;
-import com.siberika.idea.pascal.lang.psi.PascalStructType;
+import com.siberika.idea.pascal.lang.psi.*;
 import com.siberika.idea.pascal.lang.psi.impl.PasField;
 import com.siberika.idea.pascal.lang.psi.impl.PascalExpression;
-import com.siberika.idea.pascal.util.DocUtil;
-import com.siberika.idea.pascal.util.EditorUtil;
-import com.siberika.idea.pascal.util.PosUtil;
-import com.siberika.idea.pascal.util.PreserveCaretTemplateAdapter;
-import com.siberika.idea.pascal.util.PsiUtil;
-import com.siberika.idea.pascal.util.StrUtil;
+import com.siberika.idea.pascal.util.*;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.siberika.idea.pascal.PascalBundle.message;
 
@@ -632,7 +596,7 @@ public abstract class PascalActionDeclare extends BaseIntentionAction {
             Pair<String, Map<String, String>> arguments;
             if (propertySpecifier != null) {
                 if (ContextUtil.isPropertyGetter(propertySpecifier)) {
-                    Map<String, String> defaults = new SmartHashMap<>();
+                    Map<String, String> defaults = new HashMap<>();
                     arguments = Pair.create("", defaults);
                 } else {
                     Map<String, String> defaults = ImmutableMap.of(TPL_VAR_TYPE, returnType);
@@ -654,7 +618,7 @@ public abstract class PascalActionDeclare extends BaseIntentionAction {
         private Pair<String, Map<String, String>> calcArguments(FixActionData data) {
             PasExpr expression = PsiTreeUtil.getParentOfType(data.element, PasExpr.class);
             StringBuilder params = new StringBuilder();
-            Map<String, String> defaults = new SmartHashMap<>();
+            Map<String, String> defaults = new HashMap<>();
             if ((expression != null) && (expression.getNextSibling() instanceof PasArgumentList)) {
                 PasArgumentList args = (PasArgumentList) expression.getNextSibling();
                 int count = 0;

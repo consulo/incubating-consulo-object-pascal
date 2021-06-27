@@ -65,7 +65,7 @@ class PascalCommentReference extends PsiReferenceBase<PsiComment> {
             return getElement();
         } else {
             VirtualFile file = ModuleUtil.getIncludedFile(myElement.getProject(), myElement.getContainingFile().getVirtualFile(), name);
-            return file != null ? com.intellij.psi.util.PsiUtil.getPsiFile(myElement.getProject(), file) : null;
+            return file != null ? PsiManager.getInstance(myElement.getProject()).findFile(file) : null;
         }
     }
 

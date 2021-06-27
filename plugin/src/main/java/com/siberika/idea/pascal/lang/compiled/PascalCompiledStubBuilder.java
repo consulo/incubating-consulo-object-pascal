@@ -5,9 +5,9 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
-import com.intellij.psi.compiled.ClsStubBuilder;
 import com.intellij.psi.stubs.BinaryFileStubBuilder;
 import com.intellij.psi.stubs.PsiFileStub;
+import com.intellij.psi.stubs.Stub;
 import com.intellij.util.indexing.FileContent;
 import com.siberika.idea.pascal.DCUFileType;
 import com.siberika.idea.pascal.PPUFileType;
@@ -21,11 +21,9 @@ public class PascalCompiledStubBuilder implements BinaryFileStubBuilder {
 
     private static final Logger LOG = Logger.getInstance(PascalCompiledStubBuilder.class);
 
-    static final ClsStubBuilder INSTANCE = new PascalCompiledStubBuilder();
-
     @Override
     public boolean acceptsFile(VirtualFile virtualFile) {
-        return virtualFile == PPUFileType.INSTANCE || virtualFile == DCUFileType.INSTANCE;
+        return virtualFile.getFileType() == PPUFileType.INSTANCE || virtualFile.getFileType() == DCUFileType.INSTANCE;
     }
 
     @Override
@@ -35,7 +33,7 @@ public class PascalCompiledStubBuilder implements BinaryFileStubBuilder {
 
     @Nullable
     @Override
-    public PsiFileStub<?> buildFileStub(@NotNull FileContent fileContent) {
+    public Stub buildStubTree(@NotNull FileContent fileContent) {
         if (fileContent.getFileType() == PPUFileType.INSTANCE) {
             ModuleService.ensureNameFileCache(fileContent.getFile(), fileContent.getProject(), true);
         }

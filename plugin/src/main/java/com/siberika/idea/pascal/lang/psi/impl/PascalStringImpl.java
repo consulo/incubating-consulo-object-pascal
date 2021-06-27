@@ -3,12 +3,11 @@ package com.siberika.idea.pascal.lang.psi.impl;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.ProperTextRange;
 import com.intellij.openapi.util.TextRange;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.LiteralTextEscaper;
 import com.intellij.psi.PsiLanguageInjectionHost;
-import com.intellij.psi.PsiType;
 import com.intellij.psi.impl.source.tree.LeafElement;
 import com.siberika.idea.pascal.lang.psi.PascalPsiElement;
-import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -61,11 +60,6 @@ public abstract class PascalStringImpl extends PascalPsiElementImpl implements P
         return getText().length() > 2 ? getText().substring(1, getText().length() - 1) : "";
     }
 
-    @Nullable
-    public PsiType getType() {
-        return null;
-    }
-
     @NotNull
     @Override
     public LiteralTextEscaper<? extends PsiLanguageInjectionHost> createLiteralTextEscaper() {
@@ -86,7 +80,7 @@ public abstract class PascalStringImpl extends PascalPsiElementImpl implements P
             public int getOffsetInHost(int offsetInDecoded, @NotNull TextRange rangeInsideHost) {
                 ProperTextRange.assertProperRange(rangeInsideHost);
                 int offset = rangeInsideHost.getStartOffset() + offsetInDecoded;
-                int escapedCount = StringUtils.countMatches(lastDecoded.substring(0, offsetInDecoded), "'");
+                int escapedCount = StringUtil.countChars(lastDecoded.substring(0, offsetInDecoded), '\'');
                 offset += escapedCount;
                 if (offset < rangeInsideHost.getStartOffset()) offset = rangeInsideHost.getStartOffset();
                 if (offset > rangeInsideHost.getEndOffset()) offset = rangeInsideHost.getEndOffset();

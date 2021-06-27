@@ -1,27 +1,41 @@
 package com.siberika.idea.pascal;
 
-import com.intellij.ide.FileIconProvider;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.stubs.StubIndex;
+import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.Processors;
 import com.intellij.util.SmartList;
 import com.siberika.idea.pascal.lang.psi.PascalModule;
 import com.siberika.idea.pascal.lang.stub.PascalModuleIndex;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.ide.IconDescriptor;
 import consulo.ide.IconDescriptorUpdater;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 import java.util.Collection;
 
 public class PascalFileIconProvider implements IconDescriptorUpdater {
-    @Nullable
+    @RequiredReadAction
     @Override
-    public void getIcon(@NotNull VirtualFile file, int flags, @Nullable Project project) {
+    public void updateIcon(@Nonnull IconDescriptor iconDescriptor, @Nonnull PsiElement psiElement, int flags) {
+        if(psiElement instanceof PsiFile) {
+            Image icon = getIcon(PsiUtilCore.getVirtualFile(psiElement), flags, psiElement.getProject());
+            if(icon != null) {
+                iconDescriptor.setMainIcon(icon);
+            }
+        }
+    }
+
+    @Nullable
+    public Image getIcon(@NotNull VirtualFile file, int flags, @Nullable Project project) {
         String ext = FileUtilRt.getExtension(file.getName());
         if (PascalFileType.PROGRAM_EXTENSIONS.contains(ext)) {
             return PascalIcons.FILE_PROGRAM;

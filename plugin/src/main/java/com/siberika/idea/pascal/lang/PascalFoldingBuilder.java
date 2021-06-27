@@ -1,6 +1,5 @@
 package com.siberika.idea.pascal.lang;
 
-import com.intellij.codeInsight.folding.JavaCodeFoldingSettings;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.folding.FoldingBuilderEx;
 import com.intellij.lang.folding.FoldingDescriptor;
@@ -281,7 +280,7 @@ public class PascalFoldingBuilder extends FoldingBuilderEx implements DumbAware 
     @Override
     public boolean isCollapsedByDefault(@NotNull ASTNode node) {
         try {
-            return JavaCodeFoldingSettings.getInstance().isCollapseImports() && (node.getElementType() == PasTypes.USES_CLAUSE);
+            return true && (node.getElementType() == PasTypes.USES_CLAUSE);
         } catch (Throwable t) {
             return node.getElementType() == PasTypes.USES_CLAUSE;
         }
@@ -289,7 +288,7 @@ public class PascalFoldingBuilder extends FoldingBuilderEx implements DumbAware 
 
     private FoldingDescriptor createNamedFoldingDescriptor(ASTNode node, TextRange textRange, FoldingGroup group, String placeholderText, boolean collapseByDefault, Set<Object> dependencies) {
         try {
-            return new NamedFoldingDescriptor(node, textRange, group, placeholderText, collapseByDefault, dependencies);
+            return new FoldingDescriptor(node, textRange, group, placeholderText, collapseByDefault, dependencies);
         } catch (Throwable t) {
             return new NamedFoldingDescriptor(node, textRange, group, placeholderText);
         }
@@ -297,7 +296,7 @@ public class PascalFoldingBuilder extends FoldingBuilderEx implements DumbAware 
 
     private boolean isCollapseDocs() {
         try {
-            return JavaCodeFoldingSettings.getInstance().isCollapseJavadocs();
+            return false;
         } catch (Throwable t) {
             return false;
         }
@@ -305,7 +304,7 @@ public class PascalFoldingBuilder extends FoldingBuilderEx implements DumbAware 
 
     private boolean isCollapseMethods() {
         try {
-            return JavaCodeFoldingSettings.getInstance().isCollapseMethods();
+            return false;
         } catch (Throwable t) {
             return false;
         }

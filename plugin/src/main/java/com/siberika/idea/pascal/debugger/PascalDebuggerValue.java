@@ -1,17 +1,16 @@
 package com.siberika.idea.pascal.debugger;
 
-import com.intellij.debugger.impl.DebuggerUtilsEx;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
 import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiManager;
 import com.intellij.xdebugger.XDebuggerUtil;
 import com.intellij.xdebugger.XSourcePosition;
-import com.intellij.xdebugger.frame.XCompositeNode;
-import com.intellij.xdebugger.frame.XNavigatable;
-import com.intellij.xdebugger.frame.XValue;
-import com.intellij.xdebugger.frame.XValueNode;
-import com.intellij.xdebugger.frame.XValuePlace;
+import com.intellij.xdebugger.frame.*;
 import com.intellij.xdebugger.frame.presentation.XErrorValuePresentation;
 import com.intellij.xdebugger.frame.presentation.XValuePresentation;
 import com.siberika.idea.pascal.PascalBundle;
@@ -19,9 +18,11 @@ import com.siberika.idea.pascal.PascalIcons;
 import com.siberika.idea.pascal.debugger.gdb.GdbVariableObject;
 import com.siberika.idea.pascal.jps.sdk.PascalSdkData;
 import com.siberika.idea.pascal.util.DocUtil;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
+import javax.annotation.Nullable;
 import java.util.regex.Pattern;
 
 /**
@@ -42,7 +43,7 @@ public class PascalDebuggerValue extends XValue {
             node.setPresentation(null, new XErrorValuePresentation(variableObject.getError()), hasChildren());
             return;
         }
-        Icon icon = PascalIcons.VARIABLE;
+        Image icon = PascalIcons.VARIABLE;
         switch (variableObject.getFieldType()) {
             case ROUTINE: {
                 icon = PascalIcons.ROUTINE;
@@ -107,7 +108,7 @@ public class PascalDebuggerValue extends XValue {
     @Override
     public void computeSourcePosition(@NotNull XNavigatable navigatable) {
         XSourcePosition sp = variableObject.getFrame().getSourcePosition();
-        PsiFile file = sp != null ? DebuggerUtilsEx.getPsiFile(sp, variableObject.getFrame().getProcess().getProject()) : null;
+        PsiFile file = sp != null ? getPsiFile(sp, variableObject.getFrame().getProcess().getProject()) : null;
         Document doc = file != null ? PsiDocumentManager.getInstance(variableObject.getFrame().getProcess().getProject()).getDocument(file) : null;
         if (doc != null) {
             int lineNum = sp.getLine() - 1;
@@ -122,6 +123,19 @@ public class PascalDebuggerValue extends XValue {
                 lineNum--;
             }
         }
+    }
+
+    @Nullable
+    @RequiredReadAction
+    public static PsiFile getPsiFile(@Nullable XSourcePosition position, Project project) {
+        ApplicationManager.getApplication().assertReadAccessAllowed();
+        if (position != null) {
+            VirtualFile file = position.getFile();
+            if (file.isValid()) {
+                return PsiManager.getInstance(project).findFile(file);
+            }
+        }
+        return null;
     }
 
     private boolean hasChildren() {

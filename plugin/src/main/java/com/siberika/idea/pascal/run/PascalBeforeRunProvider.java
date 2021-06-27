@@ -6,6 +6,7 @@ import com.intellij.execution.Executor;
 import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.execution.executors.DefaultDebugExecutor;
 import com.intellij.execution.runners.ExecutionEnvironment;
+import com.intellij.icons.AllIcons;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
@@ -22,16 +23,21 @@ import com.intellij.psi.PsiManager;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.siberika.idea.pascal.PascalAppService;
 import com.siberika.idea.pascal.PascalBundle;
-import com.siberika.idea.pascal.jps.model.JpsPascalModuleType;
 import com.siberika.idea.pascal.lang.psi.PasModule;
 import com.siberika.idea.pascal.lang.psi.PascalModule;
 import com.siberika.idea.pascal.module.PascalModuleType;
 import com.siberika.idea.pascal.util.ModuleUtil;
 import com.siberika.idea.pascal.util.PsiUtil;
+import consulo.compiler.ModuleCompilerPathsManager;
+import consulo.roots.impl.ProductionContentFolderTypeProvider;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.image.Image;
+import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.util.List;
 
@@ -46,7 +52,14 @@ public class PascalBeforeRunProvider extends BeforeRunTaskProvider<PascalBeforeR
         return ID;
     }
 
-    @Override
+	@Nullable
+	@Override
+	public Image getIcon()
+	{
+		return AllIcons.Actions.Compile;
+	}
+
+	@Override
     public String getName() {
         return PascalBundle.message("before.launch.prepare.build");
     }
@@ -62,7 +75,15 @@ public class PascalBeforeRunProvider extends BeforeRunTaskProvider<PascalBeforeR
         return task;
     }
 
-    @Override
+	@RequiredUIAccess
+	@Nonnull
+	@Override
+	public AsyncResult<Void> configureTask(RunConfiguration runConfiguration, PrepareBuildBeforeRunTask prepareBuildBeforeRunTask)
+	{
+		return AsyncResult.resolved();
+	}
+
+	@Override
     public boolean canExecuteTask(@NotNull RunConfiguration configuration, @NotNull PrepareBuildBeforeRunTask task) {
         return configuration instanceof PascalRunConfiguration;
     }
@@ -88,8 +109,6 @@ public class PascalBeforeRunProvider extends BeforeRunTaskProvider<PascalBeforeR
                 VirtualFile mainFile = findMainFile(configuration.getProject(), module, programName);
                 if (mainFile != null) {
                     PascalModuleType.setMainFile(module, mainFile);
-                    CompilerModuleExtension moduleExtension = CompilerModuleExtension.getInstance(module);
-                    moduleExtension.commit();
                 }
             }
         }
@@ -116,9 +135,9 @@ public class PascalBeforeRunProvider extends BeforeRunTaskProvider<PascalBeforeR
 
     private void deleteExecutables(Module module, RunConfiguration configuration) {
         String programName = ((PascalRunConfiguration) configuration).getProgramFileName();
-        CompilerModuleExtension moduleExtension = CompilerModuleExtension.getInstance(module);
-        VirtualFile outputPath = moduleExtension != null ? moduleExtension.getCompilerOutputPath() : null;
-        String exeOutputPath = module.getOptionValue(JpsPascalModuleType.USERDATA_KEY_EXE_OUTPUT_PATH.toString());
+        ModuleCompilerPathsManager moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(module);
+        VirtualFile outputPath = moduleCompilerPathsManager.getCompilerOutput(ProductionContentFolderTypeProvider.getInstance());
+        String exeOutputPath = PascalModuleType.getExeOutputPath(module);
         exeOutputPath = StringUtil.isEmpty(exeOutputPath) ? (outputPath != null ? outputPath.getPath() : null) : exeOutputPath;
         if (exeOutputPath != null) {
             File exeDir = new File(exeOutputPath);

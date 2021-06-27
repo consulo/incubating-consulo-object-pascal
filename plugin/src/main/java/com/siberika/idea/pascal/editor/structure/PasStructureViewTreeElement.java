@@ -10,10 +10,10 @@ import com.siberika.idea.pascal.lang.psi.PascalNamedElement;
 import com.siberika.idea.pascal.lang.psi.PascalStructType;
 import com.siberika.idea.pascal.lang.psi.impl.PasField;
 import com.siberika.idea.pascal.util.PsiUtil;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -64,7 +64,7 @@ public class PasStructureViewTreeElement extends PsiTreeElementBase<PsiElement> 
     }
 
     @Override
-    public Icon getIcon(boolean open) {
+    public Image getIcon() {
         if (field != null) {
             if (field.fieldType == PasField.FieldType.VARIABLE) {
                 return PascalIcons.VARIABLE;
@@ -78,7 +78,7 @@ public class PasStructureViewTreeElement extends PsiTreeElementBase<PsiElement> 
                 return PascalIcons.ROUTINE;
             }
         }
-        return super.getIcon(open);
+        return super.getIcon();
     }
 
     @Nullable

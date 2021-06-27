@@ -1,6 +1,6 @@
 package com.siberika.idea.pascal;
 
-import com.intellij.ide.highlighter.XmlFileType;
+import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeConsumer;
 import com.intellij.openapi.fileTypes.FileTypeFactory;
 import org.jetbrains.annotations.NotNull;
@@ -16,6 +16,9 @@ public class PascalFileTypeFactory extends FileTypeFactory {
       fileTypeConsumer.consume(PPUFileType.INSTANCE, "ppu");
       fileTypeConsumer.consume(DCUFileType.INSTANCE, "dcu");
 
-      fileTypeConsumer.consume(XmlFileType.INSTANCE, "lpi;dproj");
+      FileType xmlFileType = fileTypeConsumer.getStandardFileTypeByName("XML");
+      if(xmlFileType != null) {
+          fileTypeConsumer.consume(xmlFileType, "lpi;dproj");
+      }
   }
 }

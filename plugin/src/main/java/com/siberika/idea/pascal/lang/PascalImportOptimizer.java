@@ -19,30 +19,15 @@ import com.siberika.idea.pascal.PascalBundle;
 import com.siberika.idea.pascal.PascalFileType;
 import com.siberika.idea.pascal.lang.context.ContextUtil;
 import com.siberika.idea.pascal.lang.parser.PascalFile;
-import com.siberika.idea.pascal.lang.psi.PasLibraryModuleHead;
-import com.siberika.idea.pascal.lang.psi.PasModule;
-import com.siberika.idea.pascal.lang.psi.PasPackageModuleHead;
-import com.siberika.idea.pascal.lang.psi.PasProgramModuleHead;
-import com.siberika.idea.pascal.lang.psi.PasUsesClause;
-import com.siberika.idea.pascal.lang.psi.PascalModule;
-import com.siberika.idea.pascal.lang.psi.PascalNamedElement;
-import com.siberika.idea.pascal.lang.psi.PascalQualifiedIdent;
+import com.siberika.idea.pascal.lang.psi.*;
 import com.siberika.idea.pascal.lang.references.ResolveUtil;
 import com.siberika.idea.pascal.util.DocUtil;
 import com.siberika.idea.pascal.util.ModuleUtil;
 import com.siberika.idea.pascal.util.PsiUtil;
-import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.regex.Pattern;
 
 /**
@@ -231,7 +216,7 @@ public class PascalImportOptimizer implements ImportOptimizer {
             uses = PsiTreeUtil.findChildOfType((module.getModuleType() == PascalModule.ModuleType.UNIT) ? PsiUtil.getModuleImplementationSection(module) : module, PasUsesClause.class);
         }
         int offs = 0;
-        String content = StringUtils.join(names, ", ");
+        String content = String.join(", ", names);
         if (uses != null) {
             offs = uses.getTextRange().getEndOffset() - 1;
             content = ",\n" + content + ";";

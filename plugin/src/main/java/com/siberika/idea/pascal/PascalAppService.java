@@ -2,13 +2,11 @@ package com.siberika.idea.pascal;
 
 import com.intellij.notification.NotificationDisplayType;
 import com.intellij.notification.NotificationGroup;
-import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.projectRoots.ProjectJdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
+import com.intellij.openapi.projectRoots.SdkTable;
+import com.intellij.openapi.util.io.StreamUtil;
 import com.siberika.idea.pascal.sdk.FPCSdkType;
-import org.apache.xmlbeans.impl.common.IOUtil;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -20,7 +18,7 @@ import java.nio.file.Files;
  * Author: George Bakhtadze
  * Date: 30/11/2015
  */
-public class PascalAppService implements ApplicationComponent {
+public class PascalAppService  {
 
     private static final Logger LOG = Logger.getInstance(PascalAppService.class);
 
@@ -29,21 +27,9 @@ public class PascalAppService implements ApplicationComponent {
     private File debugUnitFile;
     private File debugUnitDir;
 
-    @Override
-    public void initComponent() {
+    public PascalAppService() {
         new NotificationGroup(PASCAL_NOTIFICATION_GROUP, NotificationDisplayType.BALLOON, true);
         initDebugUnit();
-    }
-
-    @Override
-    public void disposeComponent() {
-
-    }
-
-    @NotNull
-    @Override
-    public String getComponentName() {
-        return PascalBundle.message("app.title");
     }
 
     public File getDebugUnitDir() {
@@ -69,11 +55,11 @@ public class PascalAppService implements ApplicationComponent {
         }
         try (InputStream data = PascalAppService.class.getResourceAsStream("/ipasdbg.pas");
              FileOutputStream os = new FileOutputStream(debugUnitFile)) {
-            IOUtil.copyCompletely(data, os);
+             StreamUtil.copyStreamContent(data, os);
         } catch (IOException e) {
             LOG.info("ERROR: failed to prepare debug unit file: " + e.getMessage());
         }
-        Sdk[] sdks = ProjectJdkTable.getInstance().getAllJdks();
+        Sdk[] sdks = SdkTable.getInstance().getAllSdks();
         for (Sdk sdk : sdks) {
             FPCSdkType.applyDebugUnitFile(sdk, debugUnitDir.getAbsolutePath(), getDebugUnitName());
         }

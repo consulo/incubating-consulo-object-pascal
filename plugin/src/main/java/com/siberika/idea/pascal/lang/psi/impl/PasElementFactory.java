@@ -9,6 +9,7 @@ import com.intellij.psi.impl.PsiFileFactoryImpl;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.siberika.idea.pascal.PascalLanguage;
 import com.siberika.idea.pascal.lang.psi.PascalPsiElement;
+import consulo.lang.util.LanguageVersionUtil;
 
 /**
  * Author: George Bakhtadze
@@ -35,7 +36,7 @@ public class PasElementFactory {
     public static PsiElement createReplacementElement(PsiElement element, String text) {
         if (element instanceof PascalPsiElement) {
             PsiFileFactoryImpl factory = (PsiFileFactoryImpl) PsiFileFactoryImpl.getInstance(element.getProject());
-            return factory.createElementFromText(text, element.getLanguage(), element.getNode().getElementType(), element);
+            return factory.createElementFromText(text, element.getLanguage(), LanguageVersionUtil.findDefaultVersion(element.getLanguage()), element.getNode().getElementType(), element);
         } else {
             return createLeafFromText(element.getProject(), text);
         }

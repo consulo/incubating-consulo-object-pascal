@@ -21,6 +21,8 @@ import com.siberika.idea.pascal.module.PascalProjectService;
 import consulo.lang.LanguageVersion;
 import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nonnull;
+
 /**
  * Author: George Bakhtadze
  * Date: 12/9/12
@@ -32,12 +34,17 @@ public class PascalParserDefinition implements ParserDefinition {
     public static final TokenSet LITERALS = TokenSet.create(PasTypes.STRING_FACTOR, PasTypes.STRING_FACTOR);
 
     @NotNull
-    @Override
-    public Lexer createLexer(LanguageVersion languageVersion) {
+    public Lexer createLexer(@Nonnull Project project) {
         PascalProjectService service = project.getComponent(PascalProjectService.class);
         Object parsing = service.getData(PascalProjectService.KEY_PARSING);
         service.remove(PascalProjectService.KEY_PARSING);
         return new PascalLexer.ParsingPascalLexer(project, parsing instanceof VirtualFile ? (VirtualFile) parsing : null);
+    }
+
+    @NotNull
+    @Override
+    public Lexer createLexer(LanguageVersion languageVersion) {
+        throw new UnsupportedOperationException();
     }
 
     @Override

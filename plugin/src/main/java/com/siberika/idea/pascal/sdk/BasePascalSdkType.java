@@ -2,7 +2,6 @@ package com.siberika.idea.pascal.sdk;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import com.intellij.codeInspection.SmartHashMap;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.projectRoots.*;
 import com.intellij.openapi.util.text.StringUtil;
@@ -144,7 +143,7 @@ public abstract class BasePascalSdkType extends SdkType {
                 LOG.info("Error getting default defines", e);
             }
         }
-        return new SmartHashMap<String, Define>();
+        return new HashMap<>();
     }
 
     public static Map<String, Directive> getDirectives(@NotNull Sdk sdk, String version) {
@@ -170,7 +169,7 @@ public abstract class BasePascalSdkType extends SdkType {
                 LOG.info("Error getting compiler directives", e);
             }
         }
-        return new SmartHashMap<String, Directive>();
+        return new HashMap<>();
     }
 
     public static void invalidateSdkCaches() {

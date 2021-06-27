@@ -14,6 +14,7 @@ import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Pair;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IElementType;
@@ -24,8 +25,6 @@ import com.siberika.idea.pascal.sdk.BasePascalSdkType;
 import com.siberika.idea.pascal.sdk.Define;
 import com.siberika.idea.pascal.util.StrUtil;
 import consulo.util.dataholder.Key;
-import org.apache.commons.lang.ObjectUtils;
-import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -208,7 +207,7 @@ public class PascalFlexLexerImpl extends _PascalLexer {
     @Override
     public void define(int pos, CharSequence sequence) {
         String name = extractDefineName(sequence);
-        if (StringUtils.isNotEmpty(name)) {
+        if (StringUtil.isNotEmpty(name)) {
             String key = name.toUpperCase();
             getActualDefines().add(key);
             defines.add(Pair.create(pos, key));
@@ -223,7 +222,7 @@ public class PascalFlexLexerImpl extends _PascalLexer {
     @Override
     public void unDefine(int pos, CharSequence sequence) {
         String name = extractDefineName(sequence);
-        if (StringUtils.isNotEmpty(name)) {
+        if (StringUtil.isNotEmpty(name)) {
             String key = name.toUpperCase();
             getActualDefines().remove(key);
             defines.add(Pair.create(-pos, key));
@@ -253,7 +252,7 @@ public class PascalFlexLexerImpl extends _PascalLexer {
         String name = extractDefineName(sequence);
         curLevel++;
         if (!isInactive()) {
-            if (StringUtils.isNotEmpty(name) && (!getActualDefines().contains(name.toUpperCase()) ^ negate)) {
+            if (StringUtil.isNotEmpty(name) && (!getActualDefines().contains(name.toUpperCase()) ^ negate)) {
                 inactiveLevel = curLevel;
                 pushCondition(false);
                 yybegin(INACTIVE_BRANCH);
@@ -274,7 +273,7 @@ public class PascalFlexLexerImpl extends _PascalLexer {
         curLevel++;
         String condition = extractCondition(sequence);
         if (!isInactive()) {
-            if (StringUtils.isNotEmpty(condition) && (!ConditionParser.checkCondition(condition, getActualDefines()))) {
+            if (StringUtil.isNotEmpty(condition) && (!ConditionParser.checkCondition(condition, getActualDefines()))) {
                 inactiveLevel = curLevel;
                 pushCondition(false);
                 yybegin(INACTIVE_BRANCH);
@@ -312,7 +311,7 @@ public class PascalFlexLexerImpl extends _PascalLexer {
             }
         } else {
             String condition = extractCondition(sequence);
-            if (isInactive() && StringUtils.isNotEmpty(condition) && ConditionParser.checkCondition(condition, getActualDefines())) {
+            if (isInactive() && StringUtil.isNotEmpty(condition) && ConditionParser.checkCondition(condition, getActualDefines())) {
                 if (curLevel == inactiveLevel) {
                     yybegin(YYINITIAL);
                     pushCondition(true);
@@ -380,10 +379,10 @@ public class PascalFlexLexerImpl extends _PascalLexer {
         String name = extractIncludeName(sequence);
         Project project = getProject();
         VirtualFile virtualFile = getVirtualFile();
-        if ((!StringUtils.isEmpty(name)) && (project != null)) {
+        if ((!StringUtil.isEmpty(name)) && (project != null)) {
             try {
                 VirtualFile file = com.siberika.idea.pascal.util.ModuleUtil.getIncludedFile(project, virtualFile, name);
-                PascalFlexLexerImpl lexer = !ObjectUtils.equals(virtualFile, file) ? processFile(project, file) : null;
+                PascalFlexLexerImpl lexer = !Objects.equals(virtualFile, file) ? processFile(project, file) : null;
                 if (lexer != null) {
                     getActualDefines().addAll(lexer.getActualDefines());
                     allDefines.putAll(lexer.getAllDefines());

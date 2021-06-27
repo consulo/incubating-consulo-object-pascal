@@ -22,60 +22,16 @@ import com.siberika.idea.pascal.PascalRTException;
 import com.siberika.idea.pascal.lang.parser.NamespaceRec;
 import com.siberika.idea.pascal.lang.parser.PascalFile;
 import com.siberika.idea.pascal.lang.parser.PascalParserUtil;
-import com.siberika.idea.pascal.lang.psi.PasCallExpr;
-import com.siberika.idea.pascal.lang.psi.PasClassProperty;
-import com.siberika.idea.pascal.lang.psi.PasConstrainedTypeParam;
-import com.siberika.idea.pascal.lang.psi.PasEntityScope;
-import com.siberika.idea.pascal.lang.psi.PasExpr;
-import com.siberika.idea.pascal.lang.psi.PasExpression;
-import com.siberika.idea.pascal.lang.psi.PasFullyQualifiedIdent;
-import com.siberika.idea.pascal.lang.psi.PasHandler;
-import com.siberika.idea.pascal.lang.psi.PasModule;
-import com.siberika.idea.pascal.lang.psi.PasNamedIdentDecl;
-import com.siberika.idea.pascal.lang.psi.PasProcedureType;
-import com.siberika.idea.pascal.lang.psi.PasTypeDecl;
-import com.siberika.idea.pascal.lang.psi.PasTypeID;
-import com.siberika.idea.pascal.lang.psi.PasWithStatement;
-import com.siberika.idea.pascal.lang.psi.PascalClassDecl;
-import com.siberika.idea.pascal.lang.psi.PascalHelperDecl;
-import com.siberika.idea.pascal.lang.psi.PascalModule;
-import com.siberika.idea.pascal.lang.psi.PascalNamedElement;
-import com.siberika.idea.pascal.lang.psi.PascalRecordDecl;
-import com.siberika.idea.pascal.lang.psi.PascalRoutine;
-import com.siberika.idea.pascal.lang.psi.PascalRoutineEntity;
-import com.siberika.idea.pascal.lang.psi.PascalStructType;
-import com.siberika.idea.pascal.lang.psi.PascalStubElement;
-import com.siberika.idea.pascal.lang.psi.impl.PasArrayTypeImpl;
-import com.siberika.idea.pascal.lang.psi.impl.PasClassTypeTypeDeclImpl;
-import com.siberika.idea.pascal.lang.psi.impl.PasEnumTypeImpl;
-import com.siberika.idea.pascal.lang.psi.impl.PasEnumTypeScope;
-import com.siberika.idea.pascal.lang.psi.impl.PasField;
-import com.siberika.idea.pascal.lang.psi.impl.PasFileTypeImpl;
-import com.siberika.idea.pascal.lang.psi.impl.PasPointerTypeImpl;
-import com.siberika.idea.pascal.lang.psi.impl.PasProcedureTypeImpl;
-import com.siberika.idea.pascal.lang.psi.impl.PasSetTypeImpl;
-import com.siberika.idea.pascal.lang.psi.impl.PasStringTypeImpl;
-import com.siberika.idea.pascal.lang.psi.impl.PasSubRangeTypeImpl;
-import com.siberika.idea.pascal.lang.psi.impl.PasTypeIDImpl;
-import com.siberika.idea.pascal.lang.psi.impl.PasVariantScope;
-import com.siberika.idea.pascal.lang.psi.impl.PascalExpression;
-import com.siberika.idea.pascal.lang.psi.impl.PascalModuleImpl;
+import com.siberika.idea.pascal.lang.psi.*;
+import com.siberika.idea.pascal.lang.psi.impl.*;
 import com.siberika.idea.pascal.lang.search.Helper;
-import com.siberika.idea.pascal.sdk.BuiltinsParser;
 import com.siberika.idea.pascal.util.ModuleUtil;
 import com.siberika.idea.pascal.util.PsiUtil;
-import org.apache.commons.lang.StringUtils;
+import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.EnumSet;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Author: George Bakhtadze
@@ -145,7 +101,7 @@ public class PasReferenceUtil {
         GlobalSearchScope scope = module != null ? GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module) : GlobalSearchScope.allScope(project);
         virtualFiles.addAll(FileTypeIndex.getFiles(PPUFileType.INSTANCE, scope));
         virtualFiles.addAll(FileTypeIndex.getFiles(DCUFileType.INSTANCE, scope));
-        virtualFiles.add(BuiltinsParser.getBuiltinsSource());
+        //virtualFiles.add(BuiltinsParser.getBuiltinsSource());
         return virtualFiles;
     }
 
@@ -513,7 +469,7 @@ public class PasReferenceUtil {
             namespaces.clear();
             namespaces.add(unitNamespace);
             if (PascalParserUtil.UNIT_NAME_SYSTEM.equalsIgnoreCase(unitNamespace.getName())) {
-                namespaces.add(BuiltinsParser.getBuiltinsModule(unitNamespace.getProject()));
+                //namespaces.add(BuiltinsParser.getBuiltinsModule(unitNamespace.getProject()));
             }
             removeFirstOnlyTypes(fieldTypes);
         }
@@ -550,7 +506,7 @@ public class PasReferenceUtil {
     private static PasEntityScope checkUnitScope(Collection<PasField> result, List<PasEntityScope> namespaces, NamespaceRec fqn, List<String> unitPrefixes) {
         List<PasEntityScope> sorted = new ArrayList<PasEntityScope>(namespaces.size());
         for (PasEntityScope namespace : namespaces) {
-            if ((namespace instanceof PasModule) && !StringUtils.isEmpty(namespace.getName())) {
+            if ((namespace instanceof PasModule) && !StringUtil.isEmpty(namespace.getName())) {
                 sorted.add(namespace);
             }
         }

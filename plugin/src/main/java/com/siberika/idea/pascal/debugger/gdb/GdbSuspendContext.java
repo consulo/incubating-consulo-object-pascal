@@ -1,6 +1,5 @@
 package com.siberika.idea.pascal.debugger.gdb;
 
-import com.intellij.codeInspection.SmartHashMap;
 import com.intellij.xdebugger.frame.XExecutionStack;
 import com.intellij.xdebugger.frame.XSuspendContext;
 import com.siberika.idea.pascal.debugger.DebugThread;
@@ -9,6 +8,7 @@ import com.siberika.idea.pascal.debugger.gdb.parser.GdbMiLine;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -19,7 +19,7 @@ import java.util.Map;
 public class GdbSuspendContext extends XSuspendContext {
     private final PascalXDebugProcess process;
     private final XExecutionStack stack;
-    private final Map<Integer, XExecutionStack> stackMap = new SmartHashMap<>();
+    private final Map<Integer, XExecutionStack> stackMap = new HashMap<>();
 
     public GdbSuspendContext(PascalXDebugProcess process, List<DebugThread> threadsLine, GdbMiLine stopContext) {
         this.process = process;

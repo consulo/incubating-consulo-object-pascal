@@ -1,10 +1,8 @@
 package com.siberika.idea.pascal.jps.builder;
 
+import com.intellij.openapi.compiler.CompileContext;
 import com.intellij.openapi.diagnostic.Logger;
 import com.siberika.idea.pascal.jps.compiler.CompilerMessager;
-import org.jetbrains.jps.incremental.CompileContext;
-import org.jetbrains.jps.incremental.messages.BuildMessage;
-import org.jetbrains.jps.incremental.messages.CompilerMessage;
 
 import java.util.Arrays;
 import java.util.List;
@@ -67,21 +65,21 @@ class PascalCompilerMessager implements CompilerMessager {
 
     @Override
     public void hint(String msgId, String msg, String path, long line, long column) {
-        context.processMessage(new CompilerMessage(name, BuildMessage.Kind.INFO, msg, path, -1L, -1L, -1L, line, column));
+        context.addMessage(com.intellij.openapi.compiler.CompilerMessageCategory.INFORMATION, msg, path, (int)line, (int)column);
     }
 
     @Override
     public void info(String msgId, String msg, String path, long line, long column) {
-        context.processMessage(new CompilerMessage(name, BuildMessage.Kind.OTHER, msg, path, -1L, -1L, -1L, line, column));
+        context.addMessage(com.intellij.openapi.compiler.CompilerMessageCategory.INFORMATION, msg, path, (int) line, (int) column);
     }
 
     @Override
     public void warning(String msgId, String msg, String path, long line, long column) {
-        context.processMessage(new CompilerMessage(name, BuildMessage.Kind.WARNING, msg, path, -1L, -1L, -1L, line, column));
+        context.addMessage(com.intellij.openapi.compiler.CompilerMessageCategory.WARNING, msg, path, (int) line, (int) column);
     }
 
     @Override
     public void error(String msgId, String msg, String path, long line, long column) {
-        context.processMessage(new CompilerMessage(name, BuildMessage.Kind.ERROR, msg, path, -1L, -1L, -1L, line, column));
+        context.addMessage(com.intellij.openapi.compiler.CompilerMessageCategory.ERROR, msg, path, (int) line, (int) column);
     }
 }

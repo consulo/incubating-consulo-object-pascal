@@ -6,7 +6,9 @@ import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
+import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.util.containers.SmartHashSet;
 import com.siberika.idea.pascal.PascalException;
 import com.siberika.idea.pascal.PascalIcons;
@@ -15,6 +17,8 @@ import com.siberika.idea.pascal.jps.sdk.PascalSdkData;
 import com.siberika.idea.pascal.jps.sdk.PascalSdkUtil;
 import com.siberika.idea.pascal.jps.util.SysUtils;
 import consulo.platform.Platform;
+import consulo.roots.types.BinariesOrderRootType;
+import consulo.roots.types.SourcesOrderRootType;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -22,6 +26,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
 import java.io.File;
+import java.net.URL;
 import java.util.*;
 
 /**
@@ -148,8 +153,21 @@ public class FPCSdkType extends BasePascalSdkType {
 
     private static void configureSdkPaths(@NotNull final Sdk sdk, String target) {
         LOG.info("Setting up SDK paths for SDK at " + sdk.getHomePath());
-        final SdkModificator[] sdkModificatorHolder = new SdkModificator[]{null};
         final SdkModificator sdkModificator = sdk.getSdkModificator();
+
+        URL builtins = FPCSdkType.class.getResource("/builtins.pas");
+        if(builtins != null) {
+            String url = VfsUtil.convertFromUrl(builtins);
+            // java plugin can be not installed
+            url = url.replace("jar://", "zip://");
+            
+            VirtualFile builtinFile = VirtualFileManager.getInstance().findFileByUrl(url);
+            if(builtinFile != null) {
+                sdkModificator.addRoot(builtinFile, BinariesOrderRootType.getInstance());
+                sdkModificator.addRoot(builtinFile, SourcesOrderRootType.getInstance());
+            }
+        }
+
         if (target != null) {
             target = target.replace(' ', '-');
             for (String dir : LIBRARY_DIRS) {
@@ -158,9 +176,8 @@ public class FPCSdkType extends BasePascalSdkType {
                     sdkModificator.addRoot(vdir, OrderRootType.CLASSES);
                 }
             }
-            sdkModificatorHolder[0] = sdkModificator;
-            sdkModificatorHolder[0].commitChanges();
         }
+        sdkModificator.commitChanges();
     }
 
     private static VirtualFile getLibrary(Sdk sdk, String target, String name) {

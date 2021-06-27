@@ -6,34 +6,16 @@ import com.intellij.psi.PsiManager;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.SmartHashSet;
-import com.siberika.idea.pascal.lang.psi.PasBlockGlobal;
-import com.siberika.idea.pascal.lang.psi.PasEntityScope;
-import com.siberika.idea.pascal.lang.psi.PasExportedRoutine;
-import com.siberika.idea.pascal.lang.psi.PasGenericTypeIdent;
-import com.siberika.idea.pascal.lang.psi.PasRoutineImplDecl;
-import com.siberika.idea.pascal.lang.psi.PasUsesClause;
-import com.siberika.idea.pascal.lang.psi.PascalModule;
-import com.siberika.idea.pascal.lang.psi.PascalNamedElement;
-import com.siberika.idea.pascal.lang.psi.PascalRoutine;
-import com.siberika.idea.pascal.lang.psi.PascalStructType;
-import com.siberika.idea.pascal.lang.psi.impl.PasField;
-import com.siberika.idea.pascal.lang.psi.impl.PasModuleImpl;
-import com.siberika.idea.pascal.lang.psi.impl.PasRoutineImplDeclImpl;
-import com.siberika.idea.pascal.lang.psi.impl.PascalModuleImpl;
-import com.siberika.idea.pascal.lang.psi.impl.RoutineUtil;
+import com.siberika.idea.pascal.lang.psi.*;
+import com.siberika.idea.pascal.lang.psi.impl.*;
 import com.siberika.idea.pascal.util.Filter;
 import com.siberika.idea.pascal.util.PosUtil;
 import com.siberika.idea.pascal.util.PsiUtil;
-import org.apache.commons.lang.StringUtils;
+import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * Author: George Bakhtadze
@@ -173,7 +155,7 @@ public class SectionToggle {
         PasEntityScope scope = container.element.getContainingScope();
         if (scope != null) {
             String ns = container.element.getNamespace();
-            String name = container.element.getReducedName().substring(StringUtils.isEmpty(ns) ? 0 : ns.length() + 1);
+            String name = container.element.getReducedName().substring(StringUtil.isEmpty(ns) ? 0 : ns.length() + 1);
             PascalRoutine routine = retrieveRoutine(scope, name);
             if (routine != null) {
                 return routine;

@@ -1,8 +1,0 @@
-<consulo-plugin>
-    <extensions defaultExtensionNs="com.intellij">
-        <psi.classFileDecompiler implementation="com.siberika.idea.pascal.lang.compiled.PascalClassFileDecompiler"/>
-
-        <filetype.stubBuilder filetype="FPC_PPU" implementationClass="com.intellij.psi.impl.compiled.ClassFileStubBuilder"/>
-        <filetype.stubBuilder filetype="DELPHI_DCU" implementationClass="com.intellij.psi.impl.compiled.ClassFileStubBuilder"/>
-    </extensions>
-</consulo-plugin>

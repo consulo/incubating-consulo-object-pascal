@@ -74,7 +74,7 @@ public class PascalSdkConfigUI implements AdditionalDataConfigurable {
         myTabbedPane.addTab(PascalBundle.message("ui.sdkSettings.tab.general"), createGeneralOptionsPanel());
         myTabbedPane.addTab(PascalBundle.message("ui.sdkSettings.tab.debugger"), createDebuggerOptionsPanel());
         if (!(sdk.getSdkType() instanceof FPCSdkType)) {
-            myTabbedPane.getTabComponentAt(1).setVisible(false);
+            ///myTabbedPane.getTabComponentAt(1).setVisible(false);
         }
 
         keyComponentMap.clear();
@@ -202,7 +202,7 @@ public class PascalSdkConfigUI implements AdditionalDataConfigurable {
     }
 
     private TextFieldWithBrowseButton addFileFieldWithBrowse(JPanel panel, int row) {
-        FileChooserDescriptor fileChooserDescriptor = FileChooserDescriptorFactory.createSingleFileDescriptor();
+        FileChooserDescriptor fileChooserDescriptor = FileChooserDescriptorFactory.createSingleLocalFileDescriptor();
         fileChooserDescriptor.setTitle(PascalBundle.message("title.choose.file"));
         TextFieldWithBrowseButton field = new TextFieldWithBrowseButton();
         field.addBrowseFolderListener(new TextBrowseFolderListener(fileChooserDescriptor));

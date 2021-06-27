@@ -109,7 +109,7 @@ public class ResolveUtil {
             StubIndex.getInstance().processAllKeys(PascalModuleIndex.KEY, processor, scope, null);
         }
         if ((null == key) || BuiltinsParser.UNIT_NAME_BUILTINS.equalsIgnoreCase(key)) {
-            modules.add(BuiltinsParser.getBuiltinsModule(project));
+            //modules.add(BuiltinsParser.getBuiltinsModule(project));
         }
         return modules;
     }

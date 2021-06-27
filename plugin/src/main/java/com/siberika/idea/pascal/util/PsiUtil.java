@@ -4,17 +4,9 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.util.Pair;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiComment;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiErrorElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
-import com.intellij.psi.PsiNamedElement;
-import com.intellij.psi.PsiWhiteSpace;
-import com.intellij.psi.SmartPointerManager;
-import com.intellij.psi.SmartPsiElementPointer;
-import com.intellij.psi.StubBasedPsiElement;
+import com.intellij.psi.*;
 import com.intellij.psi.impl.source.tree.LeafPsiElement;
 import com.intellij.psi.impl.source.tree.TreeUtil;
 import com.intellij.psi.search.PsiElementProcessor;
@@ -26,29 +18,14 @@ import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.siberika.idea.pascal.lang.context.ContextUtil;
 import com.siberika.idea.pascal.lang.psi.*;
-import com.siberika.idea.pascal.lang.psi.impl.HasUniqueName;
-import com.siberika.idea.pascal.lang.psi.impl.PasClassParentImpl;
-import com.siberika.idea.pascal.lang.psi.impl.PasExportedRoutineImpl;
-import com.siberika.idea.pascal.lang.psi.impl.PasField;
-import com.siberika.idea.pascal.lang.psi.impl.PasGenericTypeIdentImpl;
-import com.siberika.idea.pascal.lang.psi.impl.PasRefNamedIdentImpl;
-import com.siberika.idea.pascal.lang.psi.impl.PasRoutineImplDeclImpl;
-import com.siberika.idea.pascal.lang.psi.impl.PasStubStructTypeImpl;
-import com.siberika.idea.pascal.lang.psi.impl.PasSubIdentImpl;
-import com.siberika.idea.pascal.lang.psi.impl.PasTypeIDImpl;
-import com.siberika.idea.pascal.lang.psi.impl.PascalExpression;
+import com.siberika.idea.pascal.lang.psi.impl.*;
 import com.siberika.idea.pascal.lang.references.ResolveUtil;
 import com.siberika.idea.pascal.lang.stub.PasNamedStub;
 import com.siberika.idea.pascal.sdk.BuiltinsParser;
-import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.ListIterator;
+import java.util.*;
 
 /**
  * Author: George Bakhtadze
@@ -622,7 +599,7 @@ public class PsiUtil {
             for (PasFormalParameter param : params.getFormalParameterList()) {
                 PasTypeDecl td = param.getTypeDecl();
                 String typeStr = td != null ? td.getText() : null;
-                typeStr = StringUtils.isNotBlank(typeStr) ? typeStr : TYPE_UNTYPED_NAME;
+                typeStr = !StringUtil.isEmptyOrSpaces(typeStr) ? typeStr : TYPE_UNTYPED_NAME;
                 for (int i = 0; i < param.getNamedIdentDeclList().size(); i++) {
                     res.append(nonFirst ? "," : "").append(typeStr);
                     nonFirst = true;
@@ -726,7 +703,7 @@ public class PsiUtil {
         if (parent instanceof PasClassQualifiedIdent) {
             PasClassQualifiedIdent name = (PasClassQualifiedIdent) parent;
             return (element == name.getSubIdentList().get(name.getSubIdentList().size() - 1))
-                 && isRoutineName((PascalNamedElement) parent) && !StringUtils.isEmpty(((PascalNamedElement) parent).getNamespace());
+                 && isRoutineName((PascalNamedElement) parent) && !StringUtil.isEmpty(((PascalNamedElement) parent).getNamespace());
         }
         return false;
     }

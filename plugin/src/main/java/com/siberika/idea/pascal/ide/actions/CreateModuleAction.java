@@ -1,7 +1,5 @@
 package com.siberika.idea.pascal.ide.actions;
 
-import com.google.common.collect.ImmutableSet;
-import com.intellij.ide.actions.CreateClassAction;
 import com.intellij.ide.actions.CreateFileFromTemplateDialog;
 import com.intellij.ide.actions.CreateTemplateInPackageAction;
 import com.intellij.ide.fileTemplates.FileTemplate;
@@ -19,11 +17,10 @@ import com.intellij.util.containers.ContainerUtil;
 import com.siberika.idea.pascal.PascalBundle;
 import com.siberika.idea.pascal.PascalFileType;
 import com.siberika.idea.pascal.PascalIcons;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.jps.model.java.JavaSourceRootType;
 
-import javax.swing.*;
 import java.util.List;
 import java.util.Properties;
 
@@ -38,7 +35,7 @@ public class CreateModuleAction extends CreateTemplateInPackageAction<PsiFile> {
         super(PascalBundle.message("action.create.new.module"),
                 PascalBundle.message("action.create.new.module"),
                 PascalIcons.GENERAL,
-                ImmutableSet.of(JavaSourceRootType.SOURCE, JavaSourceRootType.TEST_SOURCE));
+                true);
     }
 
     @Nullable
@@ -58,7 +55,7 @@ public class CreateModuleAction extends CreateTemplateInPackageAction<PsiFile> {
         for (FileTemplate fileTemplate : getApplicableTemplates(directory.getProject())) {
             final String templateName = fileTemplate.getName();
             final String shortName = getTemplateShortName(templateName);
-            final Icon icon = getTemplateIcon();
+            final Image icon = getTemplateIcon();
             builder.addKind(shortName, icon, templateName);
         }
     }
@@ -82,7 +79,7 @@ public class CreateModuleAction extends CreateTemplateInPackageAction<PsiFile> {
 
     private static PsiElement createClass(String className, String packageName, @NotNull PsiDirectory directory, final String templateName)
             throws Exception {
-        return createClass(className, packageName, directory, templateName, CreateClassAction.class.getClassLoader());
+        return createClass(className, packageName, directory, templateName, CreateModuleAction.class.getClassLoader());
     }
 
     private static PsiElement createClass(String className, String packageName, PsiDirectory directory, String templateName, @Nullable java.lang.ClassLoader classLoader)
@@ -120,7 +117,7 @@ public class CreateModuleAction extends CreateTemplateInPackageAction<PsiFile> {
     }
 
     @NotNull
-    private static Icon getTemplateIcon() {
+    private static Image getTemplateIcon() {
         return PascalIcons.GENERAL;
     }
 
