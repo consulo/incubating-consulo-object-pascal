@@ -7,28 +7,10 @@ import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.psi.tree.TokenSet;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.siberika.idea.pascal.ide.actions.SectionToggle;
-import com.siberika.idea.pascal.lang.psi.PasArgumentList;
-import com.siberika.idea.pascal.lang.psi.PasBlockBody;
-import com.siberika.idea.pascal.lang.psi.PasBlockLocal;
-import com.siberika.idea.pascal.lang.psi.PasCallExpr;
-import com.siberika.idea.pascal.lang.psi.PasCompoundStatement;
-import com.siberika.idea.pascal.lang.psi.PasDereferenceExpr;
-import com.siberika.idea.pascal.lang.psi.PasEntityScope;
-import com.siberika.idea.pascal.lang.psi.PasExportedRoutine;
-import com.siberika.idea.pascal.lang.psi.PasFormalParameter;
-import com.siberika.idea.pascal.lang.psi.PasFormalParameterSection;
-import com.siberika.idea.pascal.lang.psi.PasFunctionDirective;
-import com.siberika.idea.pascal.lang.psi.PasParamType;
-import com.siberika.idea.pascal.lang.psi.PasProcBodyBlock;
-import com.siberika.idea.pascal.lang.psi.PasReferenceExpr;
-import com.siberika.idea.pascal.lang.psi.PasRoutineImplDecl;
-import com.siberika.idea.pascal.lang.psi.PasTypeDecl;
-import com.siberika.idea.pascal.lang.psi.PasTypes;
-import com.siberika.idea.pascal.lang.psi.PascalNamedElement;
-import com.siberika.idea.pascal.lang.psi.PascalRoutine;
-import com.siberika.idea.pascal.lang.psi.PascalRoutineEntity;
+import com.siberika.idea.pascal.lang.psi.*;
 import com.siberika.idea.pascal.lang.psi.field.ParamModifier;
 import com.siberika.idea.pascal.util.PsiUtil;
+import consulo.object.pascal.psi.PasBaseReferenceExpr;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -117,7 +99,7 @@ public class RoutineUtil {
     }
 
     public static PasCallExpr retrieveCallExpr(PsiElement element) {
-        PsiElement expr = PsiTreeUtil.skipParentsOfType(element, PascalNamedElement.class, PasReferenceExpr.class, PasDereferenceExpr.class,
+        PsiElement expr = PsiTreeUtil.skipParentsOfType(element, PascalNamedElement.class, PasBaseReferenceExpr.class, PasDereferenceExpr.class,
                 PsiWhiteSpace.class, PsiErrorElement.class);
         if (expr instanceof PasArgumentList) {
             expr = expr.getParent();

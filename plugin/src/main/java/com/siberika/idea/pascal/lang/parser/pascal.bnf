@@ -840,8 +840,8 @@ sumExpr                     ::= Expr addOp Expr
 productExpr                 ::= Expr mulOp Expr
 unaryExpr                   ::= unaryOp Expr
 dereferenceExpr             ::= Expr '^'
-referenceExpr               ::= Expr '.' FullyQualifiedIdent [GenericPostfix]
-simpleRefExpr               ::= ((InheritedCall | SPECIALIZE)? FullyQualifiedIdent [GenericPostfix]) | InheritedCall {elementType=referenceExpr}  // let qualified and simple references have the same type
+referenceExpr               ::= Expr '.' FullyQualifiedIdent [GenericPostfix] {implements="consulo.object.pascal.psi.PasBaseReferenceExpr"}
+simpleRefExpr               ::= ((InheritedCall | SPECIALIZE)? FullyQualifiedIdent [GenericPostfix]) | InheritedCall {implements="consulo.object.pascal.psi.PasBaseReferenceExpr"}  // let qualified and simple references have the same type
 callExpr                    ::= Expr ArgumentList
 indexExpr                   ::= Expr indexList
 ArgumentList                ::= '(' [ !')' Expr [ColonConstruct]  (',' Expr [ColonConstruct]) * ] ')' {pin(".*")=1}

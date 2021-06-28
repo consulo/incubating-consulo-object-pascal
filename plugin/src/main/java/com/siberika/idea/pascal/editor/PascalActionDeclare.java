@@ -40,6 +40,7 @@ import com.siberika.idea.pascal.lang.psi.*;
 import com.siberika.idea.pascal.lang.psi.impl.PasField;
 import com.siberika.idea.pascal.lang.psi.impl.PascalExpression;
 import com.siberika.idea.pascal.util.*;
+import consulo.object.pascal.psi.PasBaseReferenceExpr;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -629,8 +630,8 @@ public abstract class PascalActionDeclare extends BaseIntentionAction {
                     params.append("const $").append(TPL_VAR_ARGS).append(count).append("$").append(": $").append(TPL_VAR_TYPES).append(count).append("$");
                     String type = PascalExpression.inferType(expr);
                     defaults.put(TPL_VAR_TYPES + count, type);
-                    if (expr instanceof PasReferenceExpr) {
-                        PasFullyQualifiedIdent ident = ((PasReferenceExpr) expr).getFullyQualifiedIdent();
+                    if (expr instanceof PasBaseReferenceExpr) {
+                        PasFullyQualifiedIdent ident = ((PasBaseReferenceExpr) expr).getFullyQualifiedIdent();
                         defaults.put(TPL_VAR_ARGS + count, ident.getNamePart());
                     } else if (StringUtil.isNotEmpty(type)) {
                         if (type.startsWith("T")) {

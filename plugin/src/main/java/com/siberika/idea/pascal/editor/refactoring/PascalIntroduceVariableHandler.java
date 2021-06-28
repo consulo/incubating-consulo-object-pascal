@@ -17,17 +17,7 @@ import com.siberika.idea.pascal.PascalBundle;
 import com.siberika.idea.pascal.editor.PascalActionDeclare;
 import com.siberika.idea.pascal.ide.actions.quickfix.IdentQuickFixes;
 import com.siberika.idea.pascal.lang.parser.NamespaceRec;
-import com.siberika.idea.pascal.lang.psi.PasCallExpr;
-import com.siberika.idea.pascal.lang.psi.PasCompoundStatement;
-import com.siberika.idea.pascal.lang.psi.PasEntityScope;
-import com.siberika.idea.pascal.lang.psi.PasExpr;
-import com.siberika.idea.pascal.lang.psi.PasExpression;
-import com.siberika.idea.pascal.lang.psi.PasFullyQualifiedIdent;
-import com.siberika.idea.pascal.lang.psi.PasParenExpr;
-import com.siberika.idea.pascal.lang.psi.PasReferenceExpr;
-import com.siberika.idea.pascal.lang.psi.PasStatement;
-import com.siberika.idea.pascal.lang.psi.PascalNamedElement;
-import com.siberika.idea.pascal.lang.psi.PascalRoutine;
+import com.siberika.idea.pascal.lang.psi.*;
 import com.siberika.idea.pascal.lang.psi.impl.PasElementFactory;
 import com.siberika.idea.pascal.lang.psi.impl.PasField;
 import com.siberika.idea.pascal.lang.psi.impl.PascalExpression;
@@ -36,6 +26,7 @@ import com.siberika.idea.pascal.lang.references.resolve.Resolve;
 import com.siberika.idea.pascal.lang.references.resolve.ResolveProcessor;
 import com.siberika.idea.pascal.util.PsiUtil;
 import com.siberika.idea.pascal.util.StmtUtil;
+import consulo.object.pascal.psi.PasBaseReferenceExpr;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -140,9 +131,9 @@ public class PascalIntroduceVariableHandler implements RefactoringActionHandler 
         if (element instanceof PasCallExpr) {
             AtomicBoolean result = new AtomicBoolean(false);
             PasExpr callExpr = ((PasCallExpr) element).getExpr();
-            if (callExpr instanceof PasReferenceExpr) {        // Filter out procedure calls
+            if (callExpr instanceof PasBaseReferenceExpr) {        // Filter out procedure calls
                 result.set(true);
-                Resolve.resolveExpr(NamespaceRec.fromElement(((PasReferenceExpr) callExpr).getFullyQualifiedIdent()),
+                Resolve.resolveExpr(NamespaceRec.fromElement(((PasBaseReferenceExpr) callExpr).getFullyQualifiedIdent()),
                         new ResolveContext(PasField.TYPES_ROUTINE, true), new ResolveProcessor() {
                             @Override
                             public boolean process(PasEntityScope originalScope, PasEntityScope scope, PasField field, PasField.FieldType type) {
@@ -157,11 +148,11 @@ public class PascalIntroduceVariableHandler implements RefactoringActionHandler 
                 );
             }
             return result.get();
-        } else if (element instanceof PasReferenceExpr) {
+        } else if (element instanceof PasBaseReferenceExpr) {
             if (element.getParent() instanceof PasCallExpr) {  // Filter out reference expression before ()
                 return false;
             } else {
-                PasFullyQualifiedIdent fqn = ((PasReferenceExpr) element).getFullyQualifiedIdent();
+                PasFullyQualifiedIdent fqn = ((PasBaseReferenceExpr) element).getFullyQualifiedIdent();
                 return fqn.getSubIdentList().size() > 1;      // Filter out non qualified names
             }
         } else if ((element instanceof PasExpr) && (element.getParent() instanceof PasParenExpr)) {  // Filter expression inside ()

@@ -11,20 +11,11 @@ import com.siberika.idea.pascal.editor.highlighter.PascalReadWriteAccessDetector
 import com.siberika.idea.pascal.lang.context.CodePlace;
 import com.siberika.idea.pascal.lang.context.Context;
 import com.siberika.idea.pascal.lang.parser.NamespaceRec;
-import com.siberika.idea.pascal.lang.psi.PasCallExpr;
-import com.siberika.idea.pascal.lang.psi.PasFullyQualifiedIdent;
-import com.siberika.idea.pascal.lang.psi.PasGenericTypeIdent;
-import com.siberika.idea.pascal.lang.psi.PasNamedIdent;
-import com.siberika.idea.pascal.lang.psi.PasNamedIdentDecl;
-import com.siberika.idea.pascal.lang.psi.PasRefNamedIdent;
-import com.siberika.idea.pascal.lang.psi.PasReferenceExpr;
-import com.siberika.idea.pascal.lang.psi.PasSubIdent;
-import com.siberika.idea.pascal.lang.psi.PasTypeDecl;
-import com.siberika.idea.pascal.lang.psi.PasTypeID;
-import com.siberika.idea.pascal.lang.psi.PascalRoutine;
+import com.siberika.idea.pascal.lang.psi.*;
 import com.siberika.idea.pascal.lang.psi.impl.PasField;
 import com.siberika.idea.pascal.lang.references.resolve.Resolve;
 import com.siberika.idea.pascal.util.PsiUtil;
+import consulo.object.pascal.psi.PasBaseReferenceExpr;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.atomic.AtomicReference;
@@ -72,9 +63,9 @@ public class PascalUsageTypeProvider implements UsageTypeProvider {
             }
         } else if (context.contains(CodePlace.USES)) {
             return UsageType.CLASS_IMPORT;
-        } else if (parent instanceof PasReferenceExpr) {
+        } else if (parent instanceof PasBaseReferenceExpr) {
             AtomicReference<UsageType> result = new AtomicReference<>();
-            Resolve.resolveExpr(NamespaceRec.fromElement(((PasReferenceExpr) parent).getFullyQualifiedIdent()), new ResolveContext(PasField.TYPES_ROUTINE, PsiUtil.isFromLibrary(element)),
+            Resolve.resolveExpr(NamespaceRec.fromElement(((PasBaseReferenceExpr) parent).getFullyQualifiedIdent()), new ResolveContext(PasField.TYPES_ROUTINE, PsiUtil.isFromLibrary(element)),
                     (originalScope, scope, field, type) -> {
                         if (field.isConstructor()) {
                             result.set(UsageType.CLASS_NEW_OPERATOR);

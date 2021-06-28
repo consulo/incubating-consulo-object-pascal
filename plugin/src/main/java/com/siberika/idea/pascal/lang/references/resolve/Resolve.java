@@ -5,22 +5,12 @@ import com.intellij.psi.PsiErrorElement;
 import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.siberika.idea.pascal.lang.parser.NamespaceRec;
-import com.siberika.idea.pascal.lang.psi.PasCallExpr;
-import com.siberika.idea.pascal.lang.psi.PasEntityScope;
-import com.siberika.idea.pascal.lang.psi.PasFullyQualifiedIdent;
-import com.siberika.idea.pascal.lang.psi.PasGenericTypeIdent;
-import com.siberika.idea.pascal.lang.psi.PasIndexExpr;
-import com.siberika.idea.pascal.lang.psi.PasNamedIdent;
-import com.siberika.idea.pascal.lang.psi.PasNamedIdentDecl;
-import com.siberika.idea.pascal.lang.psi.PasRefNamedIdent;
-import com.siberika.idea.pascal.lang.psi.PasReferenceExpr;
-import com.siberika.idea.pascal.lang.psi.PasSubIdent;
-import com.siberika.idea.pascal.lang.psi.PascalIdentDecl;
-import com.siberika.idea.pascal.lang.psi.PascalNamedElement;
+import com.siberika.idea.pascal.lang.psi.*;
 import com.siberika.idea.pascal.lang.psi.impl.PasField;
 import com.siberika.idea.pascal.lang.psi.impl.PascalExpression;
 import com.siberika.idea.pascal.lang.references.ResolveContext;
 import com.siberika.idea.pascal.lang.references.ResolveUtil;
+import consulo.object.pascal.psi.PasBaseReferenceExpr;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.atomic.AtomicReference;
@@ -33,7 +23,7 @@ public class Resolve {
         PsiElement expr = ResolveUtil.isStubPowered(fqn.getParentIdent()) ? null : PsiTreeUtil.skipParentsOfType(fqn.getParentIdent(),
                 PasFullyQualifiedIdent.class, PasSubIdent.class, PasRefNamedIdent.class, PasNamedIdent.class, PasNamedIdentDecl.class, PasGenericTypeIdent.class,
                 PsiWhiteSpace.class, PsiErrorElement.class);
-        if (expr instanceof PasReferenceExpr) {
+        if (expr instanceof PasBaseReferenceExpr) {
             if ((fqn.isTargetingEnd() && (expr.getParent() instanceof PasCallExpr)) || (expr.getParent() instanceof PasIndexExpr)) {
                 expr = expr.getParent();
             }

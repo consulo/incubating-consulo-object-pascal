@@ -9,35 +9,7 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.SmartList;
 import com.siberika.idea.pascal.lang.parser.NamespaceRec;
-import com.siberika.idea.pascal.lang.psi.PasAssignPart;
-import com.siberika.idea.pascal.lang.psi.PasCallExpr;
-import com.siberika.idea.pascal.lang.psi.PasClassProperty;
-import com.siberika.idea.pascal.lang.psi.PasConstDeclaration;
-import com.siberika.idea.pascal.lang.psi.PasConstExpression;
-import com.siberika.idea.pascal.lang.psi.PasDereferenceExpr;
-import com.siberika.idea.pascal.lang.psi.PasEntityScope;
-import com.siberika.idea.pascal.lang.psi.PasExpr;
-import com.siberika.idea.pascal.lang.psi.PasExpression;
-import com.siberika.idea.pascal.lang.psi.PasFullyQualifiedIdent;
-import com.siberika.idea.pascal.lang.psi.PasGenericTypeIdent;
-import com.siberika.idea.pascal.lang.psi.PasIndexExpr;
-import com.siberika.idea.pascal.lang.psi.PasLiteralExpr;
-import com.siberika.idea.pascal.lang.psi.PasParenExpr;
-import com.siberika.idea.pascal.lang.psi.PasProductExpr;
-import com.siberika.idea.pascal.lang.psi.PasReferenceExpr;
-import com.siberika.idea.pascal.lang.psi.PasRelationalExpr;
-import com.siberika.idea.pascal.lang.psi.PasSumExpr;
-import com.siberika.idea.pascal.lang.psi.PasTypeDecl;
-import com.siberika.idea.pascal.lang.psi.PasTypeID;
-import com.siberika.idea.pascal.lang.psi.PasTypes;
-import com.siberika.idea.pascal.lang.psi.PasUnaryExpr;
-import com.siberika.idea.pascal.lang.psi.PasUnaryOp;
-import com.siberika.idea.pascal.lang.psi.PascalNamedElement;
-import com.siberika.idea.pascal.lang.psi.PascalOperation;
-import com.siberika.idea.pascal.lang.psi.PascalPsiElement;
-import com.siberika.idea.pascal.lang.psi.PascalRoutine;
-import com.siberika.idea.pascal.lang.psi.PascalRoutineEntity;
-import com.siberika.idea.pascal.lang.psi.PascalStructType;
+import com.siberika.idea.pascal.lang.psi.*;
 import com.siberika.idea.pascal.lang.references.PasReferenceUtil;
 import com.siberika.idea.pascal.lang.references.ResolveContext;
 import com.siberika.idea.pascal.lang.references.resolve.Resolve;
@@ -46,6 +18,7 @@ import com.siberika.idea.pascal.lang.references.resolve.Types;
 import com.siberika.idea.pascal.lang.search.routine.FieldMatcher;
 import com.siberika.idea.pascal.lang.search.routine.ParamCountFieldMatcher;
 import com.siberika.idea.pascal.util.PsiUtil;
+import consulo.object.pascal.psi.PasBaseReferenceExpr;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -77,9 +50,9 @@ public class PascalExpression extends ASTWrapperPsiElement implements PascalPsiE
     public static List<PasField.ValueType> getTypes(PascalExpression expr) {
         List<PasField.ValueType> res;
 
-        if (expr instanceof PasReferenceExpr) {
+        if (expr instanceof PasBaseReferenceExpr) {
             res = getChildType(getFirstChild(expr));
-            final PasField field = Types.resolveType(retrieveScope(res), ((PasReferenceExpr) expr).getFullyQualifiedIdent());
+            final PasField field = Types.resolveType(retrieveScope(res), ((PasBaseReferenceExpr) expr).getFullyQualifiedIdent());
             PasField.ValueType fieldType = field != null ? field.getValueType(0) : null;
             if (fieldType != null) {
                 res.add(fieldType);
@@ -315,7 +288,7 @@ public class PascalExpression extends ASTWrapperPsiElement implements PascalPsiE
                             if (RoutineUtil.isSuitable(expression, suitableRoutine)) {
                                 if (suitableRoutine.isConstructor()) {
                                     // TODO: handle metaclass constructor calls
-                                    if (expression.getExpr() instanceof PasReferenceExpr) {
+                                    if (expression.getExpr() instanceof PasBaseReferenceExpr) {
                                         String typeName = expression.getExpr().getText();
                                         result.set(typeName.substring(0, typeName.length() - suitableRoutine.getName().length() - 1));
                                         return false;
@@ -335,7 +308,7 @@ public class PascalExpression extends ASTWrapperPsiElement implements PascalPsiE
             }
         }
         // Handle as typecast
-        if ((result.get() == null) && (expression.getExpr() instanceof PasReferenceExpr) && (expression.getArgumentList().getExprList().size() == 1)) {
+        if ((result.get() == null) && (expression.getExpr() instanceof PasBaseReferenceExpr) && (expression.getArgumentList().getExprList().size() == 1)) {
             return expression.getExpr().getText();
         }
         return result.get();

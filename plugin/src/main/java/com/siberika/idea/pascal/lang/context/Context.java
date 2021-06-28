@@ -1,14 +1,11 @@
 package com.siberika.idea.pascal.lang.context;
 
-import com.intellij.psi.PsiComment;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiErrorElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiWhiteSpace;
+import com.intellij.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.siberika.idea.pascal.lang.psi.*;
 import com.siberika.idea.pascal.lang.psi.impl.PasStatementImpl;
 import com.siberika.idea.pascal.util.PsiUtil;
+import consulo.object.pascal.psi.PasBaseReferenceExpr;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -297,7 +294,7 @@ public class Context {
 
     private PsiElement skipToExpression(PsiElement element) {
         PsiElement pos = PsiTreeUtil.skipParentsOfType(element, PascalNamedElement.class,
-                PasReferenceExpr.class, PasDereferenceExpr.class,
+                PasBaseReferenceExpr.class, PasDereferenceExpr.class,
                 PsiWhiteSpace.class, PsiErrorElement.class);
         PsiElement res = pos;
         PsiElement parent = pos != null ? pos.getParent() : null;
@@ -352,7 +349,7 @@ public class Context {
         }
         PsiElement parent = PsiTreeUtil.skipParentsOfType(pos,
                 PasSubIdent.class, PasFullyQualifiedIdent.class, PasRefNamedIdent.class, PasNamedIdent.class, PasNamedIdentDecl.class, PasGenericTypeIdent.class,
-                PasReferenceExpr.class, PasDereferenceExpr.class, PasCallExpr.class, PasIndexExpr.class, PasParenExpr.class,
+                PasBaseReferenceExpr.class, PasDereferenceExpr.class, PasCallExpr.class, PasIndexExpr.class, PasParenExpr.class,
                 PsiWhiteSpace.class, PsiErrorElement.class);
         if (parent instanceof PasArgumentList) {
             List<PasExpr> expList = ((PasArgumentList) parent).getExprList();
@@ -378,7 +375,7 @@ public class Context {
     private PsiElement getBaseElement(PsiElement element) {
         for (PsiElement child : element.getChildren()) {
             if (PsiUtil.isInstanceOfAny(child, PasSubIdent.class, PasFullyQualifiedIdent.class, PasRefNamedIdent.class, PasNamedIdent.class, PasNamedIdentDecl.class, PasGenericTypeIdent.class,
-                    PasReferenceExpr.class, PasDereferenceExpr.class, PasCallExpr.class, PasIndexExpr.class, PasParenExpr.class)) {
+                    PasBaseReferenceExpr.class, PasDereferenceExpr.class, PasCallExpr.class, PasIndexExpr.class, PasParenExpr.class)) {
                 return child;
             }
         }

@@ -1,5 +1,6 @@
 package com.siberika.idea.pascal;
 
+import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -42,6 +43,9 @@ public class PascalFileIconProvider implements IconDescriptorUpdater {
         } else if ("inc".equalsIgnoreCase(ext)) {
             return PascalIcons.FILE_INCLUDE;
         } else if (project != null) {
+            if(DumbService.isDumb(project)) {
+                return null;
+            }
             Collection<PascalModule> modules = new SmartList<>();
             StubIndex.getInstance().processElements(PascalModuleIndex.KEY, file.getNameWithoutExtension().toUpperCase(), project, GlobalSearchScope.allScope(project),
                     PascalModule.class, Processors.cancelableCollectProcessor(modules));

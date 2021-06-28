@@ -2,23 +2,9 @@ package com.siberika.idea.pascal.lang.context;
 
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.siberika.idea.pascal.lang.psi.PasAssignPart;
-import com.siberika.idea.pascal.lang.psi.PasClassField;
-import com.siberika.idea.pascal.lang.psi.PasClassProperty;
-import com.siberika.idea.pascal.lang.psi.PasClassPropertySpecifier;
-import com.siberika.idea.pascal.lang.psi.PasConstDeclaration;
-import com.siberika.idea.pascal.lang.psi.PasDereferenceExpr;
-import com.siberika.idea.pascal.lang.psi.PasEnumType;
-import com.siberika.idea.pascal.lang.psi.PasExpression;
-import com.siberika.idea.pascal.lang.psi.PasForStatement;
-import com.siberika.idea.pascal.lang.psi.PasIndexExpr;
-import com.siberika.idea.pascal.lang.psi.PasParenExpr;
-import com.siberika.idea.pascal.lang.psi.PasReferenceExpr;
-import com.siberika.idea.pascal.lang.psi.PasUnaryExpr;
-import com.siberika.idea.pascal.lang.psi.PasUnitInterface;
-import com.siberika.idea.pascal.lang.psi.PascalNamedElement;
-import com.siberika.idea.pascal.lang.psi.PascalVariableDeclaration;
+import com.siberika.idea.pascal.lang.psi.*;
 import com.siberika.idea.pascal.util.PsiUtil;
+import consulo.object.pascal.psi.PasBaseReferenceExpr;
 
 public class ContextUtil {
     public static boolean isFieldDecl(PascalNamedElement entityDecl) {
@@ -56,7 +42,7 @@ public class ContextUtil {
     // Check if the named element is the left part of an assignment statement including assignment in FOR statement
     public static boolean isAssignLeftPart(PsiElement element) {
         PsiElement expr = PsiUtil.skipToExpression(element);
-        if (expr instanceof PasReferenceExpr) {
+        if (expr instanceof PasBaseReferenceExpr) {
             PsiElement parent = expr.getParent();
             parent = parent instanceof PasExpression ? parent : PsiTreeUtil.skipParentsOfType(expr, PasUnaryExpr.class, PasParenExpr.class, PasDereferenceExpr.class, PasIndexExpr.class);
             if (parent instanceof PasExpression) {
@@ -71,7 +57,7 @@ public class ContextUtil {
     // Check if the named element is the right part of an assignment statement
     public static boolean isAssignRightPart(PascalNamedElement element) {
         PsiElement expr = PsiUtil.skipToExpression(element);
-        if (expr instanceof PasReferenceExpr) {
+        if (expr instanceof PasBaseReferenceExpr) {
             PsiElement parent = expr.getParent();
             parent = parent instanceof PasExpression ? parent.getParent() : null;
             return parent instanceof PasAssignPart;

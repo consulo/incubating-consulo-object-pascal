@@ -43,6 +43,7 @@ import com.siberika.idea.pascal.util.DocUtil;
 import com.siberika.idea.pascal.util.EditorUtil;
 import com.siberika.idea.pascal.util.PsiUtil;
 import com.siberika.idea.pascal.util.StrUtil;
+import consulo.object.pascal.psi.PasBaseReferenceExpr;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.NotNull;
 
@@ -469,7 +470,7 @@ class CompletionUtil {
     }
 
     private static String retrieveNames(Collection<String> result, PsiElement expression) {
-        PasReferenceExpr ref = PsiTreeUtil.findChildOfType(expression, PasReferenceExpr.class);
+        PasBaseReferenceExpr ref = PsiTreeUtil.findChildOfType(expression, PasBaseReferenceExpr.class);
         if (ref != null) {
             String name = ref.getFullyQualifiedIdent().getNamePart();
             if (StringUtil.isNotEmpty(name)) {

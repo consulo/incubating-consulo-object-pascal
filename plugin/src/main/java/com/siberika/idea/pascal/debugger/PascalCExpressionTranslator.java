@@ -12,22 +12,10 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.testFramework.LightVirtualFile;
 import com.siberika.idea.pascal.PascalBundle;
 import com.siberika.idea.pascal.PascalFileType;
-import com.siberika.idea.pascal.lang.psi.PasArgumentList;
-import com.siberika.idea.pascal.lang.psi.PasCallExpr;
-import com.siberika.idea.pascal.lang.psi.PasConstExpression;
-import com.siberika.idea.pascal.lang.psi.PasDereferenceExpr;
-import com.siberika.idea.pascal.lang.psi.PasExpr;
-import com.siberika.idea.pascal.lang.psi.PasIndexExpr;
-import com.siberika.idea.pascal.lang.psi.PasIndexList;
-import com.siberika.idea.pascal.lang.psi.PasLiteralExpr;
-import com.siberika.idea.pascal.lang.psi.PasParenExpr;
-import com.siberika.idea.pascal.lang.psi.PasProductExpr;
-import com.siberika.idea.pascal.lang.psi.PasReferenceExpr;
-import com.siberika.idea.pascal.lang.psi.PasRelationalExpr;
-import com.siberika.idea.pascal.lang.psi.PasSumExpr;
-import com.siberika.idea.pascal.lang.psi.PasUnaryExpr;
+import com.siberika.idea.pascal.lang.psi.*;
 import com.siberika.idea.pascal.lang.psi.impl.PasExpressionImpl;
 import com.siberika.idea.pascal.lang.psi.impl.PascalExpression;
+import consulo.object.pascal.psi.PasBaseReferenceExpr;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -157,8 +145,8 @@ public class PascalCExpressionTranslator {
             }
         } else if (expression instanceof PasDereferenceExpr) {
             return "(*" + doTranslate(res, ((PasDereferenceExpr) expression).getExpr()) + ")";
-        } else if (expression instanceof PasReferenceExpr) {
-            PasReferenceExpr refExpr = (PasReferenceExpr) expression;
+        } else if (expression instanceof PasBaseReferenceExpr) {
+            PasBaseReferenceExpr refExpr = (PasBaseReferenceExpr) expression;
             String fqi = refExpr.getFullyQualifiedIdent().getText().toUpperCase();
             fqi = fqi.replace("SELF", "this");
             return (refExpr.getExpr() != null ? doTranslate(res, refExpr.getExpr()) + "." : "" ) + fqi;

@@ -4,30 +4,19 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.impl.source.tree.LeafPsiElement;
 import com.intellij.psi.search.PsiElementProcessor;
 import com.siberika.idea.pascal.lang.parser.NamespaceRec;
-import com.siberika.idea.pascal.lang.psi.PasArgumentList;
-import com.siberika.idea.pascal.lang.psi.PasCallExpr;
-import com.siberika.idea.pascal.lang.psi.PasClassProperty;
-import com.siberika.idea.pascal.lang.psi.PasDereferenceExpr;
-import com.siberika.idea.pascal.lang.psi.PasEntityScope;
-import com.siberika.idea.pascal.lang.psi.PasExpr;
-import com.siberika.idea.pascal.lang.psi.PasFullyQualifiedIdent;
-import com.siberika.idea.pascal.lang.psi.PasIndexExpr;
-import com.siberika.idea.pascal.lang.psi.PasProductExpr;
-import com.siberika.idea.pascal.lang.psi.PasReferenceExpr;
-import com.siberika.idea.pascal.lang.psi.PasTypeID;
-import com.siberika.idea.pascal.lang.psi.PascalNamedElement;
-import com.siberika.idea.pascal.lang.psi.PascalRoutine;
+import com.siberika.idea.pascal.lang.psi.*;
 import com.siberika.idea.pascal.lang.psi.impl.PasField;
 import com.siberika.idea.pascal.lang.psi.impl.PascalExpression;
 import com.siberika.idea.pascal.lang.references.ResolveContext;
 import com.siberika.idea.pascal.lang.search.routine.FieldMatcher;
 import com.siberika.idea.pascal.lang.search.routine.ParamCountFieldMatcher;
 import com.siberika.idea.pascal.util.ModuleUtil;
+import consulo.object.pascal.psi.PasBaseReferenceExpr;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-class ExpressionProcessor implements PsiElementProcessor<PasReferenceExpr> {
+class ExpressionProcessor implements PsiElementProcessor<PasBaseReferenceExpr> {
 
     private final NamespaceRec fqn;
     private final ResolveContext context;
@@ -45,7 +34,7 @@ class ExpressionProcessor implements PsiElementProcessor<PasReferenceExpr> {
     }
 
     @Override
-    public boolean execute(@NotNull final PasReferenceExpr refExpr) {
+    public boolean execute(@NotNull final PasBaseReferenceExpr refExpr) {
         if (refExpr.getFullyQualifiedIdent() != fqn.getParentIdent()) {              // Not the FQN which originally requested
             final FQNResolver fqnResolver = new FQNResolver(currentScope, NamespaceRec.fromElement(refExpr.getFullyQualifiedIdent()), context) {
                 @Override
@@ -92,13 +81,13 @@ class ExpressionProcessor implements PsiElementProcessor<PasReferenceExpr> {
     }
 
     boolean resolveExprTypeScope(PascalExpression expression, boolean lastPart) {
-        if (expression instanceof PasReferenceExpr) {
-            PasExpr scopeExpr = ((PasReferenceExpr) expression).getExpr();
+        if (expression instanceof PasBaseReferenceExpr) {
+            PasExpr scopeExpr = ((PasBaseReferenceExpr) expression).getExpr();
             // Resolve FQN in scope of Expr
             if (scopeExpr != null) {
                 resolveExprTypeScope((PascalExpression) scopeExpr, false);
             }
-            return execute((PasReferenceExpr) expression);
+            return execute((PasBaseReferenceExpr) expression);
         } else if (expression instanceof PasDereferenceExpr) {
             return resolveExprTypeScope((PascalExpression) ((PasDereferenceExpr) expression).getExpr(), false);
         } else if (expression instanceof PasIndexExpr) {
@@ -136,13 +125,13 @@ class ExpressionProcessor implements PsiElementProcessor<PasReferenceExpr> {
 
     private boolean handleCall(final PasCallExpr callExpr, final boolean lastPart) {
         final PasExpr expr = callExpr.getExpr();
-        if (expr instanceof PasReferenceExpr) {             // call of a routine specified explicitly with its name
-            PasExpr scopeExpr = ((PasReferenceExpr) expr).getExpr();
+        if (expr instanceof PasBaseReferenceExpr) {             // call of a routine specified explicitly with its name
+            PasExpr scopeExpr = ((PasBaseReferenceExpr) expr).getExpr();
             if (scopeExpr != null) {
                 resolveExprTypeScope((PascalExpression) scopeExpr, false);
             }
             // Resolve FQN in current scope
-            PasFullyQualifiedIdent fullyQualifiedIdent = ((PasReferenceExpr) expr).getFullyQualifiedIdent();
+            PasFullyQualifiedIdent fullyQualifiedIdent = ((PasBaseReferenceExpr) expr).getFullyQualifiedIdent();
             final FQNResolver fqnResolver = new FQNResolver(currentScope, NamespaceRec.fromElement(fullyQualifiedIdent), context) {
 
                 @Override

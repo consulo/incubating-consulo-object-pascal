@@ -7,9 +7,9 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 import com.siberika.idea.pascal.lang.lexer.PascalFlexLexer;
 import com.siberika.idea.pascal.lang.psi.PasLiteralExpr;
-import com.siberika.idea.pascal.lang.psi.PasReferenceExpr;
 import com.siberika.idea.pascal.lang.psi.PasStringFactor;
 import com.siberika.idea.pascal.lang.psi.PasTypes;
+import consulo.object.pascal.psi.PasBaseReferenceExpr;
 import org.jetbrains.annotations.NotNull;
 
 public class PascalQuoteHandler extends SimpleTokenSetQuoteHandler implements JavaLikeQuoteHandler {
@@ -43,6 +43,6 @@ public class PascalQuoteHandler extends SimpleTokenSetQuoteHandler implements Ja
     @Override
     public boolean needParenthesesAroundConcatenation(PsiElement element) {
         return element.getParent() instanceof PasStringFactor && element.getParent().getParent() instanceof PasLiteralExpr
-                && element.getParent().getParent().getParent() instanceof PasReferenceExpr;
+                && element.getParent().getParent().getParent() instanceof PasBaseReferenceExpr;
     }
 }
