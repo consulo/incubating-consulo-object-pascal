@@ -454,8 +454,8 @@
     </actions>
 
     <extensions defaultExtensionNs="com.intellij">
-        <moduleService serviceImplementation="com.siberika.idea.pascal.module.ModuleService" />
-       
+        <moduleService serviceImplementation="com.siberika.idea.pascal.module.ModuleService"/>
+
         <fileTypeFactory implementation="com.siberika.idea.pascal.PascalFileTypeFactory"/>
         <lang.parserDefinition language="Pascal" implementationClass="com.siberika.idea.pascal.PascalParserDefinition"/>
         <lang.syntaxHighlighterFactory key="Pascal" language="Pascal" implementationClass="com.siberika.idea.pascal.editor.highlighter.PascalSyntaxHighlighterFactory"/>
@@ -509,7 +509,6 @@
         <runConfigurationProducer id="FPC" implementation="com.siberika.idea.pascal.run.PascalRunContextConfigurationProducer"/>
         <consoleFilterProvider implementation="com.siberika.idea.pascal.run.HeaptrcConsoleFilterProvider"/>
         <programRunner implementation="com.siberika.idea.pascal.run.PascalRunner"/>
-        <stepsBeforeRunProvider implementation="com.siberika.idea.pascal.run.PascalBeforeRunProvider" order="first"/>
 
         <psi.referenceContributor language="Pascal" implementation="com.siberika.idea.pascal.lang.references.PascalReferenceContributor"/>
         <lang.findUsagesProvider language="Pascal" implementationClass="com.siberika.idea.pascal.lang.references.PascalFindUsagesProvider"/>
@@ -582,6 +581,9 @@
         <stubIndex implementation="com.siberika.idea.pascal.lang.stub.PascalHelperIndex"/>
 
         <fileBasedIndex implementation="com.siberika.idea.pascal.lang.compiled.PascalFakeCompiledIndex"/>
+
+        <compiler implementation="consulo.object.pascal.compiler.PascalTranslatingCompiler"/>
+        <compiler.moduleScopeFactory implementation="consulo.object.pascal.compiler.PascalCompileModuleScopeFactory"/>
 
         <moduleExtensionProvider key="pascal"
                                  icon="consulo.object.pascal.ObjectPascalIconGroup@pascal_16x16"

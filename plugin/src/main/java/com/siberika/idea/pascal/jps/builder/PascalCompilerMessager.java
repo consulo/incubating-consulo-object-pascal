@@ -12,16 +12,14 @@ import java.util.regex.Matcher;
  * Author: George Bakhtadze
  * Date: 20/05/2015
  */
-class PascalCompilerMessager implements CompilerMessager {
+public class PascalCompilerMessager implements CompilerMessager {
     private static final Logger LOG = Logger.getInstance(PascalCompilerMessager.class);
 
     private static final List<String> SUPPRESSED_MSG_ID = Arrays.asList("1018", "10026", "F2063");
 
     private final CompileContext context;
-    private final String name;
 
-    PascalCompilerMessager(String name, CompileContext context) {
-        this.name = name;
+    public PascalCompilerMessager(CompileContext context) {
         this.context = context;
     }
 

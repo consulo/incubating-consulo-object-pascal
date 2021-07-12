@@ -77,6 +77,11 @@
 	</build>
 
 	<dependencies>
-		
+		<dependency>
+			<groupId>consulo</groupId>
+			<artifactId>consulo-compiler-impl</artifactId>
+			<version>${project.version}</version>
+			<scope>provided</scope>
+		</dependency>
 	</dependencies>
 </project>
