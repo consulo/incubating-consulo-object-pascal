@@ -9,7 +9,6 @@ import com.intellij.execution.runners.RunConfigurationWithSuppressedDefaultRunAc
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.options.SettingsEditor;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.WriteExternalException;
@@ -19,7 +18,9 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nonnull;
 import java.util.Collection;
+import java.util.Map;
 
 /**
  * Author: George Bakhtadze
@@ -35,12 +36,9 @@ public class PascalRunConfiguration extends ModuleBasedConfiguration<RunConfigur
     private String programFileName;
     private boolean fixIOBuffering = true;
     private boolean debugMode = false;
-    private final Project project;
 
     public PascalRunConfiguration(String name, RunConfigurationModule configurationModule, ConfigurationFactory factory) {
         super(name, configurationModule, factory);
-        project = configurationModule.getProject();
-        workingDirectory = project.getBasePath();
     }
 
     @Override
@@ -48,15 +46,9 @@ public class PascalRunConfiguration extends ModuleBasedConfiguration<RunConfigur
         return getAllModules();
     }
 
-    @Override
-    protected ModuleBasedConfiguration createInstance() {
-        workingDirectory = project.getBasePath();
-        return new PascalRunConfiguration(getName(),  getConfigurationModule(),  getFactory());
-    }
-
     @NotNull
     public SettingsEditor<? extends RunConfiguration> getConfigurationEditor() {
-        return new PascalRunConfigurationEditor(this);
+        return new PascalRunConfigurationEditor(getProject());
     }
 
     Module findModule(@NotNull ExecutionEnvironment env) {
@@ -81,20 +73,35 @@ public class PascalRunConfiguration extends ModuleBasedConfiguration<RunConfigur
         return new PascalCommandLineState(this, env, executor instanceof DefaultDebugExecutor, workingDirectory, parameters, fixIOBuffering);
     }
 
-    public static void copyParams(PascalRunConfigurationParams from, PascalRunConfigurationParams to) {
-        to.setParameters(from.getParameters());
-        to.setWorkingDirectory(from.getWorkingDirectory());
-        to.setFixIOBuffering(from.getFixIOBuffering());
-    }
-
     @Override
-    public String getParameters() {
+    public String getProgramParameters() {
         return parameters;
     }
 
     @Override
     public String getWorkingDirectory() {
         return workingDirectory;
+    }
+
+    @Override
+    public void setEnvs(@Nonnull Map<String, String> map) {
+
+    }
+
+    @Nonnull
+    @Override
+    public Map<String, String> getEnvs() {
+        return Map.of();
+    }
+
+    @Override
+    public void setPassParentEnvs(boolean b) {
+
+    }
+
+    @Override
+    public boolean isPassParentEnvs() {
+        return false;
     }
 
     @Override
@@ -108,7 +115,7 @@ public class PascalRunConfiguration extends ModuleBasedConfiguration<RunConfigur
     }
 
     @Override
-    public void setParameters(String parameters) {
+    public void setProgramParameters(String parameters) {
         this.parameters = parameters;
     }
 
@@ -125,6 +132,11 @@ public class PascalRunConfiguration extends ModuleBasedConfiguration<RunConfigur
     @Override
     public void setDebugMode(boolean value) {
         debugMode = value;
+    }
+
+    @Override
+    public String getModuleName() {
+        return getConfigurationModule().getModuleName();
     }
 
     public String getProgramFileName() {
@@ -150,10 +162,5 @@ public class PascalRunConfiguration extends ModuleBasedConfiguration<RunConfigur
         if (programFileName != null) {
             element.setAttribute(ATTR_PROGRAM_FILE_NAME, programFileName);
         }
-    }
-
-    @Override
-    public String toString() {
-        return (debugMode ? "[debug]" : "[]") + super.toString();     // needed to pass debug/run mode to builder process
     }
 }

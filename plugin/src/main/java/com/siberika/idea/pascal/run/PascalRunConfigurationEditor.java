@@ -2,6 +2,8 @@ package com.siberika.idea.pascal.run;
 
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SettingsEditor;
+import com.intellij.openapi.project.Project;
+import consulo.object.pascal.run.PascalProgramParametersPanel;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -11,30 +13,34 @@ import javax.swing.*;
  * Date: 06/01/2013
  */
 public class PascalRunConfigurationEditor extends SettingsEditor<PascalRunConfiguration> {
-    private PascalRunConfigurationForm myForm;
+    private final Project myProject;
+    private PascalProgramParametersPanel myPanel;
 
-    public PascalRunConfigurationEditor(PascalRunConfiguration batchRunConfiguration) {
-        this.myForm = new PascalRunConfigurationForm(batchRunConfiguration);
+    public PascalRunConfigurationEditor(Project project) {
+        myProject = project;
     }
 
     @Override
     protected void resetEditorFrom(PascalRunConfiguration runConfiguration) {
-        PascalRunConfiguration.copyParams(runConfiguration, myForm);
+        myPanel.reset(runConfiguration);
     }
 
     @Override
     protected void applyEditorTo(PascalRunConfiguration runConfiguration) throws ConfigurationException {
-        PascalRunConfiguration.copyParams(myForm, runConfiguration);
+        myPanel.applyTo(runConfiguration);
     }
 
     @Override
     @NotNull
     protected JComponent createEditor() {
-        return myForm.getRootPanel();
+        if (myPanel == null) {
+            myPanel = new PascalProgramParametersPanel(myProject);
+        }
+        return myPanel;
     }
 
     @Override
     protected void disposeEditor() {
-        myForm = null;
+        myPanel = null;
     }
 }

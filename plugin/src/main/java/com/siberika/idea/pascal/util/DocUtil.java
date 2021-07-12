@@ -2,6 +2,7 @@ package com.siberika.idea.pascal.util;
 
 import com.intellij.codeInsight.template.Template;
 import com.intellij.codeInsight.template.impl.TemplateImpl;
+import com.intellij.codeInsight.template.impl.TextExpression;
 import com.intellij.codeInsight.template.impl.Variable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
@@ -19,7 +20,6 @@ import com.intellij.util.FileContentUtil;
 import com.intellij.util.SmartList;
 import com.siberika.idea.pascal.PascalBundle;
 import com.siberika.idea.pascal.lang.psi.PasModule;
-import consulo.object.pascal.editor.template.TextExpression;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;

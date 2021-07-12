@@ -14,11 +14,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public class PascalRunLineMarkerContributor extends RunLineMarkerContributor {
 
-    private static final Function<PsiElement, String> TOOLTIP_PROVIDER = new Function<PsiElement, String>() {
-        public String fun(PsiElement element) {
-            return "Run Program";
-        }
-    };
+    private static final Function<PsiElement, String> TOOLTIP_PROVIDER = element -> "Run Program";
 
     @Nullable
     @Override

@@ -26,7 +26,7 @@ public class PascalConfigurationType implements ConfigurationType, DumbAware {
 
     @NotNull
     public String getDisplayName() {
-        return "Pascal Executable";
+        return "Pascal";
     }
 
     public String getConfigurationTypeDescription() {
