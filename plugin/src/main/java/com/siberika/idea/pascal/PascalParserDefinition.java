@@ -5,7 +5,6 @@ import com.siberika.idea.pascal.lang.parser.PascalFileElementType;
 import com.siberika.idea.pascal.lang.parser.PascalParser;
 import com.siberika.idea.pascal.lang.parser.impl.PascalFileImpl;
 import com.siberika.idea.pascal.lang.psi.PasTypes;
-import com.siberika.idea.pascal.module.PascalProjectService;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.Language;
 import consulo.language.ast.ASTNode;
@@ -22,6 +21,7 @@ import consulo.language.version.LanguageVersion;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -35,11 +35,8 @@ public class PascalParserDefinition implements ParserDefinition {
     public static final TokenSet WS = TokenSet.create(TokenType.WHITE_SPACE);
     public static final TokenSet LITERALS = TokenSet.create(PasTypes.STRING_FACTOR, PasTypes.STRING_FACTOR);
 
-    public Lexer createLexer(@Nonnull Project project) {
-        PascalProjectService service = project.getInstance(PascalProjectService.class);
-        Object parsing = service.getData(PascalProjectService.KEY_PARSING);
-        service.remove(PascalProjectService.KEY_PARSING);
-        return new PascalLexer.ParsingPascalLexer(project, parsing instanceof VirtualFile ? (VirtualFile) parsing : null);
+    public Lexer createLexer(@Nonnull Project project, @Nullable VirtualFile file) {
+        return new PascalLexer.ParsingPascalLexer(project, file);
     }
 
     @Nonnull

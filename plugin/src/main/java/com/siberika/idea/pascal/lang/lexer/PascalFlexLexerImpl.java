@@ -1,27 +1,19 @@
 package com.siberika.idea.pascal.lang.lexer;
 
-import com.google.common.base.Preconditions;
 import com.siberika.idea.pascal.lang.psi.PasTypes;
 import com.siberika.idea.pascal.sdk.BasePascalSdkType;
 import com.siberika.idea.pascal.sdk.Define;
 import com.siberika.idea.pascal.util.StrUtil;
 import consulo.content.bundle.Sdk;
-import consulo.dataContext.DataContext;
-import consulo.dataContext.DataManager;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenType;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.language.lexer.FlexAdapter;
 import consulo.logging.Logger;
-import consulo.module.content.ProjectRootManager;
 import consulo.process.io.BaseInputStreamReader;
 import consulo.project.Project;
-import consulo.project.ProjectLocator;
 import consulo.util.collection.SmartList;
-import consulo.util.concurrent.AsyncResult;
-import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
@@ -50,9 +42,9 @@ public class PascalFlexLexerImpl extends _PascalLexer {
     private int conditionStack = 0;
 
     // (Offset(32), ifValueStack(16), curLevel(8), inactiveLevel(8)) - offset, stack of IF condition values, current conditional compilation level, level on which inactive code branch started
-    private List<Long> levels = new SmartList<Long>();
+    private List<Long> levels = new SmartList<>();
     // (Offset, defineName). Negative offset - undefine.
-    private List<Pair<Integer, String>> defines = new SmartList<Pair<Integer, String>>();
+    private List<Pair<Integer, String>> defines = new SmartList<>();
 
     private Set<String> actualDefines;
     // TODO: replace with defines
@@ -60,9 +52,6 @@ public class PascalFlexLexerImpl extends _PascalLexer {
 
     private VirtualFile virtualFile;
     private Project project;
-    private final boolean incremental;
-    private AsyncResult<DataContext> dataContextResult;
-    private DataContext dataContext;
 
     public void setVirtualFile(VirtualFile virtualFile) {
         this.virtualFile = virtualFile;
@@ -72,17 +61,10 @@ public class PascalFlexLexerImpl extends _PascalLexer {
         this.project = project;
     }
 
-    public PascalFlexLexerImpl(Reader in, Project project, VirtualFile virtualFile, boolean incremental) {
+    public PascalFlexLexerImpl(Reader in, Project project, VirtualFile virtualFile, @Deprecated boolean incremental) {
         super(in);
-        Preconditions.checkArgument((project != null) || incremental, "No project in non-incremental lexer");
         this.virtualFile = virtualFile;
         this.project = project;
-        this.incremental = incremental;
-        if ((null == virtualFile) && incremental) {
-            getDataContext();
-        } else if (null == project) {
-            this.project = ProjectLocator.getInstance().guessProjectForFile(virtualFile);
-        }
     }
 
     @Override
@@ -132,34 +114,6 @@ public class PascalFlexLexerImpl extends _PascalLexer {
         return 0;
     }
 
-    private DataContext getDataContext() {
-        try {
-            if (dataContext != null) {
-                return dataContext;
-            }
-            if (null == dataContextResult) {
-                dataContextResult = DataManager.getInstance().getDataContextFromFocus();
-            }
-            if (dataContextResult.isDone()) {
-                dataContext = dataContextResult.getResult();
-            } else if (dataContextResult.isRejected()) {
-                dataContextResult = DataManager.getInstance().getDataContextFromFocus();
-            }
-            return dataContext;
-        } catch (Throwable t) {
-            LOG.warn("-=Error=-", t);
-            return null;
-        }
-    }
-
-    private <T> T getData(Key<T> s) {
-        DataContext dataContext = getDataContext();
-        if (dataContext != null) {
-            return (T) dataContext.getData(s);
-        }
-        return null;
-    }
-
     private Set<String> getActualDefines() {
         if ((null == actualDefines) || (actualDefines.isEmpty())) {
             initDefines(getProject(), getVirtualFile());
@@ -175,33 +129,11 @@ public class PascalFlexLexerImpl extends _PascalLexer {
     }
 
     private Project getProject() {
-        if (isValidProject(project) || !incremental) {
-            return project;
-        }
-        project = getData(PlatformDataKeys.PROJECT);
-        if (!isValidProject(project)) {
-            project = null;
-        }
         return project;
     }
 
     private VirtualFile getVirtualFile() {
-        if ((virtualFile != null) || !incremental) {
-            return virtualFile;
-        }
-        virtualFile = getData(PlatformDataKeys.VIRTUAL_FILE);
-        if (!isValidFile(virtualFile)) {
-            virtualFile = null;
-        }
         return virtualFile;
-    }
-
-    private static boolean isValidFile(VirtualFile result) {
-        return result != null;
-    }
-
-    private static boolean isValidProject(Project project) {
-        return (project != null) && !project.isDisposed() && (ProjectRootManager.getInstance(project) != null);
     }
 
     @Override
@@ -232,8 +164,8 @@ public class PascalFlexLexerImpl extends _PascalLexer {
     }
 
     synchronized private void initDefines(Project project, VirtualFile virtualFile) {
-        actualDefines = new HashSet<String>();
-        allDefines = new HashMap<String, Define>();
+        actualDefines = new HashSet<>();
+        allDefines = new HashMap<>();
         if ((project != null)) {
             final Sdk sdk = com.siberika.idea.pascal.util.ModuleUtil.getSdk(project, virtualFile);
             if ((sdk != null) && (sdk.getVersionString() != null)) {

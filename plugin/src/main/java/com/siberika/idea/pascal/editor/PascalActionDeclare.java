@@ -20,10 +20,7 @@ import consulo.fileEditor.FileEditorManager;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.TokenSet;
 import consulo.language.editor.WriteCommandAction;
-import consulo.language.editor.intention.BaseIntentionAction;
-import consulo.language.editor.intention.HighPriorityAction;
-import consulo.language.editor.intention.IntentionAction;
-import consulo.language.editor.intention.LowPriorityAction;
+import consulo.language.editor.intention.*;
 import consulo.language.editor.template.Template;
 import consulo.language.editor.template.TemplateManager;
 import consulo.language.editor.template.TemplateState;
@@ -536,7 +533,7 @@ public abstract class PascalActionDeclare extends BaseIntentionAction {
         }
     }
 
-    public static class ActionCreateRoutine extends PascalActionDeclare {
+    public static class ActionCreateRoutine extends PascalActionDeclare implements SyntheticIntentionAction {
         private final PsiElement callScope;
         private final PascalNamedElement namedElement;
         private final PasClassPropertySpecifier propertySpecifier;

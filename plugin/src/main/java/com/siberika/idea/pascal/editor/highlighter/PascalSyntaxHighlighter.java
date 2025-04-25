@@ -22,9 +22,9 @@ public class PascalSyntaxHighlighter extends PascalSyntaxHighlighterBase {
         this.virtualFile = virtualFile;
     }
 
+    @Override
     @NotNull
     public Lexer getHighlightingLexer() {
         return new PascalLexer.SyntaxHighlightingPascalLexer(project, virtualFile);
     }
-
 }

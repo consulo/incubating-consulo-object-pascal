@@ -14,6 +14,7 @@ import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.language.editor.intention.BaseIntentionAction;
+import consulo.language.editor.intention.SyntheticIntentionAction;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.scope.GlobalSearchScope;
@@ -77,7 +78,7 @@ public class UsesActions {
 
     }
 
-    public static class SearchUnitAction extends BaseUsesAction {
+    public static class SearchUnitAction extends BaseUsesAction implements SyntheticIntentionAction {
         private final boolean toInterface;
         private final PascalNamedElement namedElement;
         private String unitName;

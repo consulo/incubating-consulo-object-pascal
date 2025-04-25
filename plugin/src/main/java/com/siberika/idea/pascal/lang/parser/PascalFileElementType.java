@@ -2,7 +2,7 @@ package com.siberika.idea.pascal.lang.parser;
 
 import com.siberika.idea.pascal.PascalLanguage;
 import com.siberika.idea.pascal.PascalParserDefinition;
-import com.siberika.idea.pascal.module.PascalProjectService;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.Language;
 import consulo.language.ast.ASTNode;
 import consulo.language.parser.ParserDefinition;
@@ -14,6 +14,7 @@ import consulo.language.psi.stub.IStubFileElementType;
 import consulo.language.psi.stub.PsiFileStub;
 import consulo.language.version.LanguageVersion;
 import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -35,18 +36,25 @@ public class PascalFileElementType extends IStubFileElementType<PsiFileStub<Pasc
     }
 
     @Override
+    @RequiredReadAction
     protected ASTNode doParseContents(@NotNull ASTNode chameleon, @NotNull PsiElement psi) {
         Project project = psi.getProject();
-        PascalProjectService service = project.getComponent(PascalProjectService.class);
-        // store file being parsed to retrieve in lexer
-        service.setData(PascalProjectService.KEY_PARSING, psi.getContainingFile().getVirtualFile());
+
+        VirtualFile file = psi.getContainingFile().getVirtualFile();
 
         final Language languageForParser = getLanguageForParser(psi);
         PascalParserDefinition parserDefinition = (PascalParserDefinition) ParserDefinition.forLanguage(project.getApplication(), languageForParser);
 
-        final LanguageVersion tempLanguageVersion = chameleon.getUserData(LanguageVersion.KEY);
-        final LanguageVersion languageVersion = tempLanguageVersion == null ? psi.getLanguageVersion() : tempLanguageVersion;
-        final PsiBuilder builder = PsiBuilderFactory.getInstance().createBuilder(project, chameleon, parserDefinition.createLexer(project), languageForParser, languageVersion, chameleon.getChars());
+        LanguageVersion tempLanguageVersion = chameleon.getUserData(LanguageVersion.KEY);
+        LanguageVersion languageVersion = tempLanguageVersion == null ? psi.getLanguageVersion() : tempLanguageVersion;
+        final PsiBuilder builder = PsiBuilderFactory.getInstance().createBuilder(
+            project,
+            chameleon,
+            parserDefinition.createLexer(project, file),
+            languageForParser,
+            languageVersion,
+            chameleon.getChars()
+        );
         final PsiParser parser = parserDefinition.createParser(languageVersion);
         return parser.parse(this, builder, languageVersion).getFirstChildNode();
     }

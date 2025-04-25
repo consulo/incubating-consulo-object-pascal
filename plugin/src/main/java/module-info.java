@@ -7,6 +7,8 @@ module com.siberika.idea.pascal {
 
     requires org.apache.commons.codec;
 
+    requires com.google.common;
+
     // TODO remove in future
     requires java.desktop;
 
