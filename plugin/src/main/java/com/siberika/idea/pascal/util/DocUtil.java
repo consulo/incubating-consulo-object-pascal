@@ -1,30 +1,28 @@
 package com.siberika.idea.pascal.util;
 
-import com.intellij.codeInsight.template.Template;
-import com.intellij.codeInsight.template.impl.TemplateImpl;
-import com.intellij.codeInsight.template.impl.TextExpression;
-import com.intellij.codeInsight.template.impl.Variable;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.command.CommandProcessor;
-import com.intellij.openapi.command.UndoConfirmationPolicy;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.ScrollType;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.*;
-import com.intellij.psi.codeStyle.CodeStyleManager;
-import com.intellij.util.FileContentUtil;
-import com.intellij.util.SmartList;
 import com.siberika.idea.pascal.PascalBundle;
 import com.siberika.idea.pascal.lang.psi.PasModule;
+import consulo.application.ApplicationManager;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.ScrollType;
+import consulo.document.Document;
+import consulo.document.util.TextRange;
+import consulo.fileEditor.util.FileContentUtil;
+import consulo.language.codeStyle.CodeStyleManager;
+import consulo.language.editor.template.Template;
+import consulo.language.editor.template.TemplateBuilderFactory;
+import consulo.language.editor.template.TextExpression;
+import consulo.language.editor.template.Variable;
+import consulo.language.psi.*;
+import consulo.project.Project;
+import consulo.undoRedo.CommandProcessor;
+import consulo.undoRedo.UndoConfirmationPolicy;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -42,7 +40,7 @@ public class DocUtil {
     private static final int SPACES = 3;
 
     private static Map<String, String> getDupMap() {
-        HashMap<String, String> res = new HashMap<String, String>();
+        HashMap<String, String> res = new HashMap<>();
         res.put("()", "(");                                         // don't add "()" if there is already "("
         res.put(";", ";");
         res.put("end", "end");
@@ -168,25 +166,16 @@ public class DocUtil {
     }
 
     public static Template createTemplate(String template, Map<String, String> defaults, boolean inline) {
-        TemplateImpl tpl = new TemplateImpl("", template, "");
+        Template tpl = TemplateBuilderFactory.getInstance().createRawTemplate("", template, "");
         tpl.setToIndent(false);
         tpl.setToReformat(false);
-        tpl.setToShortenLongNames(true);
-        List<Variable> vars = new SmartList<Variable>();
         for (int i = 0; i < tpl.getSegmentsCount(); i++) {
             String varName = tpl.getSegmentName(i);
             String def = defaults != null ? defaults.get(varName) : null;
             TextExpression expr = new TextExpression(def != null ? def : "");
-            Variable var = new Variable(varName, expr, expr, true, false);
-            vars.add(var);
-        }
-        tpl.removeAllParsed();
-        for (Variable var : vars) {
-            if (!tpl.getVariables().contains(var)) {
-                tpl.addVariable(var.getName(), var.getExpression(), var.getDefaultValueExpression(), var.isAlwaysStopAt(), var.skipOnStart());
-            }
-        }
 
+            tpl.addVariable(varName, expr, expr, true, false);
+        }
         tpl.parseSegments();
         tpl.setInline(inline);
         return tpl;

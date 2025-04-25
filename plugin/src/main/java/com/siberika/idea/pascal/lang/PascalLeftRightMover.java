@@ -1,24 +1,15 @@
 package com.siberika.idea.pascal.lang;
 
-import com.intellij.codeInsight.editorActions.moveLeftRight.MoveElementLeftRightHandler;
-import com.intellij.psi.PsiElement;
-import com.siberika.idea.pascal.lang.psi.PasArgumentList;
-import com.siberika.idea.pascal.lang.psi.PasCaseItem;
-import com.siberika.idea.pascal.lang.psi.PasClassField;
-import com.siberika.idea.pascal.lang.psi.PasClassParent;
-import com.siberika.idea.pascal.lang.psi.PasCompoundStatement;
-import com.siberika.idea.pascal.lang.psi.PasConstrainedTypeParam;
-import com.siberika.idea.pascal.lang.psi.PasEnumType;
-import com.siberika.idea.pascal.lang.psi.PasFormalParameter;
-import com.siberika.idea.pascal.lang.psi.PasFormalParameterSection;
-import com.siberika.idea.pascal.lang.psi.PasIndexList;
-import com.siberika.idea.pascal.lang.psi.PasProductExpr;
-import com.siberika.idea.pascal.lang.psi.PasRelationalExpr;
-import com.siberika.idea.pascal.lang.psi.PasSumExpr;
-import com.siberika.idea.pascal.lang.psi.PasUsesClause;
-import com.siberika.idea.pascal.lang.psi.PasVarDeclaration;
+import com.siberika.idea.pascal.PascalLanguage;
+import com.siberika.idea.pascal.lang.psi.*;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.Language;
+import consulo.language.editor.moveLeftRight.MoveElementLeftRightHandler;
+import consulo.language.psi.PsiElement;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
+@ExtensionImpl
 public class PascalLeftRightMover implements MoveElementLeftRightHandler {
     @NotNull
     @Override
@@ -55,5 +46,11 @@ public class PascalLeftRightMover implements MoveElementLeftRightHandler {
             return ((PasCompoundStatement) element).getStatementList().toArray(PsiElement.EMPTY_ARRAY);
         }
         return PsiElement.EMPTY_ARRAY;
+    }
+
+    @Nonnull
+    @Override
+    public Language getLanguage() {
+        return PascalLanguage.INSTANCE;
     }
 }

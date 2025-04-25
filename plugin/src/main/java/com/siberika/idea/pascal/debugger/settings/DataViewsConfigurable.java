@@ -1,6 +1,7 @@
 package com.siberika.idea.pascal.debugger.settings;
 
 import com.siberika.idea.pascal.PascalBundle;
+import consulo.disposer.Disposable;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -17,7 +18,7 @@ public class DataViewsConfigurable extends AbstractConfigurable<PascalDebuggerVi
     }
 
     @Override
-    public JComponent createComponent() {
+    public JComponent createComponent(Disposable disposable) {
         return createOptionsPanel(PascalDebuggerViewSettings.class);
     }
 

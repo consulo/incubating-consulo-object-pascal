@@ -1,18 +1,5 @@
 package com.siberika.idea.pascal.editor.refactoring;
 
-import com.intellij.codeInsight.template.TextResult;
-import com.intellij.codeInsight.template.impl.TemplateState;
-import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Pass;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.refactoring.IntroduceTargetChooser;
-import com.intellij.refactoring.RefactoringActionHandler;
-import com.intellij.util.SmartList;
 import com.siberika.idea.pascal.PascalBundle;
 import com.siberika.idea.pascal.editor.PascalActionDeclare;
 import com.siberika.idea.pascal.ide.actions.quickfix.IdentQuickFixes;
@@ -26,7 +13,19 @@ import com.siberika.idea.pascal.lang.references.resolve.Resolve;
 import com.siberika.idea.pascal.lang.references.resolve.ResolveProcessor;
 import com.siberika.idea.pascal.util.PsiUtil;
 import com.siberika.idea.pascal.util.StmtUtil;
+import consulo.application.ApplicationManager;
+import consulo.codeEditor.Editor;
+import consulo.dataContext.DataContext;
+import consulo.language.editor.refactoring.action.RefactoringActionHandler;
+import consulo.language.editor.refactoring.introduce.IntroduceTargetChooser;
+import consulo.language.editor.template.TemplateState;
+import consulo.language.editor.template.TextResult;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.util.PsiTreeUtil;
 import consulo.object.pascal.psi.PasBaseReferenceExpr;
+import consulo.project.Project;
+import consulo.util.collection.SmartList;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -49,23 +48,20 @@ public class PascalIntroduceVariableHandler implements RefactoringActionHandler 
         PasEntityScope scope = PsiUtil.getNearestAffectingScope(nearestStatement);
         if (!expressionList.isEmpty()) {
             if (editor != null) {
-                IntroduceTargetChooser.showChooser(editor, expressionList, new Pass<PsiElement>() {
-                            @Override
-                            public void pass(PsiElement expression) {
-                                String type = PascalExpression.inferType(expression);
-                                PascalActionDeclare.ActionCreateVar cva = new PascalActionDeclare.ActionCreateVar("", expression, null, scope, type) {
-                                    public void afterExecution(Editor editor, PsiFile file, TemplateState state) {
-                                        TextResult varName = state.getVariableValue(TPL_VAR_NAME);
-                                        if (varName != null) {
-                                            replaceExprAndAddAssignment(nearestStatement, varName.getText(), expression);
-                                        }
-                                    }
-                                };
-                                cva.invoke(project, editor, file);
+                IntroduceTargetChooser.showChooser(editor, expressionList, expression -> {
+                        String type = PascalExpression.inferType(expression);
+                        PascalActionDeclare.ActionCreateVar cva = new PascalActionDeclare.ActionCreateVar("", expression, null, scope, type) {
+                            public void afterExecution(Editor editor1, PsiFile file1, TemplateState state) {
+                                TextResult varName = state.getVariableValue(TPL_VAR_NAME);
+                                if (varName != null) {
+                                    replaceExprAndAddAssignment(nearestStatement, varName.getText(), expression);
+                                }
                             }
-                        },
-                        new PsiElementTrimRenderer(100),
-                        PascalBundle.message("popup.expressions.title")
+                        };
+                        cva.invoke(project, editor, file);
+                    },
+                    new PsiElementTrimRenderer(100),
+                    PascalBundle.message("popup.expressions.title")
                 );
             }
         }
@@ -75,15 +71,15 @@ public class PascalIntroduceVariableHandler implements RefactoringActionHandler 
         final String text = expression.getText();
         PsiElement varElement = PasElementFactory.createElementFromText(expression.getProject(), name);
         PsiElement stmt = PasElementFactory.createElementFromText(expression.getProject(),
-                "begin " + name +  " := " + text + ";end.", PasCompoundStatement.class);
+            "begin " + name + " := " + text + ";end.", PasCompoundStatement.class);
         PsiElement stmtFinal = PsiTreeUtil.getChildOfType(stmt, PasStatement.class);
         if (stmtFinal != null) {
             ApplicationManager.getApplication().runWriteAction(
-                    () -> {
-                        expression.replace(varElement);
-                        PsiElement newStmt = nearestStatement.getParent().addBefore(stmtFinal, nearestStatement);
-                        IdentQuickFixes.addElements(nearestStatement.getParent(), newStmt, true, ";");
-                    }
+                () -> {
+                    expression.replace(varElement);
+                    PsiElement newStmt = nearestStatement.getParent().addBefore(stmtFinal, nearestStatement);
+                    IdentQuickFixes.addElements(nearestStatement.getParent(), newStmt, true, ";");
+                }
             );
         }
     }
@@ -134,28 +130,31 @@ public class PascalIntroduceVariableHandler implements RefactoringActionHandler 
             if (callExpr instanceof PasBaseReferenceExpr) {        // Filter out procedure calls
                 result.set(true);
                 Resolve.resolveExpr(NamespaceRec.fromElement(((PasBaseReferenceExpr) callExpr).getFullyQualifiedIdent()),
-                        new ResolveContext(PasField.TYPES_ROUTINE, true), new ResolveProcessor() {
-                            @Override
-                            public boolean process(PasEntityScope originalScope, PasEntityScope scope, PasField field, PasField.FieldType type) {
-                                PascalNamedElement el = field.getElement();
-                                if (el instanceof PascalRoutine) {
-                                    result.set(!"".equals(((PascalRoutine) el).getFunctionTypeStr()));
-                                    return false;
-                                }
-                                return true;
+                    new ResolveContext(PasField.TYPES_ROUTINE, true), new ResolveProcessor() {
+                        @Override
+                        public boolean process(PasEntityScope originalScope, PasEntityScope scope, PasField field, PasField.FieldType type) {
+                            PascalNamedElement el = field.getElement();
+                            if (el instanceof PascalRoutine) {
+                                result.set(!"".equals(((PascalRoutine) el).getFunctionTypeStr()));
+                                return false;
                             }
+                            return true;
                         }
+                    }
                 );
             }
             return result.get();
-        } else if (element instanceof PasBaseReferenceExpr) {
+        }
+        else if (element instanceof PasBaseReferenceExpr) {
             if (element.getParent() instanceof PasCallExpr) {  // Filter out reference expression before ()
                 return false;
-            } else {
+            }
+            else {
                 PasFullyQualifiedIdent fqn = ((PasBaseReferenceExpr) element).getFullyQualifiedIdent();
                 return fqn.getSubIdentList().size() > 1;      // Filter out non qualified names
             }
-        } else if ((element instanceof PasExpr) && (element.getParent() instanceof PasParenExpr)) {  // Filter expression inside ()
+        }
+        else if ((element instanceof PasExpr) && (element.getParent() instanceof PasParenExpr)) {  // Filter expression inside ()
             return false;
         }
         return true;

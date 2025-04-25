@@ -1,6 +1,6 @@
 package com.siberika.idea.pascal.module;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;

@@ -1,12 +1,12 @@
 package com.siberika.idea.pascal.debugger;
 
-import com.intellij.openapi.projectRoots.Sdk;
 import com.siberika.idea.pascal.debugger.gdb.GdbVariableObject;
 import com.siberika.idea.pascal.debugger.settings.PascalDebuggerViewSettings;
 import com.siberika.idea.pascal.debugger.settings.PascalTypeRenderers;
 import com.siberika.idea.pascal.debugger.settings.TypeRenderer;
 import com.siberika.idea.pascal.jps.sdk.PascalSdkData;
 import com.siberika.idea.pascal.jps.util.FileUtil;
+import consulo.content.bundle.Sdk;
 
 public abstract class DebugBackend {
     protected final PascalXDebugProcess process;

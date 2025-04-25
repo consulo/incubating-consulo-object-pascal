@@ -1,15 +1,18 @@
 package com.siberika.idea.pascal.lang.references.impl.manipulators;
 
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.AbstractElementManipulator;
-import com.intellij.util.IncorrectOperationException;
 import com.siberika.idea.pascal.lang.psi.impl.PascalStringImpl;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.document.util.TextRange;
+import consulo.language.psi.AbstractElementManipulator;
+import consulo.language.util.IncorrectOperationException;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * Author: George Bakhtadze
  * Date: 21/01/2016
  */
+@ExtensionImpl
 public class PascalStringManipulator extends AbstractElementManipulator<PascalStringImpl> {
     @Override
     public PascalStringImpl handleContentChange(@NotNull PascalStringImpl psi, @NotNull TextRange range, String newContent) throws IncorrectOperationException {
@@ -22,6 +25,12 @@ public class PascalStringManipulator extends AbstractElementManipulator<PascalSt
     @Override
     public TextRange getRangeInElement(@NotNull final PascalStringImpl element) {
         return getStringTokenRange(element);
+    }
+
+    @Nonnull
+    @Override
+    public Class<PascalStringImpl> getElementClass() {
+        return PascalStringImpl.class;
     }
 
     private static TextRange getStringTokenRange(final PascalStringImpl element) {

@@ -1,24 +1,23 @@
 package com.siberika.idea.pascal.run;
 
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.Executor;
-import com.intellij.execution.configurations.*;
-import com.intellij.execution.executors.DefaultDebugExecutor;
-import com.intellij.execution.runners.ExecutionEnvironment;
-import com.intellij.execution.runners.RunConfigurationWithSuppressedDefaultRunAction;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleUtilCore;
-import com.intellij.openapi.options.SettingsEditor;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.util.InvalidDataException;
-import com.intellij.openapi.util.WriteExternalException;
 import com.siberika.idea.pascal.module.PascalModuleType;
+import consulo.content.bundle.Sdk;
+import consulo.execution.configuration.*;
+import consulo.execution.configuration.ui.SettingsEditor;
+import consulo.execution.debug.DefaultDebugExecutor;
+import consulo.execution.executor.Executor;
+import consulo.execution.runner.ExecutionEnvironment;
+import consulo.language.util.ModuleUtilCore;
+import consulo.module.Module;
 import consulo.object.pascal.module.extension.ObjectPascalModuleExtension;
+import consulo.process.ExecutionException;
+import consulo.util.xml.serializer.InvalidDataException;
+import consulo.util.xml.serializer.WriteExternalException;
+import jakarta.annotation.Nonnull;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Map;
 

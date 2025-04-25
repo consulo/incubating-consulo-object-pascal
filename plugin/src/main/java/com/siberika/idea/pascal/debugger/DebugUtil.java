@@ -1,17 +1,15 @@
 package com.siberika.idea.pascal.debugger;
 
-import com.intellij.execution.configurations.RunProfile;
-import com.intellij.execution.runners.ExecutionEnvironment;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleUtilCore;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.ModuleRootManager;
-import com.intellij.openapi.roots.ProjectRootManager;
 import com.siberika.idea.pascal.debugger.gdb.parser.GdbMiLine;
 import com.siberika.idea.pascal.jps.sdk.PascalSdkData;
 import com.siberika.idea.pascal.run.PascalRunConfiguration;
 import com.siberika.idea.pascal.sdk.BasePascalSdkType;
+import consulo.content.bundle.Sdk;
+import consulo.execution.configuration.RunProfile;
+import consulo.execution.runner.ExecutionEnvironment;
+import consulo.language.util.ModuleUtilCore;
+import consulo.logging.Logger;
+import consulo.module.Module;
 import consulo.object.pascal.module.extension.ObjectPascalModuleExtension;
 
 public class DebugUtil {

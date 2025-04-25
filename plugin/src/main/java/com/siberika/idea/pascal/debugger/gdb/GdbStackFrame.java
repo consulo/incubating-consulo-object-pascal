@@ -1,20 +1,5 @@
 package com.siberika.idea.pascal.debugger.gdb;
 
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.util.Computable;
-import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiElement;
-import com.intellij.ui.ColoredTextContainer;
-import com.intellij.ui.SimpleTextAttributes;
-import com.intellij.xdebugger.XDebuggerUtil;
-import com.intellij.xdebugger.XSourcePosition;
-import com.intellij.xdebugger.evaluation.XDebuggerEvaluator;
-import com.intellij.xdebugger.frame.XCompositeNode;
-import com.intellij.xdebugger.frame.XStackFrame;
-import com.intellij.xdebugger.frame.XValueChildrenList;
-import com.intellij.xdebugger.impl.ui.tree.nodes.XValueContainerNode;
 import com.siberika.idea.pascal.debugger.PascalDebuggerValue;
 import com.siberika.idea.pascal.debugger.PascalXDebugProcess;
 import com.siberika.idea.pascal.debugger.VariableManager;
@@ -26,7 +11,21 @@ import com.siberika.idea.pascal.lang.psi.PascalRoutine;
 import com.siberika.idea.pascal.util.DocUtil;
 import com.siberika.idea.pascal.util.PsiUtil;
 import com.siberika.idea.pascal.util.StrUtil;
+import consulo.application.ApplicationManager;
+import consulo.application.util.function.Computable;
+import consulo.execution.debug.XDebuggerUtil;
+import consulo.execution.debug.XSourcePosition;
+import consulo.execution.debug.evaluation.XDebuggerEvaluator;
+import consulo.execution.debug.frame.XCompositeNode;
+import consulo.execution.debug.frame.XStackFrame;
+import consulo.execution.debug.frame.XValueChildrenList;
+import consulo.language.psi.PsiElement;
+import consulo.logging.Logger;
+import consulo.ui.ex.ColoredTextContainer;
+import consulo.ui.ex.SimpleTextAttributes;
 import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.LocalFileSystem;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -172,23 +171,23 @@ public class GdbStackFrame extends XStackFrame {
             return false;
         }
 
-        if (node instanceof XValueContainerNode) {
-            try {
-                if ((variableObjects == null) || variableObjects.isEmpty()) {
-                    node.addChildren(XValueChildrenList.EMPTY, true);
-                    return false;
-                }
-                XValueChildrenList childrenList = new XValueChildrenList(variableObjects.size());
-                for (GdbVariableObject var : variableObjects) {
-                    if (var.isVisible() && !var.isWatched()) {
-                        childrenList.add(var.getExpression().substring(var.getExpression().lastIndexOf('.') + 1), new PascalDebuggerValue(var));
-                    }
-                }
-                node.addChildren(childrenList, true);
-            } catch (Exception e) {
-                LOG.error("DBG Error: exception while adding children", e);
+        try {
+            if ((variableObjects == null) || variableObjects.isEmpty()) {
+                node.addChildren(XValueChildrenList.EMPTY, true);
+                return false;
             }
+            XValueChildrenList childrenList = new XValueChildrenList(variableObjects.size());
+            for (GdbVariableObject var : variableObjects) {
+                if (var.isVisible() && !var.isWatched()) {
+                    childrenList.add(var.getExpression().substring(var.getExpression().lastIndexOf('.') + 1), new PascalDebuggerValue(var));
+                }
+            }
+            node.addChildren(childrenList, true);
         }
+        catch (Exception e) {
+            LOG.error("DBG Error: exception while adding children", e);
+        }
+
         return true;
     }
 

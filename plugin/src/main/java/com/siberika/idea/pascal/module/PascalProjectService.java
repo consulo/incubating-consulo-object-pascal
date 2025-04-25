@@ -1,5 +1,10 @@
 package com.siberika.idea.pascal.module;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
+import jakarta.inject.Singleton;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -7,6 +12,9 @@ import java.util.concurrent.ConcurrentHashMap;
  * Author: George Bakhtadze
  * Date: 03/05/2019
  */
+@ServiceAPI(ComponentScope.PROJECT)
+@ServiceImpl
+@Singleton
 public class PascalProjectService {
 
     public static final String KEY_PARSING = "parsing";

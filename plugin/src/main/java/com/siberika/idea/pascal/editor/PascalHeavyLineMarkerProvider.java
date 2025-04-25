@@ -1,24 +1,23 @@
 package com.siberika.idea.pascal.editor;
 
-import com.intellij.codeInsight.daemon.LineMarkerInfo;
-import com.intellij.codeInsight.daemon.LineMarkerProvider;
-import com.intellij.concurrency.JobLauncher;
-import com.intellij.icons.AllIcons;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.progress.ProgressIndicator;
-import com.intellij.openapi.progress.ProgressIndicatorProvider;
-import com.intellij.openapi.util.Computable;
-import com.intellij.psi.PsiElement;
-import com.intellij.util.Processor;
+import com.siberika.idea.pascal.PascalLanguage;
 import com.siberika.idea.pascal.editor.linemarker.PascalMarker;
-import com.siberika.idea.pascal.lang.psi.PasEntityScope;
-import com.siberika.idea.pascal.lang.psi.PasExportedRoutine;
-import com.siberika.idea.pascal.lang.psi.PasRoutineImplDecl;
-import com.siberika.idea.pascal.lang.psi.PascalNamedElement;
-import com.siberika.idea.pascal.lang.psi.PascalRoutine;
-import com.siberika.idea.pascal.lang.psi.PascalStructType;
+import com.siberika.idea.pascal.lang.psi.*;
 import com.siberika.idea.pascal.lang.search.PascalDefinitionsSearch;
 import com.siberika.idea.pascal.util.PsiUtil;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.application.AllIcons;
+import consulo.application.ApplicationManager;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicatorProvider;
+import consulo.application.util.concurrent.JobLauncher;
+import consulo.application.util.function.Computable;
+import consulo.application.util.function.Processor;
+import consulo.language.Language;
+import consulo.language.editor.gutter.LineMarkerInfo;
+import consulo.language.editor.gutter.LineMarkerProvider;
+import consulo.language.psi.PsiElement;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,6 +30,7 @@ import java.util.List;
  * Author: George Bakhtadze
  * Date: 01/08/2015
  */
+@ExtensionImpl
 public class PascalHeavyLineMarkerProvider implements LineMarkerProvider {
     @Nullable
     @Override
@@ -77,4 +77,9 @@ public class PascalHeavyLineMarkerProvider implements LineMarkerProvider {
         });
     }
 
+    @Nonnull
+    @Override
+    public Language getLanguage() {
+        return PascalLanguage.INSTANCE;
+    }
 }

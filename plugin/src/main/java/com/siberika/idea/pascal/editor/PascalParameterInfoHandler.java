@@ -1,19 +1,18 @@
 package com.siberika.idea.pascal.editor;
 
-import com.intellij.codeInsight.lookup.LookupElement;
-import com.intellij.lang.parameterInfo.CreateParameterInfoContext;
-import com.intellij.lang.parameterInfo.ParameterInfoContext;
-import com.intellij.lang.parameterInfo.ParameterInfoHandler;
-import com.intellij.lang.parameterInfo.ParameterInfoUIContext;
-import com.intellij.lang.parameterInfo.ParameterInfoUtils;
-import com.intellij.lang.parameterInfo.UpdateParameterInfoContext;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.util.PsiTreeUtil;
+import com.siberika.idea.pascal.PascalLanguage;
 import com.siberika.idea.pascal.lang.psi.PasCallExpr;
 import com.siberika.idea.pascal.lang.psi.PasTypes;
 import com.siberika.idea.pascal.lang.psi.PascalRoutineEntity;
 import com.siberika.idea.pascal.lang.psi.field.ParamModifier;
 import com.siberika.idea.pascal.lang.references.PasReferenceUtil;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.Language;
+import consulo.language.editor.completion.lookup.LookupElement;
+import consulo.language.editor.parameterInfo.*;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.util.PsiTreeUtil;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,6 +24,7 @@ import java.util.TreeMap;
  * Author: George Bakhtadze
  * Date: 25/03/2015
  */
+@ExtensionImpl
 public class PascalParameterInfoHandler implements ParameterInfoHandler<PasCallExpr, PascalRoutineEntity> {
     @Override
     public boolean couldShowInLookup() {
@@ -137,4 +137,9 @@ public class PascalParameterInfoHandler implements ParameterInfoHandler<PasCallE
         );
     }
 
+    @Nonnull
+    @Override
+    public Language getLanguage() {
+        return PascalLanguage.INSTANCE;
+    }
 }

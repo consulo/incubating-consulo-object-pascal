@@ -1,13 +1,13 @@
 package com.siberika.idea.pascal.lang.stub;
 
-import com.intellij.psi.stubs.StubElement;
-import com.intellij.psi.stubs.StubInputStream;
-import com.intellij.psi.stubs.StubOutputStream;
-import com.intellij.util.io.StringRef;
 import com.siberika.idea.pascal.lang.psi.PasEntityScope;
 import com.siberika.idea.pascal.lang.psi.PascalStubElement;
 import com.siberika.idea.pascal.lang.stub.struct.PasClassDeclStub;
 import com.siberika.idea.pascal.lang.stub.struct.PascalHelperDeclStub;
+import consulo.index.io.StringRef;
+import consulo.language.psi.stub.StubElement;
+import consulo.language.psi.stub.StubInputStream;
+import consulo.language.psi.stub.StubOutputStream;
 
 import java.io.IOException;
 import java.util.Collection;

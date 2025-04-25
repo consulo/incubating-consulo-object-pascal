@@ -1,18 +1,13 @@
 package com.siberika.idea.pascal.ide.intention;
 
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Pair;
-import com.intellij.psi.PsiElement;
-import com.intellij.util.IncorrectOperationException;
 import com.siberika.idea.pascal.PascalBundle;
-import com.siberika.idea.pascal.lang.psi.PasClassQualifiedIdent;
-import com.siberika.idea.pascal.lang.psi.PasConstrainedTypeParam;
-import com.siberika.idea.pascal.lang.psi.PasFormalParameterSection;
-import com.siberika.idea.pascal.lang.psi.PasNamedIdent;
-import com.siberika.idea.pascal.lang.psi.PasTypes;
-import com.siberika.idea.pascal.lang.psi.PascalRoutine;
+import com.siberika.idea.pascal.lang.psi.*;
 import com.siberika.idea.pascal.util.PsiUtil;
+import consulo.codeEditor.Editor;
+import consulo.language.psi.PsiElement;
+import consulo.language.util.IncorrectOperationException;
+import consulo.project.Project;
+import consulo.util.lang.Pair;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -27,7 +22,6 @@ class SynchronizeSignature extends RoutineIntention {
 
     @Nls(capitalization = Nls.Capitalization.Sentence)
     @NotNull
-    @Override
     public String getFamilyName() {
         return PascalBundle.message("action.fix.signature.synchronize.family");
     }

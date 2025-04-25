@@ -1,14 +1,6 @@
 package com.siberika.idea.pascal.lang.psi.impl;
 
 import com.google.common.cache.Cache;
-import com.intellij.lang.ASTNode;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.progress.ProcessCanceledException;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.stubs.IStubElementType;
-import com.intellij.psi.stubs.StubElement;
-import com.intellij.util.SmartList;
 import com.siberika.idea.pascal.lang.psi.PasEntityScope;
 import com.siberika.idea.pascal.lang.psi.PascalNamedElement;
 import com.siberika.idea.pascal.lang.stub.PasExportedRoutineStub;
@@ -16,6 +8,14 @@ import com.siberika.idea.pascal.lang.stub.PasIdentStubImpl;
 import com.siberika.idea.pascal.lang.stub.PasNamedStub;
 import com.siberika.idea.pascal.lang.stub.struct.PasStructStub;
 import com.siberika.idea.pascal.util.PsiUtil;
+import consulo.component.ProcessCanceledException;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.stub.IStubElementType;
+import consulo.language.psi.stub.StubElement;
+import consulo.logging.Logger;
+import consulo.util.collection.SmartList;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;

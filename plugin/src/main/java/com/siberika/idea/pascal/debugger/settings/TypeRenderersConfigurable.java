@@ -1,7 +1,7 @@
 package com.siberika.idea.pascal.debugger.settings;
 
-import com.intellij.openapi.options.SearchableConfigurable;
 import com.siberika.idea.pascal.PascalBundle;
+import consulo.configurable.SearchableConfigurable;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;

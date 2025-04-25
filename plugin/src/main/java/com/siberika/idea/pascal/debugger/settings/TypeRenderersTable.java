@@ -1,16 +1,16 @@
 package com.siberika.idea.pascal.debugger.settings;
 
-import com.intellij.execution.util.ListTableWithButtons;
-import com.intellij.execution.util.StringWithNewLinesCellEditor;
-import com.intellij.icons.AllIcons;
-import com.intellij.idea.ActionsBundle;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.ide.CopyPasteManager;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.AnActionButton;
-import com.intellij.util.ui.ColumnInfo;
-import com.intellij.util.ui.ListTableModel;
 import com.siberika.idea.pascal.PascalBundle;
+import consulo.application.AllIcons;
+import consulo.execution.ui.awt.ListTableWithButtons;
+import consulo.execution.ui.awt.StringWithNewLinesCellEditor;
+import consulo.ui.ex.action.ActionsBundle;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.awt.AnActionButton;
+import consulo.ui.ex.awt.ColumnInfo;
+import consulo.ui.ex.awt.CopyPasteManager;
+import consulo.ui.ex.awt.table.ListTableModel;
+import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

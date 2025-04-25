@@ -1,12 +1,12 @@
 package com.siberika.idea.pascal.jps.util;
 
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.configurations.GeneralCommandLine;
-import com.intellij.execution.process.CapturingProcessHandler;
-import com.intellij.execution.process.ProcessOutput;
-import com.intellij.openapi.diagnostic.Logger;
 import com.siberika.idea.pascal.PascalException;
 import com.siberika.idea.pascal.jps.JpsPascalBundle;
+import consulo.logging.Logger;
+import consulo.process.ExecutionException;
+import consulo.process.cmd.GeneralCommandLine;
+import consulo.process.util.CapturingProcessUtil;
+import consulo.process.util.ProcessOutput;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -50,8 +50,7 @@ public class SysUtils {
     public static ProcessOutput execute(@NotNull final GeneralCommandLine cmd,
                                         final int timeout) throws ExecutionException {
         LOG.info("Executing: " + cmd.getCommandLineString());
-        final CapturingProcessHandler processHandler = new CapturingProcessHandler(cmd);
-        return timeout < 0 ? processHandler.runProcess() : processHandler.runProcess(timeout);
+        return timeout < 0 ? CapturingProcessUtil.execAndGetOutput(cmd) : CapturingProcessUtil.execAndGetOutput(cmd, timeout);
     }
 
     @Nullable

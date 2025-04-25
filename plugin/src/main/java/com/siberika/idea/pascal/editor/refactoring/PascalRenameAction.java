@@ -1,13 +1,13 @@
 package com.siberika.idea.pascal.editor.refactoring;
 
-import com.intellij.codeInsight.intention.impl.BaseIntentionAction;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.refactoring.RefactoringFactory;
-import com.intellij.util.IncorrectOperationException;
 import com.siberika.idea.pascal.PascalBundle;
+import consulo.codeEditor.Editor;
+import consulo.language.editor.intention.BaseIntentionAction;
+import consulo.language.editor.refactoring.RefactoringFactory;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.util.IncorrectOperationException;
+import consulo.project.Project;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -33,7 +33,6 @@ public class PascalRenameAction extends BaseIntentionAction {
     }
 
     @NotNull
-    @Override
     public String getFamilyName() {
         return PascalBundle.message("action.familyName");
     }

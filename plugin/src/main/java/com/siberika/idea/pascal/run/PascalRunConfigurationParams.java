@@ -1,6 +1,6 @@
 package com.siberika.idea.pascal.run;
 
-import com.intellij.execution.CommonProgramRunConfigurationParameters;
+import consulo.execution.CommonProgramRunConfigurationParameters;
 
 /**
  * Author: George Bakhtadze

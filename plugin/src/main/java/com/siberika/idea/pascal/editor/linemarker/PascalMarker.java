@@ -1,30 +1,24 @@
 package com.siberika.idea.pascal.editor.linemarker;
 
-import com.intellij.codeInsight.daemon.GutterIconNavigationHandler;
-import com.intellij.openapi.application.ReadAction;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.psi.util.PsiUtilCore;
-import com.intellij.util.ConstantFunction;
-import com.intellij.util.EmptyQuery;
-import com.intellij.util.Function;
-import com.intellij.util.Query;
 import com.siberika.idea.pascal.PascalBundle;
 import com.siberika.idea.pascal.ide.actions.SectionToggle;
-import com.siberika.idea.pascal.lang.psi.PasEntityScope;
-import com.siberika.idea.pascal.lang.psi.PasUnitModuleHead;
-import com.siberika.idea.pascal.lang.psi.PasUsesClause;
-import com.siberika.idea.pascal.lang.psi.PascalModule;
-import com.siberika.idea.pascal.lang.psi.PascalRoutine;
-import com.siberika.idea.pascal.lang.psi.PascalStructType;
+import com.siberika.idea.pascal.lang.psi.*;
 import com.siberika.idea.pascal.lang.search.DescendingEntities;
 import com.siberika.idea.pascal.lang.search.GotoSuper;
 import com.siberika.idea.pascal.lang.search.Helper;
 import com.siberika.idea.pascal.lang.search.UsedBy;
 import com.siberika.idea.pascal.util.EditorUtil;
+import consulo.application.ReadAction;
+import consulo.application.util.query.EmptyQuery;
+import consulo.application.util.query.Query;
+import consulo.language.editor.gutter.GutterIconNavigationHandler;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiUtilCore;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.language.psi.util.PsiTreeUtil;
 
 import java.util.Collections;
+import java.util.function.Function;
 
 public class PascalMarker {
     private final GutterIconNavigationHandler<PsiElement> handler;
@@ -47,7 +41,7 @@ public class PascalMarker {
                     EditorUtil.navigateTo(e, PascalBundle.message("navigate.title.toggle.section"), null, Collections.singletonList(target));
                 }
             },
-            new ConstantFunction<>(PascalBundle.message("navigate.title.toggle.section"))
+            psiElement -> PascalBundle.message("navigate.title.toggle.section")
     );
 
     public static PascalMarker GOTO_SUPER = new PascalMarker(
@@ -62,22 +56,22 @@ public class PascalMarker {
                     return GotoSuper.search(element);
                 }
             },
-            new ConstantFunction<>(PascalBundle.message("navigate.title.goto.super"))
+            psiElement -> PascalBundle.message("navigate.title.goto.super")
     );
 
     public static PascalMarker DESCENDING_ENTITIES = new PascalMarker(
-            new CollectionNavigationHandler<PasEntityScope>(true,
+            new CollectionNavigationHandler<PsiElement>(true,
                     PascalBundle.message("navigate.title.goto.subclassed"),
                     PascalBundle.message("navigate.title.goto.subclassed.search"),
                     PascalBundle.message("navigate.info.subclassed.noitems"),
                     PascalBundle.message("navigate.subclassed.impossible.reindex")) {
 
                 @Override
-                Query<PasEntityScope> createQuery(PsiElement element) {
+                Query<PsiElement> createQuery(PsiElement element) {
                     return DescendingEntities.getQuery(element, GlobalSearchScope.allScope(PsiUtilCore.getProjectInReadAction(element)));
                 }
             },
-            new ConstantFunction<>(PascalBundle.message("navigate.title.goto.subclassed"))
+            psiElement -> PascalBundle.message("navigate.title.goto.subclassed")
     );
 
     private static final EmptyQuery<PascalModule> USED_BY_EMPTY_QUERY = new EmptyQuery<>();
@@ -95,7 +89,7 @@ public class PascalMarker {
                     return moduleHead != null ? UsedBy.getQuery(moduleHead) : USED_BY_EMPTY_QUERY;
                 }
             },
-            new ConstantFunction<>(PascalBundle.message("navigate.title.used.by"))
+            psiElement -> PascalBundle.message("navigate.title.used.by")
     );
 
     private static final EmptyQuery<PascalStructType> HELPERS_EMPTY_QUERY = new EmptyQuery<>();
@@ -116,7 +110,7 @@ public class PascalMarker {
                     }
                 }
             },
-            new ConstantFunction<>(PascalBundle.message("navigate.title.goto.helper"))
+            psiElement -> PascalBundle.message("navigate.title.goto.helper")
     );
 
     public GutterIconNavigationHandler<PsiElement> getHandler() {

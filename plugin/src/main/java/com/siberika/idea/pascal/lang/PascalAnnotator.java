@@ -1,14 +1,5 @@
 package com.siberika.idea.pascal.lang;
 
-import com.intellij.lang.annotation.Annotation;
-import com.intellij.lang.annotation.AnnotationHolder;
-import com.intellij.lang.annotation.Annotator;
-import com.intellij.openapi.module.ModuleUtil;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.util.io.FileUtilRt;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.SmartList;
 import com.siberika.idea.pascal.PascalBundle;
 import com.siberika.idea.pascal.editor.PascalActionDeclare;
 import com.siberika.idea.pascal.editor.PascalRoutineActions;
@@ -18,20 +9,7 @@ import com.siberika.idea.pascal.ide.actions.SectionToggle;
 import com.siberika.idea.pascal.ide.actions.UsesActions;
 import com.siberika.idea.pascal.lang.context.ContextUtil;
 import com.siberika.idea.pascal.lang.parser.NamespaceRec;
-import com.siberika.idea.pascal.lang.psi.PasClassPropertySpecifier;
-import com.siberika.idea.pascal.lang.psi.PasConstExpression;
-import com.siberika.idea.pascal.lang.psi.PasEntityScope;
-import com.siberika.idea.pascal.lang.psi.PasEnumType;
-import com.siberika.idea.pascal.lang.psi.PasFullyQualifiedIdent;
-import com.siberika.idea.pascal.lang.psi.PasLibraryModuleHead;
-import com.siberika.idea.pascal.lang.psi.PasModule;
-import com.siberika.idea.pascal.lang.psi.PasNamespaceIdent;
-import com.siberika.idea.pascal.lang.psi.PasPackageModuleHead;
-import com.siberika.idea.pascal.lang.psi.PasProgramModuleHead;
-import com.siberika.idea.pascal.lang.psi.PasUnitModuleHead;
-import com.siberika.idea.pascal.lang.psi.PascalNamedElement;
-import com.siberika.idea.pascal.lang.psi.PascalRoutine;
-import com.siberika.idea.pascal.lang.psi.PascalStructType;
+import com.siberika.idea.pascal.lang.psi.*;
 import com.siberika.idea.pascal.lang.psi.impl.PasExportedRoutineImpl;
 import com.siberika.idea.pascal.lang.psi.impl.PasField;
 import com.siberika.idea.pascal.lang.psi.impl.PasRoutineImplDeclImpl;
@@ -42,6 +20,14 @@ import com.siberika.idea.pascal.lang.references.resolve.Resolve;
 import com.siberika.idea.pascal.util.PsiContext;
 import com.siberika.idea.pascal.util.PsiUtil;
 import com.siberika.idea.pascal.util.StrUtil;
+import consulo.language.editor.annotation.Annotation;
+import consulo.language.editor.annotation.AnnotationHolder;
+import consulo.language.editor.annotation.Annotator;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.language.util.ModuleUtilCore;
+import consulo.util.collection.SmartList;
+import consulo.util.io.FileUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.EnumSet;
@@ -84,7 +70,7 @@ public class PascalAnnotator implements Annotator {
                 PsiContext context = PsiUtil.getContext(namedElement);
                 Set<AddFixType> fixes = EnumSet.of(AddFixType.VAR, AddFixType.TYPE, AddFixType.CONST, AddFixType.ROUTINE, AddFixType.UNIT_FIND); // [*] => var type const routine
                 if (context == PsiContext.FQN_FIRST) {
-                    if (!ResolveUtil.findUnitsWithStub(namedElement.getProject(), ModuleUtil.findModuleForPsiElement(namedElement), namedElement.getName()).isEmpty()) {
+                    if (!ResolveUtil.findUnitsWithStub(namedElement.getProject(), ModuleUtilCore.findModuleForPsiElement(namedElement), namedElement.getName()).isEmpty()) {
                         fixes.add(AddFixType.UNIT);
                     }
                 }
@@ -235,7 +221,7 @@ public class PascalAnnotator implements Annotator {
                 Annotation ann = holder.createErrorAnnotation(element, PascalBundle.message("ann.error.unit.name.notmatch"));
                 ann.registerFix(new PascalRenameAction(element, fileName, PascalBundle.message("action.module.rename")));
                 ann.registerFix(new PascalRenameAction(element.getContainingFile(),
-                        nameIdent.getName() + "." + FileUtilRt.getExtension(fn),
+                        nameIdent.getName() + "." + FileUtil.getExtension(fn),
                         PascalBundle.message("action.file.rename")));
             }
         }

@@ -1,7 +1,8 @@
 package com.siberika.idea.pascal;
 
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
+import consulo.virtualFileSystem.fileType.FileType;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -22,8 +23,8 @@ public class PPUFileType implements FileType {
 
     @NotNull
     @Override
-    public String getDescription() {
-        return "Free Pascal compiled unit";
+    public LocalizeValue getDescription() {
+        return LocalizeValue.localizeTODO("Free Pascal compiled unit");
     }
 
     @NotNull

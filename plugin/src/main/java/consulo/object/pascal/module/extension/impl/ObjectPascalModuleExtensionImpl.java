@@ -1,18 +1,17 @@
 package consulo.object.pascal.module.extension.impl;
 
-import com.intellij.openapi.projectRoots.SdkTypeId;
 import com.siberika.idea.pascal.sdk.BasePascalSdkType;
-import consulo.module.extension.impl.ModuleExtensionWithSdkImpl;
+import consulo.content.bundle.SdkType;
+import consulo.module.content.layer.ModuleRootLayer;
+import consulo.module.content.layer.extension.ModuleExtensionWithSdkBase;
 import consulo.object.pascal.module.extension.ObjectPascalModuleExtension;
-import consulo.roots.ModuleRootLayer;
-
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 27/06/2021
  */
-public class ObjectPascalModuleExtensionImpl extends ModuleExtensionWithSdkImpl<ObjectPascalModuleExtension> implements ObjectPascalModuleExtension {
+public class ObjectPascalModuleExtensionImpl extends ModuleExtensionWithSdkBase<ObjectPascalModuleExtension> implements ObjectPascalModuleExtension {
     public ObjectPascalModuleExtensionImpl(@Nonnull String id, @Nonnull ModuleRootLayer rootLayer) {
         super(id, rootLayer);
     }
@@ -29,7 +28,7 @@ public class ObjectPascalModuleExtensionImpl extends ModuleExtensionWithSdkImpl<
 
     @Nonnull
     @Override
-    public Class<? extends SdkTypeId> getSdkTypeClass() {
+    public Class<? extends SdkType> getSdkTypeClass() {
         return BasePascalSdkType.class;
     }
 }

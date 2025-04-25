@@ -1,15 +1,15 @@
 package com.siberika.idea.pascal.util;
 
-import com.intellij.codeInsight.template.Template;
-import com.intellij.codeInsight.template.TemplateEditingAdapter;
-import com.intellij.codeInsight.template.impl.TemplateState;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.RangeMarker;
-import com.intellij.openapi.editor.ScrollType;
-import com.intellij.openapi.fileEditor.FileEditorManager;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
 import com.siberika.idea.pascal.editor.PascalActionDeclare;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.ScrollType;
+import consulo.document.RangeMarker;
+import consulo.fileEditor.FileEditorManager;
+import consulo.language.editor.template.Template;
+import consulo.language.editor.template.TemplateState;
+import consulo.language.editor.template.event.TemplateEditingAdapter;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 
 /**
  * Author: George Bakhtadze

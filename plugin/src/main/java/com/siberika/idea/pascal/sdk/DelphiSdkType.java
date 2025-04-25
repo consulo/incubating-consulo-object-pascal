@@ -1,11 +1,6 @@
 package com.siberika.idea.pascal.sdk;
 
 import com.google.common.collect.ImmutableMap;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.projectRoots.*;
-import com.intellij.openapi.roots.OrderRootType;
-import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.siberika.idea.pascal.PascalException;
 import com.siberika.idea.pascal.PascalIcons;
 import com.siberika.idea.pascal.jps.compiler.DelphiBackendCompiler;
@@ -13,12 +8,21 @@ import com.siberika.idea.pascal.jps.sdk.PascalCompilerFamily;
 import com.siberika.idea.pascal.jps.sdk.PascalSdkData;
 import com.siberika.idea.pascal.jps.sdk.PascalSdkUtil;
 import com.siberika.idea.pascal.jps.util.SysUtils;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.application.Application;
+import consulo.content.OrderRootType;
+import consulo.content.base.BinariesOrderRootType;
+import consulo.content.base.SourcesOrderRootType;
+import consulo.content.bundle.*;
+import consulo.logging.Logger;
 import consulo.ui.image.Image;
+import consulo.virtualFileSystem.LocalFileSystem;
+import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
 import java.io.File;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -28,6 +32,7 @@ import java.util.regex.Pattern;
  * Author: George Bakhtadze
  * Date: 10/01/2013
  */
+@ExtensionImpl
 public class DelphiSdkType extends BasePascalSdkType {
 
     private static final Logger LOG = Logger.getInstance(DelphiSdkType.class.getName());
@@ -48,7 +53,7 @@ public class DelphiSdkType extends BasePascalSdkType {
 
     @NotNull
     public static DelphiSdkType getInstance() {
-        return SdkType.EP_NAME.findExtensionOrFail(DelphiSdkType.class);
+        return Application.get().getExtensionPoint(SdkType.class).findExtensionOrFail(DelphiSdkType.class);
     }
 
     public DelphiSdkType() {
@@ -210,7 +215,7 @@ public class DelphiSdkType extends BasePascalSdkType {
         for (String dir : LIBRARY_DIRS_SOURCE) {
             VirtualFile vdir = getSource(sdk, dir);
             if (vdir != null) {
-                sdkModificator.addRoot(vdir, OrderRootType.CLASSES);
+                sdkModificator.addRoot(vdir, BinariesOrderRootType.getInstance());
             }
         }
         sdkModificatorHolder[0] = sdkModificator;
@@ -233,7 +238,7 @@ public class DelphiSdkType extends BasePascalSdkType {
 
     @Override
     public boolean isRootTypeApplicable(@NotNull OrderRootType type) {
-        return type.equals(OrderRootType.SOURCES) || type.equals(OrderRootType.CLASSES);
+        return type.equals(SourcesOrderRootType.getInstance()) || type.equals(BinariesOrderRootType.getInstance());
     }
 
     @Nullable

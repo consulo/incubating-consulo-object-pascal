@@ -1,6 +1,6 @@
 package com.siberika.idea.pascal.debugger.settings;
 
-import com.intellij.ui.JBColor;
+import consulo.ui.ex.JBColor;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;

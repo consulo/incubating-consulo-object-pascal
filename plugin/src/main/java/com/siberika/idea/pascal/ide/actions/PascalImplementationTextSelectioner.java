@@ -1,18 +1,23 @@
 package com.siberika.idea.pascal.ide.actions;
 
-import com.intellij.codeInsight.hint.ImplementationTextSelectioner;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.PsiElement;
+import com.siberika.idea.pascal.PascalLanguage;
 import com.siberika.idea.pascal.lang.psi.PasExportedRoutine;
 import com.siberika.idea.pascal.lang.psi.PasGenericTypeIdent;
 import com.siberika.idea.pascal.lang.psi.PasTypeDeclaration;
 import com.siberika.idea.pascal.lang.psi.PascalRoutine;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.document.util.TextRange;
+import consulo.language.Language;
+import consulo.language.editor.ImplementationTextSelectioner;
+import consulo.language.psi.PsiElement;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * Author: George Bakhtadze
  * Date: 25/02/2017
  */
+@ExtensionImpl
 public class PascalImplementationTextSelectioner implements ImplementationTextSelectioner {
     @Override
     public int getTextStartOffset(@NotNull PsiElement element) {
@@ -39,5 +44,11 @@ public class PascalImplementationTextSelectioner implements ImplementationTextSe
             return impl != null ? impl : element;
         }
         return element;
+    }
+
+    @Nonnull
+    @Override
+    public Language getLanguage() {
+        return PascalLanguage.INSTANCE;
     }
 }

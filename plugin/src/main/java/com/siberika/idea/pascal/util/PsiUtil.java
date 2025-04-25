@@ -1,27 +1,26 @@
 package com.siberika.idea.pascal.util;
 
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.progress.ProcessCanceledException;
-import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.*;
-import com.intellij.psi.impl.source.tree.LeafPsiElement;
-import com.intellij.psi.impl.source.tree.TreeUtil;
-import com.intellij.psi.search.PsiElementProcessor;
-import com.intellij.psi.stubs.StubElement;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.FileContentUtil;
-import com.intellij.util.SmartList;
-import com.intellij.util.containers.ContainerUtil;
 import com.siberika.idea.pascal.lang.context.ContextUtil;
 import com.siberika.idea.pascal.lang.psi.*;
 import com.siberika.idea.pascal.lang.psi.impl.*;
 import com.siberika.idea.pascal.lang.references.ResolveUtil;
 import com.siberika.idea.pascal.lang.stub.PasNamedStub;
 import com.siberika.idea.pascal.sdk.BuiltinsParser;
+import consulo.application.ApplicationManager;
+import consulo.component.ProcessCanceledException;
+import consulo.fileEditor.util.FileContentUtil;
+import consulo.language.ast.IElementType;
+import consulo.language.impl.ast.TreeUtil;
+import consulo.language.impl.psi.LeafPsiElement;
+import consulo.language.psi.*;
+import consulo.language.psi.resolve.PsiElementProcessor;
+import consulo.language.psi.stub.StubElement;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.logging.Logger;
+import consulo.util.collection.SmartList;
+import consulo.util.lang.Pair;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -63,7 +62,7 @@ public class PsiUtil {
     public static <T extends PsiElement> Collection<T> findChildrenOfAnyType(@Nullable final PsiElement element,
                                                                              @NotNull final Class<? extends T>... classes) {
         if (element == null) {
-            return ContainerUtil.emptyList();
+            return List.of();
         }
 
         PsiElementProcessor.CollectElements<T> processor = new PsiElementProcessor.CollectElements<T>() {
@@ -85,7 +84,7 @@ public class PsiUtil {
     public static <T extends PsiElement> Collection<T> findImmChildrenOfAnyType(@Nullable final PsiElement element,
                                                                                 @NotNull final Class<? extends T>... classes) {
         if (element == null) {
-            return ContainerUtil.emptyList();
+            return List.of();
         }
 
         Collection<T> result = new SmartList<T>();

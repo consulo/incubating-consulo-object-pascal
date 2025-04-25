@@ -1,9 +1,9 @@
 package com.siberika.idea.pascal.lang.psi;
 
-import com.intellij.openapi.util.Pair;
-import com.intellij.psi.SmartPsiElementPointer;
 import com.siberika.idea.pascal.lang.psi.impl.PasField;
 import com.siberika.idea.pascal.lang.stub.PasModuleStub;
+import consulo.language.psi.SmartPsiElementPointer;
+import consulo.util.lang.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

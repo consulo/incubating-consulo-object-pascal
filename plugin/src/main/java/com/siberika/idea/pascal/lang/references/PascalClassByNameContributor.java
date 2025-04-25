@@ -1,17 +1,17 @@
 package com.siberika.idea.pascal.lang.references;
 
-import com.intellij.navigation.ChooseByNameContributor;
-import com.intellij.navigation.NavigationItem;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.codeStyle.MinusculeMatcher;
-import com.intellij.psi.codeStyle.NameUtil;
-import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.psi.stubs.StubIndex;
-import com.intellij.util.CommonProcessors;
-import com.intellij.util.containers.SmartHashSet;
 import com.siberika.idea.pascal.lang.psi.PascalNamedElement;
 import com.siberika.idea.pascal.lang.psi.PascalStructType;
 import com.siberika.idea.pascal.lang.stub.PascalStructIndex;
+import consulo.application.util.function.CommonProcessors;
+import consulo.application.util.matcher.MinusculeMatcher;
+import consulo.application.util.matcher.NameUtil;
+import consulo.ide.navigation.ChooseByNameContributor;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.language.psi.stub.StubIndex;
+import consulo.navigation.NavigationItem;
+import consulo.project.Project;
+import consulo.util.collection.SmartHashSet;
 import org.jetbrains.annotations.NotNull;
 
 /**

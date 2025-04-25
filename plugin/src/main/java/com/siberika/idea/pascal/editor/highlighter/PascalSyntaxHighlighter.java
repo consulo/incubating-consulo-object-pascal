@@ -1,9 +1,9 @@
 package com.siberika.idea.pascal.editor.highlighter;
 
-import com.intellij.lexer.Lexer;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.siberika.idea.pascal.lang.lexer.PascalLexer;
+import consulo.language.lexer.Lexer;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 
 /**

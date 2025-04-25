@@ -1,9 +1,9 @@
 package com.siberika.idea.pascal.lang.psi.impl;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.stubs.IStubElementType;
 import com.siberika.idea.pascal.lang.psi.PascalObjectDecl;
 import com.siberika.idea.pascal.lang.stub.struct.PasObjectDeclStub;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.stub.IStubElementType;
 
 public abstract class PascalObjectDeclImpl extends PasStubStructTypeImpl<PascalObjectDecl, PasObjectDeclStub> implements PascalObjectDecl {
 

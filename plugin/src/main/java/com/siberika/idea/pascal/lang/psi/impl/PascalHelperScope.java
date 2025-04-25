@@ -1,19 +1,12 @@
 package com.siberika.idea.pascal.lang.psi.impl;
 
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.psi.PsiElement;
-import com.siberika.idea.pascal.lang.psi.PasClassQualifiedIdent;
-import com.siberika.idea.pascal.lang.psi.PasEntityScope;
-import com.siberika.idea.pascal.lang.psi.PasGenericTypeIdent;
-import com.siberika.idea.pascal.lang.psi.PasNamedIdent;
-import com.siberika.idea.pascal.lang.psi.PasNamespaceIdent;
-import com.siberika.idea.pascal.lang.psi.PasRoutineImplDecl;
-import com.siberika.idea.pascal.lang.psi.PascalNamedElement;
-import com.siberika.idea.pascal.lang.psi.PascalRoutineEntity;
+import com.siberika.idea.pascal.lang.psi.*;
 import com.siberika.idea.pascal.lang.references.ResolveContext;
 import com.siberika.idea.pascal.lang.references.resolve.Types;
 import com.siberika.idea.pascal.util.ModuleUtil;
 import com.siberika.idea.pascal.util.PsiUtil;
+import consulo.language.psi.PsiElement;
+import consulo.logging.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedHashMap;

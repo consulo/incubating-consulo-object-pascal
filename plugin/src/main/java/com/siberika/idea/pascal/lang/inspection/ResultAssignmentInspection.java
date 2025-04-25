@@ -1,20 +1,14 @@
 package com.siberika.idea.pascal.lang.inspection;
 
-import com.intellij.codeInspection.ProblemHighlightType;
-import com.intellij.codeInspection.ProblemsHolder;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.util.PsiTreeUtil;
 import com.siberika.idea.pascal.editor.highlighter.PascalReadWriteAccessDetector;
 import com.siberika.idea.pascal.ide.actions.quickfix.IdentQuickFixes;
-import com.siberika.idea.pascal.lang.psi.PasCompoundStatement;
-import com.siberika.idea.pascal.lang.psi.PasExitStatement;
-import com.siberika.idea.pascal.lang.psi.PasExpression;
-import com.siberika.idea.pascal.lang.psi.PasFullyQualifiedIdent;
-import com.siberika.idea.pascal.lang.psi.PasRoutineImplDecl;
-import com.siberika.idea.pascal.lang.psi.PasSubIdent;
-import com.siberika.idea.pascal.lang.psi.PascalPsiElement;
-import com.siberika.idea.pascal.lang.psi.PascalRoutine;
+import com.siberika.idea.pascal.lang.psi.*;
 import com.siberika.idea.pascal.lang.psi.impl.RoutineUtil;
+import consulo.language.editor.inspection.ProblemHighlightType;
+import consulo.language.editor.inspection.ProblemsHolder;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.util.PsiTreeUtil;
+import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.List;
@@ -57,4 +51,9 @@ public class ResultAssignmentInspection extends PascalLocalInspectionBase {
                 new IdentQuickFixes.AddResultAssignmentAction()));
     }
 
+    @Nonnull
+    @Override
+    public String getDisplayName() {
+        return "No result assignment detection";
+    }
 }

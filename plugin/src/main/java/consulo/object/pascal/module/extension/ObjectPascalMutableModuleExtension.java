@@ -1,8 +1,7 @@
 package consulo.object.pascal.module.extension;
 
 import consulo.module.extension.MutableModuleExtensionWithSdk;
-
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

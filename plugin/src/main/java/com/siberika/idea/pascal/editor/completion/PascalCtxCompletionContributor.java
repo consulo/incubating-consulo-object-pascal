@@ -1,18 +1,5 @@
 package com.siberika.idea.pascal.editor.completion;
 
-import com.intellij.codeInsight.completion.*;
-import com.intellij.codeInsight.lookup.LookupElement;
-import com.intellij.codeInsight.lookup.LookupElementBuilder;
-import com.intellij.lang.ASTNode;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.patterns.PlatformPatterns;
-import com.intellij.psi.*;
-import com.intellij.psi.impl.source.tree.LeafPsiElement;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.TokenSet;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.ProcessingContext;
-import com.intellij.util.Processor;
 import com.siberika.idea.pascal.PascalIcons;
 import com.siberika.idea.pascal.PascalLanguage;
 import com.siberika.idea.pascal.editor.ContextAwareVirtualFile;
@@ -32,13 +19,30 @@ import com.siberika.idea.pascal.lang.search.GotoSuper;
 import com.siberika.idea.pascal.lang.stub.PascalUnitSymbolIndex;
 import com.siberika.idea.pascal.util.DocUtil;
 import com.siberika.idea.pascal.util.PsiUtil;
-import consulo.codeInsight.completion.CompletionProvider;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.application.util.function.Processor;
+import consulo.language.Language;
+import consulo.language.ast.ASTNode;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.TokenSet;
+import consulo.language.editor.completion.*;
+import consulo.language.editor.completion.lookup.LookupElement;
+import consulo.language.editor.completion.lookup.LookupElementBuilder;
+import consulo.language.editor.completion.lookup.PrioritizedLookupElement;
+import consulo.language.impl.psi.LeafPsiElement;
+import consulo.language.pattern.PlatformPatterns;
+import consulo.language.psi.*;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.language.util.ProcessingContext;
+import consulo.util.lang.StringUtil;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
 import static com.siberika.idea.pascal.lang.context.CodePlace.*;
 
+@ExtensionImpl
 public class PascalCtxCompletionContributor extends CompletionContributor {
 
     private static final Map<IElementType, TokenSet> DO_THEN_OF_MAP = initDoThenOfMap();
@@ -464,4 +468,9 @@ public class PascalCtxCompletionContributor extends CompletionContributor {
         }
     }
 
+    @Nonnull
+    @Override
+    public Language getLanguage() {
+        return PascalLanguage.INSTANCE;
+    }
 }

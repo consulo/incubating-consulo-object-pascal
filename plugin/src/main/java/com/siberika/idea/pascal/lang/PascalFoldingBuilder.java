@@ -1,24 +1,28 @@
 package com.siberika.idea.pascal.lang;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.folding.FoldingBuilderEx;
-import com.intellij.lang.folding.FoldingDescriptor;
-import com.intellij.lang.folding.NamedFoldingDescriptor;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.FoldingGroup;
-import com.intellij.openapi.project.DumbAware;
-import com.intellij.openapi.project.DumbService;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiComment;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.search.PsiElementProcessor;
-import com.intellij.psi.util.PsiTreeUtil;
+import com.siberika.idea.pascal.PascalLanguage;
 import com.siberika.idea.pascal.editor.highlighter.PasHighlightWithIdentsHandler;
 import com.siberika.idea.pascal.lang.folding.PascalCodeFoldingSettings;
 import com.siberika.idea.pascal.lang.psi.*;
 import com.siberika.idea.pascal.lang.psi.impl.PasRoutineImplDeclImpl;
 import com.siberika.idea.pascal.util.PsiUtil;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.application.dumb.DumbAware;
+import consulo.codeEditor.FoldingGroup;
+import consulo.document.Document;
+import consulo.document.util.TextRange;
+import consulo.language.Language;
+import consulo.language.ast.ASTNode;
+import consulo.language.editor.folding.FoldingBuilderEx;
+import consulo.language.editor.folding.FoldingDescriptor;
+import consulo.language.editor.folding.NamedFoldingDescriptor;
+import consulo.language.psi.PsiComment;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.resolve.PsiElementProcessor;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.project.DumbService;
+import consulo.util.lang.StringUtil;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,6 +32,7 @@ import java.util.*;
  * Author: George Bakhtadze
  * Date: 24/03/2013
  */
+@ExtensionImpl
 public class PascalFoldingBuilder extends FoldingBuilderEx implements DumbAware {
 
     private static final int PLACEHOLDER_MAX_SIZE = 256;
@@ -310,4 +315,9 @@ public class PascalFoldingBuilder extends FoldingBuilderEx implements DumbAware 
         }
     }
 
+    @Nonnull
+    @Override
+    public Language getLanguage() {
+        return PascalLanguage.INSTANCE;
+    }
 }

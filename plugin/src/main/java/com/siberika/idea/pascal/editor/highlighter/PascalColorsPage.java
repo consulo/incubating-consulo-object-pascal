@@ -1,24 +1,24 @@
 package com.siberika.idea.pascal.editor.highlighter;
 
-import com.intellij.openapi.editor.HighlighterColors;
-import com.intellij.openapi.editor.colors.TextAttributesKey;
-import com.intellij.openapi.fileTypes.SyntaxHighlighter;
-import com.intellij.openapi.options.colors.AttributesDescriptor;
-import com.intellij.openapi.options.colors.ColorDescriptor;
-import com.intellij.openapi.options.colors.ColorSettingsPage;
 import com.siberika.idea.pascal.PascalBundle;
-import com.siberika.idea.pascal.PascalIcons;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.codeEditor.HighlighterColors;
+import consulo.colorScheme.TextAttributesKey;
+import consulo.colorScheme.setting.AttributesDescriptor;
+import consulo.colorScheme.setting.ColorDescriptor;
+import consulo.language.editor.colorScheme.setting.ColorSettingsPage;
+import consulo.language.editor.highlight.SyntaxHighlighter;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
 import java.util.Map;
 
 /**
 * Author: George Bakhtadze
 * Date: 12/5/12
 */
+@ExtensionImpl
 public class PascalColorsPage implements ColorSettingsPage {
     final static String DEMO_TEXT = "{ File header }\n" +
             "program sample;\n" +

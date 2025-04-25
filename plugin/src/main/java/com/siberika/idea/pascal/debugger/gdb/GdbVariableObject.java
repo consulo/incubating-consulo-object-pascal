@@ -1,8 +1,8 @@
 package com.siberika.idea.pascal.debugger.gdb;
 
-import com.intellij.xdebugger.evaluation.XDebuggerEvaluator;
 import com.siberika.idea.pascal.debugger.gdb.parser.GdbMiResults;
 import com.siberika.idea.pascal.lang.psi.impl.PasField;
+import consulo.execution.debug.evaluation.XDebuggerEvaluator;
 
 import java.util.ArrayList;
 import java.util.List;

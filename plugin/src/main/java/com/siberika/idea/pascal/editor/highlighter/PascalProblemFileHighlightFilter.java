@@ -1,8 +1,8 @@
 package com.siberika.idea.pascal.editor.highlighter;
 
-import com.intellij.openapi.util.Condition;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.siberika.idea.pascal.PascalFileType;
+import consulo.util.lang.function.Condition;
+import consulo.virtualFileSystem.VirtualFile;
 
 public class PascalProblemFileHighlightFilter implements Condition<VirtualFile> {
     @Override

@@ -1,23 +1,19 @@
 package com.siberika.idea.pascal.run;
 
-import com.intellij.execution.actions.ConfigurationContext;
-import com.intellij.execution.actions.ConfigurationFromContext;
-import com.intellij.execution.actions.RunConfigurationProducer;
-import com.intellij.execution.configurations.RunConfiguration;
-import com.intellij.lang.ASTNode;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.util.Ref;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.siberika.idea.pascal.lang.psi.PasBlockBody;
-import com.siberika.idea.pascal.lang.psi.PasBlockGlobal;
-import com.siberika.idea.pascal.lang.psi.PasModule;
-import com.siberika.idea.pascal.lang.psi.PasProgramModuleHead;
-import com.siberika.idea.pascal.lang.psi.PasTypes;
-import com.siberika.idea.pascal.lang.psi.PascalModule;
+import com.siberika.idea.pascal.lang.psi.*;
 import com.siberika.idea.pascal.module.PascalModuleType;
 import com.siberika.idea.pascal.util.PsiUtil;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.execution.action.ConfigurationContext;
+import consulo.execution.action.ConfigurationFromContext;
+import consulo.execution.action.RunConfigurationProducer;
+import consulo.execution.configuration.RunConfiguration;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.module.Module;
+import consulo.util.lang.ref.SimpleReference;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,13 +21,14 @@ import org.jetbrains.annotations.Nullable;
  * Author: George Bakhtadze
  * Date: 12/5/12
  */
+@ExtensionImpl
 public class PascalRunContextConfigurationProducer extends RunConfigurationProducer<PascalRunConfiguration> implements Cloneable {
     public PascalRunContextConfigurationProducer() {
         super(PascalConfigurationType.getInstance());
     }
 
     @Override
-    protected boolean setupConfigurationFromContext(PascalRunConfiguration configuration, ConfigurationContext context, Ref<PsiElement> sourceElement) {
+    protected boolean setupConfigurationFromContext(PascalRunConfiguration configuration, ConfigurationContext context, SimpleReference<PsiElement> sourceElement) {
         if (isProgramLeafElement(sourceElement.get())) {
             setupConf(context, configuration, true);
             return true;

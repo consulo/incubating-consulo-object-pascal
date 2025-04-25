@@ -1,26 +1,24 @@
 package com.siberika.idea.pascal.debugger;
 
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.ExecutionResult;
-import com.intellij.execution.configurations.RunProfile;
-import com.intellij.execution.configurations.RunProfileState;
-import com.intellij.execution.executors.DefaultDebugExecutor;
-import com.intellij.execution.runners.ExecutionEnvironment;
-import com.intellij.execution.runners.GenericProgramRunner;
-import com.intellij.execution.ui.RunContentDescriptor;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleUtilCore;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.xdebugger.XDebugProcess;
-import com.intellij.xdebugger.XDebugProcessStarter;
-import com.intellij.xdebugger.XDebugSession;
-import com.intellij.xdebugger.XDebuggerManager;
 import com.siberika.idea.pascal.run.PascalRunConfiguration;
 import com.siberika.idea.pascal.sdk.FPCSdkType;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.content.bundle.Sdk;
+import consulo.execution.ExecutionResult;
+import consulo.execution.configuration.RunProfile;
+import consulo.execution.configuration.RunProfileState;
+import consulo.execution.debug.*;
+import consulo.execution.runner.ExecutionEnvironment;
+import consulo.execution.runner.GenericProgramRunner;
+import consulo.execution.ui.RunContentDescriptor;
+import consulo.language.util.ModuleUtilCore;
+import consulo.module.Module;
 import consulo.object.pascal.module.extension.ObjectPascalModuleExtension;
+import consulo.process.ExecutionException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+@ExtensionImpl
 public class PascalDebugRunner extends GenericProgramRunner {
     @NotNull
     public String getRunnerId() {

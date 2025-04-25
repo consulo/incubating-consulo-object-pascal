@@ -1,9 +1,9 @@
 package com.siberika.idea.pascal.lang.references;
 
-import com.intellij.psi.PsiElement;
 import com.siberika.idea.pascal.lang.psi.PasEntityScope;
 import com.siberika.idea.pascal.lang.psi.impl.PasField;
 import com.siberika.idea.pascal.lang.references.resolve.ResolveOptions;
+import consulo.language.psi.PsiElement;
 
 import java.util.EnumSet;
 import java.util.List;

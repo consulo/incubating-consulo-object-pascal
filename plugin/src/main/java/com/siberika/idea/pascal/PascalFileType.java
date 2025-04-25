@@ -1,6 +1,7 @@
 package com.siberika.idea.pascal;
 
-import com.intellij.openapi.fileTypes.LanguageFileType;
+import consulo.language.file.LanguageFileType;
+import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.NotNull;
 
@@ -29,8 +30,8 @@ public class PascalFileType extends LanguageFileType {
 
     @NotNull
     @Override
-    public String getDescription() {
-        return "Pascal Source";
+    public LocalizeValue getDescription() {
+        return LocalizeValue.localizeTODO("Pascal Source");
     }
 
     @NotNull

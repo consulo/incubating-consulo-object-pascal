@@ -1,36 +1,26 @@
 package com.siberika.idea.pascal.lang.inspection;
 
-import com.intellij.codeInspection.InspectionManager;
-import com.intellij.codeInspection.LocalInspectionToolSession;
-import com.intellij.codeInspection.ProblemDescriptor;
-import com.intellij.codeInspection.ProblemHighlightType;
-import com.intellij.codeInspection.ProblemsHolder;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiManager;
-import com.intellij.psi.PsiReference;
-import com.intellij.psi.SmartPsiElementPointer;
-import com.intellij.psi.search.LocalSearchScope;
-import com.intellij.psi.search.PsiElementProcessor;
-import com.intellij.psi.search.searches.ReferencesSearch;
-import com.intellij.util.Processor;
-import com.intellij.util.Query;
-import com.intellij.util.containers.SmartHashSet;
 import com.siberika.idea.pascal.ide.actions.SectionToggle;
 import com.siberika.idea.pascal.ide.actions.quickfix.IdentQuickFixes;
-import com.siberika.idea.pascal.lang.psi.PasClassQualifiedIdent;
-import com.siberika.idea.pascal.lang.psi.PasClassTypeDecl;
-import com.siberika.idea.pascal.lang.psi.PasEntityScope;
-import com.siberika.idea.pascal.lang.psi.PasExportedRoutine;
-import com.siberika.idea.pascal.lang.psi.PasFormalParameter;
-import com.siberika.idea.pascal.lang.psi.PasFormalParameterSection;
-import com.siberika.idea.pascal.lang.psi.PasRoutineImplDecl;
-import com.siberika.idea.pascal.lang.psi.PasSubIdent;
-import com.siberika.idea.pascal.lang.psi.PascalInterfaceDecl;
-import com.siberika.idea.pascal.lang.psi.PascalNamedElement;
-import com.siberika.idea.pascal.lang.psi.PascalRoutine;
-import com.siberika.idea.pascal.lang.psi.PascalStructType;
+import com.siberika.idea.pascal.lang.psi.*;
 import com.siberika.idea.pascal.util.PsiUtil;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.application.util.function.Processor;
+import consulo.application.util.query.Query;
+import consulo.language.editor.inspection.ProblemDescriptor;
+import consulo.language.editor.inspection.ProblemHighlightType;
+import consulo.language.editor.inspection.ProblemsHolder;
+import consulo.language.editor.inspection.scheme.InspectionManager;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiManager;
+import consulo.language.psi.PsiReference;
+import consulo.language.psi.SmartPsiElementPointer;
+import consulo.language.psi.resolve.PsiElementProcessor;
+import consulo.language.psi.scope.LocalSearchScope;
+import consulo.language.psi.search.ReferencesSearch;
+import consulo.project.Project;
+import consulo.util.collection.SmartHashSet;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -38,19 +28,18 @@ import java.util.Set;
 
 import static com.siberika.idea.pascal.PascalBundle.message;
 
+@ExtensionImpl
 public class UnusedIdentsInspection extends PascalLocalInspectionBase {
 
-    private LocalSearchScope fileScope;
-
+    @Nonnull
     @Override
-    public void inspectionStarted(@NotNull LocalInspectionToolSession session, boolean isOnTheFly) {
-        super.inspectionStarted(session, isOnTheFly);
-        fileScope = new LocalSearchScope(session.getFile());
+    public String getDisplayName() {
+        return "Unused local identifiers detection";
     }
 
     @Override
     public void checkNamedIdent(PascalNamedElement namedIdent, ProblemsHolder holder, boolean isOnTheFly) {
-        ProblemDescriptor res = annotateIdent(holder.getManager(), namedIdent, isOnTheFly, fileScope);
+        ProblemDescriptor res = annotateIdent(holder.getManager(), namedIdent, isOnTheFly, new LocalSearchScope(namedIdent.getContainingFile()));
         if (res != null) {
             holder.registerProblem(res);
         }

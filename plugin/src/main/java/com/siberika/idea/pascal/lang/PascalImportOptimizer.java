@@ -1,22 +1,8 @@
 package com.siberika.idea.pascal.lang;
 
-import com.intellij.lang.ImportOptimizer;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleUtilCore;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
-import com.intellij.psi.codeStyle.CodeStyleManager;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.SmartList;
 import com.siberika.idea.pascal.PascalBundle;
 import com.siberika.idea.pascal.PascalFileType;
+import com.siberika.idea.pascal.PascalLanguage;
 import com.siberika.idea.pascal.lang.context.ContextUtil;
 import com.siberika.idea.pascal.lang.parser.PascalFile;
 import com.siberika.idea.pascal.lang.psi.*;
@@ -24,6 +10,24 @@ import com.siberika.idea.pascal.lang.references.ResolveUtil;
 import com.siberika.idea.pascal.util.DocUtil;
 import com.siberika.idea.pascal.util.ModuleUtil;
 import com.siberika.idea.pascal.util.PsiUtil;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.document.Document;
+import consulo.document.util.TextRange;
+import consulo.language.Language;
+import consulo.language.codeStyle.CodeStyleManager;
+import consulo.language.editor.refactoring.ImportOptimizer;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiManager;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.language.util.ModuleUtilCore;
+import consulo.logging.Logger;
+import consulo.module.Module;
+import consulo.project.Project;
+import consulo.util.collection.SmartList;
+import consulo.util.lang.Pair;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -34,6 +38,7 @@ import java.util.regex.Pattern;
  * Author: George Bakhtadze
  * Date: 17/12/2015
  */
+@ExtensionImpl
 public class PascalImportOptimizer implements ImportOptimizer {
 
     private static final Logger LOG = Logger.getInstance(PascalImportOptimizer.class);
@@ -297,6 +302,12 @@ public class PascalImportOptimizer implements ImportOptimizer {
             }
         }
         return -1;
+    }
+
+    @Nonnull
+    @Override
+    public Language getLanguage() {
+        return PascalLanguage.INSTANCE;
     }
 
     private static class ByOffsetComparator<T extends PsiElement> implements Comparator<T> {

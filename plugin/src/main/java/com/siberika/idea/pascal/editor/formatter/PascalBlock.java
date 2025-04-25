@@ -1,29 +1,19 @@
 package com.siberika.idea.pascal.editor.formatter;
 
-import com.intellij.formatting.Block;
-import com.intellij.formatting.ChildAttributes;
-import com.intellij.formatting.Indent;
-import com.intellij.formatting.Spacing;
-import com.intellij.formatting.SpacingBuilder;
-import com.intellij.formatting.Wrap;
-import com.intellij.formatting.WrapType;
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiWhiteSpace;
-import com.intellij.psi.TokenType;
-import com.intellij.psi.codeStyle.CodeStyleSettings;
-import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
-import com.intellij.psi.formatter.common.AbstractBlock;
-import com.intellij.psi.impl.source.tree.TreeUtil;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.TokenSet;
-import com.intellij.util.Function;
-import com.intellij.util.containers.ContainerUtil;
 import com.siberika.idea.pascal.PascalLanguage;
 import com.siberika.idea.pascal.editor.settings.PascalCodeStyleSettings;
 import com.siberika.idea.pascal.lang.lexer.PascalLexer;
 import com.siberika.idea.pascal.lang.psi.PasTypes;
 import com.siberika.idea.pascal.lang.psi.PascalStructType;
+import consulo.language.ast.ASTNode;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.TokenSet;
+import consulo.language.ast.TokenType;
+import consulo.language.codeStyle.*;
+import consulo.language.impl.ast.TreeUtil;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiWhiteSpace;
+import consulo.util.collection.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,6 +21,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * Author: George Bakhtadze
@@ -126,7 +117,7 @@ public class PascalBlock extends AbstractBlock implements Block {
         if (mySubBlocks == null) {
             mySubBlocks = ContainerUtil.mapNotNull(myNode.getChildren(null), new Function<ASTNode, Block>() {
                 @Override
-                public Block fun(ASTNode node) {
+                public Block apply(ASTNode node) {
                     if (isWhitespaceOrEmpty(node) || TOKEN_STRUCT_FILTERED.contains(node.getElementType())) {
                         return null;
                     }

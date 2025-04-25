@@ -1,6 +1,6 @@
 package com.siberika.idea.pascal.sdk;
 
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import org.jetbrains.annotations.NotNull;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;

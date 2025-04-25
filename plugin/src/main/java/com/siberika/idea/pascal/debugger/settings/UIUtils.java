@@ -1,7 +1,7 @@
 package com.siberika.idea.pascal.debugger.settings;
 
-import com.intellij.openapi.ui.ComboBox;
-import com.intellij.openapi.ui.TextFieldWithBrowseButton;
+import consulo.ui.ex.awt.ComboBox;
+import consulo.ui.ex.awt.TextFieldWithBrowseButton;
 
 import javax.swing.*;
 

@@ -1,30 +1,9 @@
 package com.siberika.idea.pascal.lang.inspection;
 
-import com.intellij.codeInspection.ProblemDescriptor;
-import com.intellij.codeInspection.ProblemHighlightType;
-import com.intellij.codeInspection.ProblemsHolder;
-import com.intellij.openapi.command.CommandProcessor;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.ScrollType;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.SmartPsiElementPointer;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.Processor;
-import com.intellij.util.SmartList;
-import com.intellij.util.containers.SmartHashSet;
 import com.siberika.idea.pascal.PascalBundle;
 import com.siberika.idea.pascal.editor.PascalRoutineActions;
 import com.siberika.idea.pascal.ide.actions.quickfix.PascalBaseFix;
-import com.siberika.idea.pascal.lang.psi.PasClassParent;
-import com.siberika.idea.pascal.lang.psi.PasClassTypeDecl;
-import com.siberika.idea.pascal.lang.psi.PasEntityScope;
-import com.siberika.idea.pascal.lang.psi.PasExportedRoutine;
-import com.siberika.idea.pascal.lang.psi.PascalInterfaceDecl;
-import com.siberika.idea.pascal.lang.psi.PascalNamedElement;
-import com.siberika.idea.pascal.lang.psi.PascalStructType;
+import com.siberika.idea.pascal.lang.psi.*;
 import com.siberika.idea.pascal.lang.psi.impl.PasField;
 import com.siberika.idea.pascal.lang.psi.impl.RoutineUtil;
 import com.siberika.idea.pascal.lang.references.ResolveUtil;
@@ -32,6 +11,22 @@ import com.siberika.idea.pascal.lang.search.PascalDefinitionsSearch;
 import com.siberika.idea.pascal.util.DocUtil;
 import com.siberika.idea.pascal.util.EditorUtil;
 import com.siberika.idea.pascal.util.PsiUtil;
+import consulo.application.util.function.Processor;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.ScrollType;
+import consulo.document.Document;
+import consulo.language.editor.inspection.ProblemDescriptor;
+import consulo.language.editor.inspection.ProblemHighlightType;
+import consulo.language.editor.inspection.ProblemsHolder;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.SmartPsiElementPointer;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.project.Project;
+import consulo.undoRedo.CommandProcessor;
+import consulo.util.collection.SmartHashSet;
+import consulo.util.collection.SmartList;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 
@@ -112,12 +107,18 @@ public class NotImplementedInspection extends PascalLocalInspectionBase {
     }
 
     private boolean hasNoDescendants(PasClassTypeDecl classTypeDecl) {
-        return PascalDefinitionsSearch.processDescendingStructs(classTypeDecl, false, new Processor<PasEntityScope>() {
+        return PascalDefinitionsSearch.processDescendingStructs(classTypeDecl, false, new Processor<>() {
             @Override
             public boolean process(PasEntityScope pascalStructType) {
                 return false;
             }
         });
+    }
+
+    @Nonnull
+    @Override
+    public String getDisplayName() {
+        return "Not implemented methods detection";
     }
 
     private class ImplementMethodFix extends PascalBaseFix {

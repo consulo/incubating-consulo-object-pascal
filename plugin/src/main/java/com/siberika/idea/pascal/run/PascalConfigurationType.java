@@ -1,9 +1,11 @@
 package com.siberika.idea.pascal.run;
 
-import com.intellij.execution.configurations.*;
-import com.intellij.openapi.project.DumbAware;
-import com.intellij.openapi.project.Project;
 import com.siberika.idea.pascal.PascalIcons;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.application.dumb.DumbAware;
+import consulo.execution.configuration.*;
+import consulo.localize.LocalizeValue;
+import consulo.project.Project;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.NotNull;
 
@@ -11,6 +13,7 @@ import org.jetbrains.annotations.NotNull;
  * Author: George Bakhtadze
  * Date: 12/5/12
  */
+@ExtensionImpl(id = "FPC")
 public class PascalConfigurationType implements ConfigurationType, DumbAware {
     private final ConfigurationFactory myFactory;
 
@@ -19,18 +22,18 @@ public class PascalConfigurationType implements ConfigurationType, DumbAware {
             @NotNull
             @Override
             public RunConfiguration createTemplateConfiguration(@NotNull Project project) {
-                return new PascalRunConfiguration(getDisplayName(), new RunConfigurationModule(project), this);
+                return new PascalRunConfiguration(getDisplayName().get(), new RunConfigurationModule(project), this);
             }
         };
     }
 
     @NotNull
-    public String getDisplayName() {
-        return "Pascal";
+    public LocalizeValue getDisplayName() {
+        return LocalizeValue.localizeTODO("Pascal");
     }
 
-    public String getConfigurationTypeDescription() {
-        return "Pascal run configuration";
+    public LocalizeValue getConfigurationTypeDescription() {
+        return LocalizeValue.localizeTODO("Pascal run configuration");
     }
 
     public Image getIcon() {

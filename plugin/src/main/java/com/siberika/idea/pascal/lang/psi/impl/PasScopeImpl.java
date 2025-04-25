@@ -1,12 +1,12 @@
 package com.siberika.idea.pascal.lang.psi.impl;
 
 import com.google.common.cache.Cache;
-import com.intellij.lang.ASTNode;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.progress.ProcessCanceledException;
-import com.intellij.psi.PsiFile;
 import com.siberika.idea.pascal.lang.psi.PasEntityScope;
 import com.siberika.idea.pascal.util.PsiUtil;
+import consulo.component.ProcessCanceledException;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.PsiFile;
+import consulo.logging.Logger;
 import org.jetbrains.annotations.Nullable;
 
 /**

@@ -1,9 +1,9 @@
 package com.siberika.idea.pascal.lang.lexer;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.tree.IElementType;
 import com.siberika.idea.pascal.PascalLanguage;
 import com.siberika.idea.pascal.lang.psi.PascalPsiElement;
+import consulo.language.ast.ASTNode;
+import consulo.language.ast.IElementType;
 import org.jetbrains.annotations.NotNull;
 
 /**

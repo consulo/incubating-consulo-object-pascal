@@ -1,8 +1,5 @@
 package com.siberika.idea.pascal.lang.inspection;
 
-import com.intellij.codeInspection.ProblemHighlightType;
-import com.intellij.codeInspection.ProblemsHolder;
-import com.intellij.psi.PsiElement;
 import com.siberika.idea.pascal.ide.actions.quickfix.IdentQuickFixes;
 import com.siberika.idea.pascal.lang.psi.PasCompoundStatement;
 import com.siberika.idea.pascal.lang.psi.PasRoutineImplDecl;
@@ -10,9 +7,15 @@ import com.siberika.idea.pascal.lang.psi.PasTypes;
 import com.siberika.idea.pascal.lang.psi.PascalRoutine;
 import com.siberika.idea.pascal.lang.psi.impl.RoutineUtil;
 import com.siberika.idea.pascal.util.PsiUtil;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.editor.inspection.ProblemHighlightType;
+import consulo.language.editor.inspection.ProblemsHolder;
+import consulo.language.psi.PsiElement;
+import jakarta.annotation.Nonnull;
 
 import static com.siberika.idea.pascal.PascalBundle.message;
 
+@ExtensionImpl
 public class DestructorInheritedInspection extends PascalLocalInspectionBase {
 
     @Override
@@ -31,5 +34,11 @@ public class DestructorInheritedInspection extends PascalLocalInspectionBase {
                 }
             }
         }
+    }
+
+    @Nonnull
+    @Override
+    public String getDisplayName() {
+        return "No inherited destructor call detection";
     }
 }

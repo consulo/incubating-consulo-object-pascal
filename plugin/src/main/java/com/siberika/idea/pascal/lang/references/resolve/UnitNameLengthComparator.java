@@ -1,7 +1,7 @@
 package com.siberika.idea.pascal.lang.references.resolve;
 
-import com.intellij.util.StringLenComparator;
 import com.siberika.idea.pascal.lang.psi.PasEntityScope;
+import consulo.util.lang.StringLenComparator;
 
 import java.util.Comparator;
 

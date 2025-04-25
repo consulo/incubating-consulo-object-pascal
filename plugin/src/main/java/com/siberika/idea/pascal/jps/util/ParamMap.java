@@ -1,6 +1,6 @@
 package com.siberika.idea.pascal.jps.util;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 
 import java.util.HashMap;
 

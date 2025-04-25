@@ -1,20 +1,20 @@
 package com.siberika.idea.pascal.lang.search;
 
-import com.intellij.openapi.application.QueryExecutorBase;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.EmptyQuery;
-import com.intellij.util.ExecutorsQuery;
-import com.intellij.util.Processor;
-import com.intellij.util.Query;
 import com.siberika.idea.pascal.lang.psi.PasNamespaceIdent;
 import com.siberika.idea.pascal.lang.psi.PasUnitModuleHead;
 import com.siberika.idea.pascal.lang.psi.PascalModule;
 import com.siberika.idea.pascal.lang.references.ResolveUtil;
 import com.siberika.idea.pascal.util.ModuleUtil;
+import consulo.application.util.query.EmptyQuery;
+import consulo.application.util.query.ExecutorsQuery;
+import consulo.application.util.query.Query;
+import consulo.project.util.query.QueryExecutorBase;
+import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Predicate;
 
 public class UsedBy {
     public static Query<PascalModule> getQuery(@NotNull PasUnitModuleHead entity) {
@@ -40,11 +40,11 @@ public class UsedBy {
         }
 
         @Override
-        public void processQuery(@NotNull Options options, @NotNull Processor<? super PascalModule> consumer) {
+        public void processQuery(@NotNull Options options, @NotNull Predicate<? super PascalModule> consumer) {
             retrieveUsingModules(options.element, consumer);
         }
 
-        private void retrieveUsingModules(@NotNull PasNamespaceIdent namespaceIdent, Processor<? super PascalModule> consumer) {
+        private void retrieveUsingModules(@NotNull PasNamespaceIdent namespaceIdent, Predicate<? super PascalModule> consumer) {
             String name = namespaceIdent.getName();
             String namespace = namespaceIdent.getNamespace();
             String namespaceless = namespaceIdent.getNamePart();
@@ -70,10 +70,10 @@ public class UsedBy {
             }
         }
 
-        private boolean collectUnits(Processor<? super PascalModule> consumer, String name, PascalModule module, List<String> usedUnitsList) {
+        private boolean collectUnits(Predicate<? super PascalModule> consumer, String name, PascalModule module, List<String> usedUnitsList) {
             for (String unitName : usedUnitsList) {
                 if (unitName.equalsIgnoreCase(name)) {
-                    if (!consumer.process(module)) {
+                    if (!consumer.test(module)) {
                         return false;
                     }
                 }

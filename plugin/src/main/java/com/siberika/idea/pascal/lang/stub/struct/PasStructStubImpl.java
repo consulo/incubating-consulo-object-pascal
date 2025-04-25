@@ -1,9 +1,9 @@
 package com.siberika.idea.pascal.lang.stub.struct;
 
-import com.intellij.psi.stubs.StubElement;
 import com.siberika.idea.pascal.lang.psi.PascalStructType;
 import com.siberika.idea.pascal.lang.psi.impl.PasField;
 import com.siberika.idea.pascal.lang.stub.PasNamedStubBase;
+import consulo.language.psi.stub.StubElement;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;

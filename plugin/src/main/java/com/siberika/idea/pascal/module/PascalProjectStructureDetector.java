@@ -1,7 +1,7 @@
 package com.siberika.idea.pascal.module;
 
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.util.io.FileUtil;
+import consulo.logging.Logger;
+import consulo.util.io.FileUtil;
 
 import java.io.File;
 import java.util.Arrays;

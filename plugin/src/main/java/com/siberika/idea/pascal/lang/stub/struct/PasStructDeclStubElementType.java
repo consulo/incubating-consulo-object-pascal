@@ -1,24 +1,15 @@
 package com.siberika.idea.pascal.lang.stub.struct;
 
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.stubs.ILightStubElementType;
-import com.intellij.psi.stubs.IndexSink;
-import com.intellij.psi.stubs.StubElement;
-import com.intellij.psi.stubs.StubInputStream;
-import com.intellij.psi.stubs.StubOutputStream;
-import com.intellij.util.SmartList;
 import com.siberika.idea.pascal.PascalLanguage;
-import com.siberika.idea.pascal.lang.psi.PasArrayType;
-import com.siberika.idea.pascal.lang.psi.PasConstDeclaration;
-import com.siberika.idea.pascal.lang.psi.PasTypeDeclaration;
-import com.siberika.idea.pascal.lang.psi.PascalNamedElement;
-import com.siberika.idea.pascal.lang.psi.PascalStructType;
-import com.siberika.idea.pascal.lang.psi.PascalVariableDeclaration;
+import com.siberika.idea.pascal.lang.psi.*;
 import com.siberika.idea.pascal.lang.references.ResolveUtil;
 import com.siberika.idea.pascal.lang.stub.PascalStructIndex;
 import com.siberika.idea.pascal.lang.stub.PascalSymbolIndex;
 import com.siberika.idea.pascal.lang.stub.StubUtil;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.stub.*;
+import consulo.logging.Logger;
+import consulo.util.collection.SmartList;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;

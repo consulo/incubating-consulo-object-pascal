@@ -1,31 +1,20 @@
 package com.siberika.idea.pascal.lang.psi.impl;
 
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
-import com.intellij.lang.ASTNode;
-import com.intellij.navigation.ItemPresentation;
-import com.intellij.openapi.roots.FileIndexFacade;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiReference;
-import com.intellij.psi.search.LocalSearchScope;
-import com.intellij.psi.search.ProjectScopeImpl;
-import com.intellij.psi.search.SearchScope;
-import com.intellij.util.IncorrectOperationException;
 import com.siberika.idea.pascal.ide.actions.SectionToggle;
 import com.siberika.idea.pascal.lang.PascalReference;
 import com.siberika.idea.pascal.lang.parser.PascalParserUtil;
-import com.siberika.idea.pascal.lang.psi.PasFormalParameter;
-import com.siberika.idea.pascal.lang.psi.PasGenericTypeIdent;
-import com.siberika.idea.pascal.lang.psi.PasNamedIdent;
-import com.siberika.idea.pascal.lang.psi.PasNamespaceIdent;
-import com.siberika.idea.pascal.lang.psi.PasRefNamedIdent;
-import com.siberika.idea.pascal.lang.psi.PasRoutineImplDecl;
-import com.siberika.idea.pascal.lang.psi.PasSubIdent;
-import com.siberika.idea.pascal.lang.psi.PasUsesClause;
-import com.siberika.idea.pascal.lang.psi.PascalInlineDeclaration;
-import com.siberika.idea.pascal.lang.psi.PascalNamedElement;
-import com.siberika.idea.pascal.lang.psi.PascalRoutine;
+import com.siberika.idea.pascal.lang.psi.*;
 import com.siberika.idea.pascal.util.StrUtil;
+import consulo.content.scope.SearchScope;
+import consulo.document.util.TextRange;
+import consulo.language.ast.ASTNode;
+import consulo.language.impl.psi.ASTWrapperPsiElement;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiReference;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.language.psi.scope.LocalSearchScope;
+import consulo.language.util.IncorrectOperationException;
+import consulo.navigation.ItemPresentation;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -132,7 +121,7 @@ public abstract class PascalNamedElementImpl extends ASTWrapperPsiElement implem
         if (!isExported()) {
             return new LocalSearchScope(this.getContainingFile());
         } else {
-            return new ProjectScopeImpl(getProject(), FileIndexFacade.getInstance(getProject()));
+            return GlobalSearchScope.projectScope(getProject());
         }
     }
 

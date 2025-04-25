@@ -1,9 +1,9 @@
 package com.siberika.idea.pascal.editor.structure;
 
-import com.intellij.ide.structureView.StructureViewModel;
-import com.intellij.ide.structureView.StructureViewModelBase;
-import com.intellij.ide.structureView.StructureViewTreeElement;
-import com.intellij.psi.PsiFile;
+import consulo.fileEditor.structureView.StructureViewModel;
+import consulo.fileEditor.structureView.StructureViewTreeElement;
+import consulo.language.editor.structureView.StructureViewModelBase;
+import consulo.language.psi.PsiFile;
 
 /**
  * Author: George Bakhtadze

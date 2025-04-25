@@ -1,18 +1,14 @@
 package com.siberika.idea.pascal.lang.psi.impl;
 
-import com.intellij.codeInsight.lookup.LookupElement;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiReference;
-import com.intellij.psi.PsiReferenceBase;
-import com.intellij.psi.util.PsiTreeUtil;
 import com.siberika.idea.pascal.lang.parser.PascalFile;
-import com.siberika.idea.pascal.lang.psi.PasCustomAttributeDecl;
-import com.siberika.idea.pascal.lang.psi.PasForInlineDeclaration;
-import com.siberika.idea.pascal.lang.psi.PasInlineVarDeclaration;
-import com.siberika.idea.pascal.lang.psi.PasModule;
-import com.siberika.idea.pascal.lang.psi.PascalNamedElement;
+import com.siberika.idea.pascal.lang.psi.*;
+import consulo.document.util.TextRange;
+import consulo.language.editor.completion.lookup.LookupElement;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiReference;
+import consulo.language.psi.PsiReferenceBase;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.logging.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;

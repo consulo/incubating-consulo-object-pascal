@@ -1,13 +1,5 @@
 package com.siberika.idea.pascal.lang.psi.impl;
 
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.parameterInfo.ParameterInfoUtils;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.impl.source.tree.LeafPsiElement;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.SmartList;
 import com.siberika.idea.pascal.lang.parser.NamespaceRec;
 import com.siberika.idea.pascal.lang.psi.*;
 import com.siberika.idea.pascal.lang.references.PasReferenceUtil;
@@ -18,7 +10,15 @@ import com.siberika.idea.pascal.lang.references.resolve.Types;
 import com.siberika.idea.pascal.lang.search.routine.FieldMatcher;
 import com.siberika.idea.pascal.lang.search.routine.ParamCountFieldMatcher;
 import com.siberika.idea.pascal.util.PsiUtil;
+import consulo.language.ast.ASTNode;
+import consulo.language.ast.IElementType;
+import consulo.language.editor.parameterInfo.ParameterInfoUtils;
+import consulo.language.impl.psi.ASTWrapperPsiElement;
+import consulo.language.impl.psi.LeafPsiElement;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.util.PsiTreeUtil;
 import consulo.object.pascal.psi.PasBaseReferenceExpr;
+import consulo.util.collection.SmartList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

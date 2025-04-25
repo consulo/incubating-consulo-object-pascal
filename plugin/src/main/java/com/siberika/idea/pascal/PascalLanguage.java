@@ -1,6 +1,6 @@
 package com.siberika.idea.pascal;
 
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import org.jetbrains.annotations.NotNull;
 
 /**

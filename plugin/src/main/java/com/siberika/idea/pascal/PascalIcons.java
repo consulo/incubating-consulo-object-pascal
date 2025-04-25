@@ -31,7 +31,7 @@ public interface PascalIcons {
     Image HELPER = ObjectPascalIconGroup.nhelper();
 
     final class Idea {
-        public static final Image RUN = PlatformIconGroup.generalRun();
-        public static final Image USED_BY = PlatformIconGroup.generalInheritedMethod();
+        public static final Image RUN = PlatformIconGroup.actionsExecute();
+        public static final Image USED_BY = PlatformIconGroup.gutterImplementingmethod();
     }
 }

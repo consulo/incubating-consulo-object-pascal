@@ -1,8 +1,8 @@
 package com.siberika.idea.pascal.lang.psi;
 
-import com.intellij.psi.PsiNameIdentifierOwner;
-import com.intellij.psi.tree.TokenSet;
 import com.siberika.idea.pascal.lang.psi.impl.PasField;
+import consulo.language.ast.TokenSet;
+import consulo.language.psi.PsiNameIdentifierOwner;
 import org.jetbrains.annotations.NotNull;
 
 /**

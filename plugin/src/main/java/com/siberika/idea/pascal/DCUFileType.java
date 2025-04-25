@@ -1,8 +1,9 @@
 package com.siberika.idea.pascal;
 
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -24,8 +25,8 @@ public class DCUFileType implements FileType {
 
     @NotNull
     @Override
-    public String getDescription() {
-        return "Delphi compiled unit";
+    public LocalizeValue getDescription() {
+        return LocalizeValue.localizeTODO("Delphi compiled unit");
     }
 
     @NotNull

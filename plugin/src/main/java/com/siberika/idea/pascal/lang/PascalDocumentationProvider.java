@@ -1,19 +1,23 @@
 package com.siberika.idea.pascal.lang;
 
-import com.intellij.lang.documentation.DocumentationMarkup;
-import com.intellij.lang.documentation.DocumentationProvider;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.*;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.SmartList;
+import com.siberika.idea.pascal.PascalLanguage;
 import com.siberika.idea.pascal.ide.actions.SectionToggle;
 import com.siberika.idea.pascal.lang.compiled.CompiledFileImpl;
 import com.siberika.idea.pascal.lang.psi.*;
 import com.siberika.idea.pascal.lang.psi.impl.HasUniqueName;
 import com.siberika.idea.pascal.lang.psi.impl.PasField;
 import com.siberika.idea.pascal.util.PsiUtil;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.document.Document;
+import consulo.document.util.TextRange;
+import consulo.language.Language;
+import consulo.language.editor.documentation.DocumentationMarkup;
+import consulo.language.editor.documentation.LanguageDocumentationProvider;
+import consulo.language.psi.*;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.util.collection.SmartList;
+import consulo.util.lang.StringUtil;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -21,7 +25,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class PascalDocumentationProvider implements DocumentationProvider {
+@ExtensionImpl
+public class PascalDocumentationProvider implements LanguageDocumentationProvider {
 
     private static final String DOC_LF = "<br/>";
 
@@ -217,15 +222,9 @@ public class PascalDocumentationProvider implements DocumentationProvider {
         return comment;
     }
 
-    @Nullable
+    @Nonnull
     @Override
-    public PsiElement getDocumentationElementForLookupItem(PsiManager psiManager, Object object, PsiElement element) {
-        return null;
-    }
-
-    @Nullable
-    @Override
-    public PsiElement getDocumentationElementForLink(PsiManager psiManager, String link, PsiElement context) {
-        return null;
+    public Language getLanguage() {
+        return PascalLanguage.INSTANCE;
     }
 }

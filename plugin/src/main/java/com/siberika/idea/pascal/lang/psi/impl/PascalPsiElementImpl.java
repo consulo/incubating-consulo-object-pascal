@@ -1,8 +1,8 @@
 package com.siberika.idea.pascal.lang.psi.impl;
 
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
-import com.intellij.lang.ASTNode;
 import com.siberika.idea.pascal.lang.psi.PascalPsiElement;
+import consulo.language.ast.ASTNode;
+import consulo.language.impl.psi.ASTWrapperPsiElement;
 
 /**
  * Author: George Bakhtadze

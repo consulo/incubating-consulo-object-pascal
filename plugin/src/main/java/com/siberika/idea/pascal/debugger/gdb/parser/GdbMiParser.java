@@ -1,6 +1,6 @@
 package com.siberika.idea.pascal.debugger.gdb.parser;
 
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;

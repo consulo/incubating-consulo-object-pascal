@@ -1,13 +1,17 @@
 package com.siberika.idea.pascal.lang.folding;
 
-import com.intellij.openapi.components.PersistentStateComponent;
-import com.intellij.openapi.components.State;
-import com.intellij.openapi.components.Storage;
-import com.intellij.util.xmlb.XmlSerializerUtil;
+import consulo.annotation.component.ServiceImpl;
+import consulo.component.persist.PersistentStateComponent;
+import consulo.component.persist.State;
+import consulo.component.persist.Storage;
+import consulo.util.xml.serializer.XmlSerializerUtil;
+import jakarta.inject.Singleton;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @State(name = "PascalCodeFoldingSettings", storages = @Storage("editor.codeinsight.xml"))
+@ServiceImpl
+@Singleton
 public class PascalCodeFoldingSettingsImpl extends PascalCodeFoldingSettings implements PersistentStateComponent<PascalCodeFoldingSettingsImpl> {
 
     private boolean FOLD_WITH_BLOCKS = false;

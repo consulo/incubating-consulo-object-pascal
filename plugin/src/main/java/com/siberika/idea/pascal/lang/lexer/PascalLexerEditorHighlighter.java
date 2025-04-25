@@ -1,13 +1,13 @@
 package com.siberika.idea.pascal.lang.lexer;
 
-import com.intellij.lexer.FlexLexer;
-import com.intellij.lexer.Lexer;
-import com.intellij.openapi.editor.colors.EditorColorsScheme;
-import com.intellij.openapi.editor.event.DocumentEvent;
-import com.intellij.openapi.editor.ex.util.LexerEditorHighlighter;
-import com.intellij.openapi.fileTypes.SyntaxHighlighter;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.colorScheme.EditorColorsScheme;
+import consulo.document.event.DocumentEvent;
+import consulo.language.editor.highlight.LexerEditorHighlighter;
+import consulo.language.editor.highlight.SyntaxHighlighter;
+import consulo.language.lexer.FlexLexer;
+import consulo.language.lexer.Lexer;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

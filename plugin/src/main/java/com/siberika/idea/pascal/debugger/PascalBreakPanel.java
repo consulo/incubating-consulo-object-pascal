@@ -1,15 +1,14 @@
 package com.siberika.idea.pascal.debugger;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.ui.JBColor;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
-import com.intellij.util.ui.JBUI;
-import com.intellij.xdebugger.breakpoints.XBreakpoint;
-import com.intellij.xdebugger.breakpoints.ui.XBreakpointCustomPropertiesPanel;
-import com.intellij.xdebugger.impl.breakpoints.XBreakpointBase;
-import com.intellij.xdebugger.impl.ui.DebuggerUIUtil;
 import com.siberika.idea.pascal.PascalBundle;
+import consulo.execution.debug.breakpoint.XBreakpoint;
+import consulo.execution.debug.breakpoint.ui.XBreakpointCustomPropertiesPanel;
+import consulo.execution.debug.ui.DebuggerUIUtil;
+import consulo.project.Project;
+import consulo.ui.ex.JBColor;
+import consulo.ui.ex.awt.JBUI;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -94,7 +93,7 @@ public class PascalBreakPanel<T extends PascalLineBreakpointProperties, B extend
         changed = changed || properties.setIgnoreCountEnabled(properties.getIgnoreCount() > 0 && myPassCountCheckbox.isSelected());
 
         if (changed) {
-            ((XBreakpointBase)breakpoint).fireBreakpointChanged();
+            breakpoint.fireBreakpointChanged();
         }
     }
 

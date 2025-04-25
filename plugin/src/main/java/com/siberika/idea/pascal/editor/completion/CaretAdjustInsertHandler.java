@@ -1,11 +1,11 @@
 package com.siberika.idea.pascal.editor.completion;
 
-import com.intellij.codeInsight.completion.InsertHandler;
-import com.intellij.codeInsight.completion.InsertionContext;
-import com.intellij.codeInsight.lookup.LookupElement;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.impl.source.tree.LeafPsiElement;
 import com.siberika.idea.pascal.util.DocUtil;
+import consulo.language.editor.completion.lookup.InsertHandler;
+import consulo.language.editor.completion.lookup.InsertionContext;
+import consulo.language.editor.completion.lookup.LookupElement;
+import consulo.language.impl.psi.LeafPsiElement;
+import consulo.language.psi.PsiElement;
 
 public class CaretAdjustInsertHandler implements InsertHandler<LookupElement> {
 

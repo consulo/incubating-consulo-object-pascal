@@ -1,7 +1,7 @@
 package com.siberika.idea.pascal.editor;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.testFramework.LightVirtualFile;
+import consulo.language.file.light.LightVirtualFile;
+import consulo.language.psi.PsiElement;
 
 /**
  * Author: George Bakhtadze

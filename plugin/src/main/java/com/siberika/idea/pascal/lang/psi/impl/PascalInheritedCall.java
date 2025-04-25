@@ -1,8 +1,8 @@
 package com.siberika.idea.pascal.lang.psi.impl;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiReference;
-import com.intellij.psi.PsiReferenceService;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.PsiReference;
+import consulo.language.psi.PsiReferenceService;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class PascalInheritedCall extends PascalPsiElementImpl {

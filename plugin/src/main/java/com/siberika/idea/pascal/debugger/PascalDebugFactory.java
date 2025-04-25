@@ -1,13 +1,13 @@
 package com.siberika.idea.pascal.debugger;
 
-import com.intellij.execution.ExecutionResult;
-import com.intellij.execution.configurations.GeneralCommandLine;
-import com.intellij.execution.runners.ExecutionEnvironment;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.xdebugger.XDebugProcess;
-import com.intellij.xdebugger.XDebugSession;
 import com.siberika.idea.pascal.jps.sdk.PascalSdkData;
 import com.siberika.idea.pascal.sdk.BasePascalSdkType;
+import consulo.content.bundle.Sdk;
+import consulo.execution.ExecutionResult;
+import consulo.execution.debug.XDebugProcess;
+import consulo.execution.debug.XDebugSession;
+import consulo.execution.runner.ExecutionEnvironment;
+import consulo.process.cmd.GeneralCommandLine;
 
 public class PascalDebugFactory {
 

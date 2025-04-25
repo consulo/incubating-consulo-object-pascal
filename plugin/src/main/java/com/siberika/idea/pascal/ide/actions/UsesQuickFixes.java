@@ -1,17 +1,17 @@
 package com.siberika.idea.pascal.ide.actions;
 
-import com.intellij.codeInspection.ProblemDescriptor;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiElement;
 import com.siberika.idea.pascal.ide.actions.quickfix.PascalBaseFix;
 import com.siberika.idea.pascal.lang.PascalImportOptimizer;
 import com.siberika.idea.pascal.lang.psi.PasUsesClause;
 import com.siberika.idea.pascal.lang.psi.PascalQualifiedIdent;
 import com.siberika.idea.pascal.util.DocUtil;
 import com.siberika.idea.pascal.util.PsiUtil;
+import consulo.document.Document;
+import consulo.document.util.TextRange;
+import consulo.language.editor.inspection.ProblemDescriptor;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiElement;
+import consulo.project.Project;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 

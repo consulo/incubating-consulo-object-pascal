@@ -1,11 +1,11 @@
 package com.siberika.idea.pascal.ide.intention;
 
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
-import com.intellij.util.IncorrectOperationException;
 import com.siberika.idea.pascal.PascalBundle;
 import com.siberika.idea.pascal.lang.psi.PascalRoutine;
+import consulo.codeEditor.Editor;
+import consulo.language.psi.PsiElement;
+import consulo.language.util.IncorrectOperationException;
+import consulo.project.Project;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,7 +19,6 @@ class TurnToProcedure extends RoutineIntention {
 
     @Nls(capitalization = Nls.Capitalization.Sentence)
     @NotNull
-    @Override
     public String getFamilyName() {
         return PascalBundle.message("action.fix.routine.to.procedure.family");
     }

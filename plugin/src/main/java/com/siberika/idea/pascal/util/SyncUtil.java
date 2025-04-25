@@ -1,7 +1,7 @@
 package com.siberika.idea.pascal.util;
 
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.progress.ProcessCanceledException;
+import consulo.component.ProcessCanceledException;
+import consulo.logging.Logger;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;

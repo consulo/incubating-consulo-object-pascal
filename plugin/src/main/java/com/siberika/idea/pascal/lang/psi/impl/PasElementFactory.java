@@ -1,15 +1,14 @@
 package com.siberika.idea.pascal.lang.psi.impl;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiErrorElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiFileFactory;
-import com.intellij.psi.impl.PsiFileFactoryImpl;
-import com.intellij.psi.util.PsiTreeUtil;
 import com.siberika.idea.pascal.PascalLanguage;
 import com.siberika.idea.pascal.lang.psi.PascalPsiElement;
-import consulo.lang.util.LanguageVersionUtil;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiErrorElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiFileFactory;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.language.version.LanguageVersionUtil;
+import consulo.project.Project;
 
 /**
  * Author: George Bakhtadze
@@ -35,7 +34,7 @@ public class PasElementFactory {
 
     public static PsiElement createReplacementElement(PsiElement element, String text) {
         if (element instanceof PascalPsiElement) {
-            PsiFileFactoryImpl factory = (PsiFileFactoryImpl) PsiFileFactoryImpl.getInstance(element.getProject());
+            PsiFileFactory factory = PsiFileFactory.getInstance(element.getProject());
             return factory.createElementFromText(text, element.getLanguage(), LanguageVersionUtil.findDefaultVersion(element.getLanguage()), element.getNode().getElementType(), element);
         } else {
             return createLeafFromText(element.getProject(), text);

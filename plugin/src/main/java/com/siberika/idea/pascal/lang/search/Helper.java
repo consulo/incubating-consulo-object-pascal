@@ -1,13 +1,5 @@
 package com.siberika.idea.pascal.lang.search;
 
-import com.intellij.openapi.application.QueryExecutorBase;
-import com.intellij.openapi.application.ReadAction;
-import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.psi.stubs.StubIndex;
-import com.intellij.psi.util.PsiUtilCore;
-import com.intellij.util.ExecutorsQuery;
-import com.intellij.util.Processor;
-import com.intellij.util.Query;
 import com.siberika.idea.pascal.lang.parser.NamespaceRec;
 import com.siberika.idea.pascal.lang.psi.PascalHelperDecl;
 import com.siberika.idea.pascal.lang.psi.PascalNamedElement;
@@ -16,9 +8,17 @@ import com.siberika.idea.pascal.lang.references.PasReferenceUtil;
 import com.siberika.idea.pascal.lang.references.ResolveUtil;
 import com.siberika.idea.pascal.lang.stub.PascalHelperIndex;
 import com.siberika.idea.pascal.util.PsiUtil;
+import consulo.application.ReadAction;
+import consulo.application.util.query.ExecutorsQuery;
+import consulo.application.util.query.Query;
+import consulo.language.psi.PsiUtilCore;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.language.psi.stub.StubIndex;
+import consulo.project.util.query.QueryExecutorBase;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
+import java.util.function.Predicate;
 
 public class Helper {
     public static Query<PascalStructType> getQuery(PascalStructType entity) {
@@ -63,11 +63,11 @@ public class Helper {
         }
 
         @Override
-        public void processQuery(@NotNull Options queryParameters, @NotNull Processor<? super PascalStructType> consumer) {
+        public void processQuery(@NotNull Options queryParameters, @NotNull Predicate<? super PascalStructType> consumer) {
             String name = ResolveUtil.cleanupName(queryParameters.element.getName()).toUpperCase();
             ReadAction.run(() -> {
                 for (PascalStructType structType : StubIndex.getElements(PascalHelperIndex.KEY, name, queryParameters.element.getProject(), queryParameters.scope, PascalStructType.class)) {
-                    if (isHelperFor(structType, queryParameters.element) && (!consumer.process(structType))) {
+                    if (isHelperFor(structType, queryParameters.element) && (!consumer.test(structType))) {
                         break;
                     }
                 }

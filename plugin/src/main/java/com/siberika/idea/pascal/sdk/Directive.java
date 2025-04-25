@@ -1,6 +1,7 @@
 package com.siberika.idea.pascal.sdk;
 
-import com.intellij.util.SmartList;
+
+import consulo.util.collection.SmartList;
 
 import java.util.Arrays;
 import java.util.Collection;

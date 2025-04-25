@@ -1,8 +1,8 @@
 package com.siberika.idea.pascal.jps.sdk;
 
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.util.SystemInfo;
 import com.siberika.idea.pascal.jps.util.FileUtil;
+import consulo.application.util.SystemInfo;
+import consulo.logging.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

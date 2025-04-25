@@ -1,6 +1,6 @@
 package com.siberika.idea.pascal.lang.compiled;
 
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 
 public interface PascalCachingUnitDecompiler {

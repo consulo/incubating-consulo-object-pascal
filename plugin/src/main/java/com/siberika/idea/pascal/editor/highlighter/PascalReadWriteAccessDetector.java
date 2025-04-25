@@ -1,34 +1,25 @@
 package com.siberika.idea.pascal.editor.highlighter;
 
-import com.intellij.codeInsight.highlighting.ReadWriteAccessDetector;
-import com.intellij.lang.parameterInfo.ParameterInfoUtils;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiReference;
-import com.intellij.psi.util.PsiTreeUtil;
 import com.siberika.idea.pascal.lang.context.ContextUtil;
-import com.siberika.idea.pascal.lang.psi.PasAssignPart;
-import com.siberika.idea.pascal.lang.psi.PasCallExpr;
-import com.siberika.idea.pascal.lang.psi.PasForInlineDeclaration;
-import com.siberika.idea.pascal.lang.psi.PasFormalParameter;
-import com.siberika.idea.pascal.lang.psi.PasInlineConstDeclaration;
-import com.siberika.idea.pascal.lang.psi.PasInlineVarDeclaration;
-import com.siberika.idea.pascal.lang.psi.PasTypes;
-import com.siberika.idea.pascal.lang.psi.PascalIdentDecl;
-import com.siberika.idea.pascal.lang.psi.PascalInlineDeclaration;
-import com.siberika.idea.pascal.lang.psi.PascalNamedElement;
-import com.siberika.idea.pascal.lang.psi.PascalQualifiedIdent;
-import com.siberika.idea.pascal.lang.psi.PascalRoutineEntity;
+import com.siberika.idea.pascal.lang.psi.*;
 import com.siberika.idea.pascal.lang.psi.field.ParamModifier;
 import com.siberika.idea.pascal.lang.psi.impl.PasField;
 import com.siberika.idea.pascal.lang.psi.impl.RoutineUtil;
 import com.siberika.idea.pascal.lang.references.PasReferenceUtil;
 import com.siberika.idea.pascal.util.PsiUtil;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.editor.highlight.ReadWriteAccessDetector;
+import consulo.language.editor.parameterInfo.ParameterInfoUtils;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiReference;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.logging.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.List;
 
+@ExtensionImpl
 public class PascalReadWriteAccessDetector extends ReadWriteAccessDetector {
 
     public static final Logger LOG = Logger.getInstance(PascalReadWriteAccessDetector.class);

@@ -1,16 +1,16 @@
 package com.siberika.idea.pascal.ide.actions;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.SmartList;
-import com.intellij.util.containers.SmartHashSet;
 import com.siberika.idea.pascal.lang.psi.*;
 import com.siberika.idea.pascal.lang.psi.impl.*;
 import com.siberika.idea.pascal.util.Filter;
 import com.siberika.idea.pascal.util.PosUtil;
 import com.siberika.idea.pascal.util.PsiUtil;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiManager;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.util.collection.SmartHashSet;
+import consulo.util.collection.SmartList;
 import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

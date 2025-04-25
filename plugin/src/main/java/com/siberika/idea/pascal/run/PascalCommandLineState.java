@@ -1,21 +1,21 @@
 package com.siberika.idea.pascal.run;
 
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.configurations.CommandLineState;
-import com.intellij.execution.configurations.GeneralCommandLine;
-import com.intellij.execution.filters.TextConsoleBuilderFactory;
-import com.intellij.execution.process.CapturingProcessHandler;
-import com.intellij.execution.process.ProcessHandler;
-import com.intellij.execution.runners.ExecutionEnvironment;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.util.SystemInfo;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.siberika.idea.pascal.PascalBundle;
 import com.siberika.idea.pascal.debugger.PascalDebugFactory;
 import com.siberika.idea.pascal.jps.util.FileUtil;
 import com.siberika.idea.pascal.module.PascalModuleType;
+import consulo.application.util.SystemInfo;
+import consulo.content.bundle.Sdk;
+import consulo.execution.configuration.CommandLineState;
+import consulo.execution.runner.ExecutionEnvironment;
+import consulo.execution.ui.console.TextConsoleBuilderFactory;
+import consulo.logging.Logger;
+import consulo.module.Module;
+import consulo.process.ExecutionException;
+import consulo.process.ProcessHandler;
+import consulo.process.cmd.GeneralCommandLine;
+import consulo.process.local.ProcessHandlerFactory;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -79,7 +79,8 @@ public class PascalCommandLineState extends CommandLineState {
         }
         commandLine.addParameters(params);
         commandLine.setWorkDirectory(workDirectory);
-        ProcessHandler handler = new CapturingProcessHandler(commandLine.createProcess(), commandLine.getCharset(), commandLine.getCommandLineString());
+
+        ProcessHandler handler = ProcessHandlerFactory.getInstance().createProcessHandler(commandLine);
         setConsoleBuilder(TextConsoleBuilderFactory.getInstance().createBuilder(runConfiguration.getProject()));
         return handler;
     }

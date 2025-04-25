@@ -1,18 +1,20 @@
 package com.siberika.idea.pascal.editor.refactoring;
 
-import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiReference;
-import com.intellij.refactoring.move.MoveCallback;
-import com.intellij.refactoring.move.MoveHandlerDelegate;
 import com.siberika.idea.pascal.util.StrUtil;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.codeEditor.Editor;
+import consulo.dataContext.DataContext;
+import consulo.language.editor.refactoring.move.MoveCallback;
+import consulo.language.editor.refactoring.move.MoveHandlerDelegate;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiReference;
+import consulo.project.Project;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Set;
 
+@ExtensionImpl
 public class PascalMoveHandler extends MoveHandlerDelegate {
 
     @Override

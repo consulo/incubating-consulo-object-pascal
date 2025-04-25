@@ -1,38 +1,33 @@
 package com.siberika.idea.pascal.sdk;
 
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.command.WriteCommandAction;
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
-import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleManager;
-import com.intellij.openapi.options.ConfigurationException;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectManager;
-import com.intellij.openapi.projectRoots.AdditionalDataConfigurable;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.ui.ComboBox;
-import com.intellij.openapi.ui.TextBrowseFolderListener;
-import com.intellij.openapi.ui.TextFieldWithBrowseButton;
-import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileEvent;
-import com.intellij.openapi.vfs.VirtualFileListener;
-import com.intellij.psi.search.FileTypeIndex;
-import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.ui.JBColor;
-import com.intellij.ui.TabbedPaneWrapper;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
-import com.intellij.util.FileContentUtil;
-import com.intellij.util.indexing.FileBasedIndex;
-import com.intellij.util.ui.JBUI;
 import com.siberika.idea.pascal.DCUFileType;
 import com.siberika.idea.pascal.PPUFileType;
 import com.siberika.idea.pascal.PascalBundle;
 import com.siberika.idea.pascal.jps.sdk.PascalSdkData;
+import consulo.application.ApplicationManager;
+import consulo.configurable.ConfigurationException;
+import consulo.content.bundle.AdditionalDataConfigurable;
+import consulo.content.bundle.Sdk;
 import consulo.disposer.Disposable;
+import consulo.document.FileDocumentManager;
+import consulo.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.FileChooserDescriptorFactory;
+import consulo.fileEditor.util.FileContentUtil;
+import consulo.language.editor.WriteCommandAction;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.language.psi.search.FileTypeIndex;
+import consulo.language.psi.stub.FileBasedIndex;
+import consulo.module.Module;
+import consulo.module.ModuleManager;
+import consulo.project.Project;
+import consulo.project.ProjectManager;
+import consulo.ui.ex.JBColor;
+import consulo.ui.ex.awt.*;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.event.VirtualFileEvent;
+import consulo.virtualFileSystem.event.VirtualFileListener;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -48,7 +43,7 @@ import java.util.Map;
  * Date: 18/01/2013
  */
 public class PascalSdkConfigUI implements AdditionalDataConfigurable {
-    private final Disposable myDisposable = Disposer.newDisposable();
+    private final Disposable myDisposable = Disposable.newDisposable();
 
     private TextFieldWithBrowseButton compilerCommandEdit;
 

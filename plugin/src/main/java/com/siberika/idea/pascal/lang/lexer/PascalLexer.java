@@ -1,13 +1,13 @@
 package com.siberika.idea.pascal.lang.lexer;
 
-import com.intellij.lexer.DelegateLexer;
-import com.intellij.lexer.FlexAdapter;
-import com.intellij.lexer.FlexLexer;
-import com.intellij.lexer.Lexer;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.tree.TokenSet;
 import com.siberika.idea.pascal.lang.psi.PasTypes;
+import consulo.language.ast.TokenSet;
+import consulo.language.lexer.DelegateLexer;
+import consulo.language.lexer.FlexAdapter;
+import consulo.language.lexer.FlexLexer;
+import consulo.language.lexer.Lexer;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class PascalLexer extends DelegateLexer implements PasTypes {

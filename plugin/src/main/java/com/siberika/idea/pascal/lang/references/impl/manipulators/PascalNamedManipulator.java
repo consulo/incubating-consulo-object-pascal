@@ -1,18 +1,21 @@
 package com.siberika.idea.pascal.lang.references.impl.manipulators;
 
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.AbstractElementManipulator;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.util.IncorrectOperationException;
 import com.siberika.idea.pascal.lang.psi.PascalNamedElement;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.document.Document;
+import consulo.document.FileDocumentManager;
+import consulo.document.util.TextRange;
+import consulo.language.psi.AbstractElementManipulator;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.util.IncorrectOperationException;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * Author: George Bakhtadze
  * Date: 23/08/2013
  */
+@ExtensionImpl
 public class PascalNamedManipulator extends AbstractElementManipulator<PascalNamedElement> {
     @Override
     public PascalNamedElement handleContentChange(@NotNull PascalNamedElement element, @NotNull TextRange range, String newContent) throws IncorrectOperationException {
@@ -25,6 +28,12 @@ public class PascalNamedManipulator extends AbstractElementManipulator<PascalNam
             }
         }
         return element;
+    }
+
+    @Nonnull
+    @Override
+    public Class<PascalNamedElement> getElementClass() {
+        return PascalNamedElement.class;
     }
 
 

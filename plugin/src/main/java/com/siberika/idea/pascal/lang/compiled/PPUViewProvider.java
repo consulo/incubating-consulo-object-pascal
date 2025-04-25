@@ -1,14 +1,18 @@
 package com.siberika.idea.pascal.lang.compiled;
 
-import com.intellij.lang.Language;
-import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.FileIndexFacade;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.*;
 import com.siberika.idea.pascal.DCUFileType;
 import com.siberika.idea.pascal.PascalLanguage;
+import consulo.ide.ServiceManager;
+import consulo.language.Language;
+import consulo.language.content.FileIndexFacade;
+import consulo.language.file.FileViewProvider;
+import consulo.language.impl.file.SingleRootFileViewProvider;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiManager;
+import consulo.language.psi.PsiReference;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
 import org.jetbrains.annotations.NotNull;
 
 /**

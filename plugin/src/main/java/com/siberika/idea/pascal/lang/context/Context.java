@@ -1,10 +1,10 @@
 package com.siberika.idea.pascal.lang.context;
 
-import com.intellij.psi.*;
-import com.intellij.psi.util.PsiTreeUtil;
 import com.siberika.idea.pascal.lang.psi.*;
 import com.siberika.idea.pascal.lang.psi.impl.PasStatementImpl;
 import com.siberika.idea.pascal.util.PsiUtil;
+import consulo.language.psi.*;
+import consulo.language.psi.util.PsiTreeUtil;
 import consulo.object.pascal.psi.PasBaseReferenceExpr;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

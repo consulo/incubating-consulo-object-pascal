@@ -1,12 +1,16 @@
 package com.siberika.idea.pascal.editor.completion;
 
-import com.intellij.codeInsight.highlighting.BraceMatcher;
-import com.intellij.openapi.editor.highlighter.HighlighterIterator;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.TokenSet;
+import com.siberika.idea.pascal.PascalLanguage;
 import com.siberika.idea.pascal.lang.psi.PasTypes;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.codeEditor.HighlighterIterator;
+import consulo.language.Language;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.TokenSet;
+import consulo.language.editor.highlight.LanguageBraceMatcher;
+import consulo.language.psi.PsiFile;
+import consulo.virtualFileSystem.fileType.FileType;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -14,7 +18,8 @@ import org.jetbrains.annotations.Nullable;
  * Author: George Bakhtadze
  * Date: 01/10/2013
  */
-public class PascalBraceMatcher implements BraceMatcher {
+@ExtensionImpl
+public class PascalBraceMatcher implements LanguageBraceMatcher {
     @Override
     public int getBraceTokenGroupId(IElementType tokenType) {
         return 0;  //To change body of implemented methods use File | Settings | File Templates.
@@ -25,7 +30,7 @@ public class PascalBraceMatcher implements BraceMatcher {
 
     @Override
     public boolean isLBraceToken(HighlighterIterator iterator, CharSequence fileText, FileType fileType) {
-        return END_PAIRS.contains(iterator.getTokenType()) || (iterator.getTokenType() == PasTypes.REPEAT)
+        return END_PAIRS.contains((IElementType) iterator.getTokenType()) || (iterator.getTokenType() == PasTypes.REPEAT)
             || (iterator.getTokenType() == PasTypes.LBRACK) || (iterator.getTokenType() == PasTypes.LPAREN);
     }
 
@@ -49,7 +54,7 @@ public class PascalBraceMatcher implements BraceMatcher {
 
     @Override
     public boolean isStructuralBrace(HighlighterIterator iterator, CharSequence text, FileType fileType) {
-        return END_PAIRS.contains(iterator.getTokenType()) || (iterator.getTokenType() == PasTypes.END)
+        return END_PAIRS.contains((IElementType) iterator.getTokenType()) || (iterator.getTokenType() == PasTypes.END)
                 || (iterator.getTokenType() == PasTypes.REPEAT) || (iterator.getTokenType() == PasTypes.UNTIL);
     }
 
@@ -75,5 +80,11 @@ public class PascalBraceMatcher implements BraceMatcher {
     @Override
     public int getCodeConstructStart(PsiFile file, int openingBraceOffset) {
         return openingBraceOffset;
+    }
+
+    @Nonnull
+    @Override
+    public Language getLanguage() {
+        return PascalLanguage.INSTANCE;
     }
 }

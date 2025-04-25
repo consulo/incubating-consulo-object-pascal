@@ -1,22 +1,26 @@
 package com.siberika.idea.pascal.module;
 
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleUtil;
-import com.intellij.openapi.progress.ProcessCanceledException;
-import com.intellij.openapi.project.DumbService;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.SmartPsiElementPointer;
-import com.intellij.psi.search.FileTypeIndex;
-import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.util.Processor;
 import com.siberika.idea.pascal.PPUFileType;
 import com.siberika.idea.pascal.jps.util.SysUtils;
 import com.siberika.idea.pascal.util.PsiUtil;
 import com.siberika.idea.pascal.util.SyncUtil;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
+import consulo.application.ApplicationManager;
+import consulo.application.util.function.Processor;
+import consulo.component.ProcessCanceledException;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.SmartPsiElementPointer;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.language.psi.search.FileTypeIndex;
+import consulo.language.util.ModuleUtilCore;
+import consulo.logging.Logger;
+import consulo.module.Module;
+import consulo.project.DumbService;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
+import jakarta.inject.Singleton;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,6 +30,9 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReentrantLock;
 
+@ServiceAPI(ComponentScope.MODULE)
+@ServiceImpl
+@Singleton
 public class ModuleService {
 
     private static final Logger LOG = Logger.getInstance(ModuleService.class);
@@ -41,20 +48,21 @@ public class ModuleService {
     private long lastClearTimeNameFile = 0;
     private File syntaxCheckTempDir;
 
-    ModuleService() {
+    public ModuleService() {
         syntaxCheckTempDir = SysUtils.createTempDir("ipassynck");
     }
 
     public static ModuleService getInstance(@Nullable Module module) {
         if (module != null) {
             return module.getComponent(ModuleService.class);
-        } else {
+        }
+        else {
             return INSTANCE_DEFAULT;
         }
     }
 
     public static void ensureNameFileCache(VirtualFile file, Project project, boolean checkTTL) {
-        Module module = ModuleUtil.findModuleForFile(file, project);
+        Module module = ModuleUtilCore.findModuleForFile(file, project);
         ModuleService.getInstance(module).ensureCache(module, checkTTL);
     }
 
@@ -76,9 +84,11 @@ public class ModuleService {
                 if (result != null) {
                     cache.put(key, PsiUtil.createSmartPointer(result));
                 }
-            } catch (ProcessCanceledException e) {
+            }
+            catch (ProcessCanceledException e) {
                 throw e;
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 LOG.error("Error calculating value", e);
             }
         }
@@ -91,7 +101,8 @@ public class ModuleService {
             cache.clear();
             lastClearTime = currentTime;
             return false;
-        } else {
+        }
+        else {
             return true;
         }
     }
@@ -116,7 +127,8 @@ public class ModuleService {
         }
         SyncUtil.doWithLock(cacheNameFileLock, () -> {
             cacheNameFileMap.clear();
-            lastClearTimeNameFile = System.nanoTime();;
+            lastClearTimeNameFile = System.nanoTime();
+            ;
             ApplicationManager.getApplication().runReadAction(() -> {
                 FileTypeIndex.processFiles(PPUFileType.INSTANCE, new Processor<VirtualFile>() {
                     @Override

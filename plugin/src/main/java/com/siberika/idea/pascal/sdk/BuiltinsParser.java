@@ -1,12 +1,12 @@
 package com.siberika.idea.pascal.sdk;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.io.StreamUtil;
-import com.intellij.psi.PsiManager;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.testFramework.LightVirtualFile;
 import com.siberika.idea.pascal.PascalFileType;
 import com.siberika.idea.pascal.lang.psi.PascalModule;
+import consulo.language.file.light.LightVirtualFile;
+import consulo.language.psi.PsiManager;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.project.Project;
+import consulo.util.io.StreamUtil;
 
 import java.io.IOException;
 import java.io.InputStream;

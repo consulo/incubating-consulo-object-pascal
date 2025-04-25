@@ -1,17 +1,7 @@
 package com.siberika.idea.pascal.editor;
 
-import com.intellij.codeHighlighting.Pass;
-import com.intellij.codeInsight.daemon.DaemonCodeAnalyzerSettings;
-import com.intellij.codeInsight.daemon.LineMarkerInfo;
-import com.intellij.codeInsight.daemon.LineMarkerProvider;
-import com.intellij.codeInsight.daemon.impl.LineMarkersPass;
-import com.intellij.icons.AllIcons;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.editor.colors.EditorColorsManager;
-import com.intellij.openapi.editor.markup.GutterIconRenderer;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.util.PsiTreeUtil;
 import com.siberika.idea.pascal.PascalIcons;
+import com.siberika.idea.pascal.PascalLanguage;
 import com.siberika.idea.pascal.editor.linemarker.PascalMarker;
 import com.siberika.idea.pascal.ide.actions.SectionToggle;
 import com.siberika.idea.pascal.lang.psi.*;
@@ -21,7 +11,20 @@ import com.siberika.idea.pascal.lang.search.GotoSuper;
 import com.siberika.idea.pascal.lang.search.Helper;
 import com.siberika.idea.pascal.lang.search.UsedBy;
 import com.siberika.idea.pascal.util.PsiUtil;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.application.AllIcons;
+import consulo.codeEditor.markup.GutterIconRenderer;
+import consulo.colorScheme.EditorColorsManager;
+import consulo.language.Language;
+import consulo.language.editor.DaemonCodeAnalyzerSettings;
+import consulo.language.editor.Pass;
+import consulo.language.editor.gutter.LineMarkerInfo;
+import consulo.language.editor.gutter.LineMarkerProvider;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.logging.Logger;
 import consulo.ui.image.Image;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -32,6 +35,7 @@ import java.util.List;
  * Author: George Bakhtadze
  * Date: 05/09/2013
  */
+@ExtensionImpl
 public class PascalLineMarkerProvider implements LineMarkerProvider {
 
     public static final Logger LOG = Logger.getInstance(PascalLineMarkerProvider.class.getName());
@@ -75,7 +79,7 @@ public class PascalLineMarkerProvider implements LineMarkerProvider {
 
     static LineMarkerInfo<PsiElement> createLineMarkerInfo(@NotNull PsiElement element, Image icon, @NotNull PascalMarker marker) {
         PsiElement el = getLeaf(element);
-        return new LineMarkerInfo<PsiElement>(el, el.getTextRange(),
+        return new LineMarkerInfo<>(el, el.getTextRange(),
                 icon, Pass.LINE_MARKERS,
                 marker.getTooltip(), marker.getHandler(),
                 GutterIconRenderer.Alignment.RIGHT);
@@ -93,7 +97,7 @@ public class PascalLineMarkerProvider implements LineMarkerProvider {
     public LineMarkerInfo getLineMarkerInfo(@NotNull PsiElement element) {
         if (element instanceof PasRoutineImplDeclImpl) {
             if (myDaemonSettings.SHOW_METHOD_SEPARATORS) {
-                return LineMarkersPass.createMethodSeparatorLineMarker(getLeaf(element), myColorsManager);
+                return LineMarkerInfo.createMethodSeparatorLineMarker(getLeaf(element), myColorsManager);
             }
         } else if ((element instanceof PasClassTypeDecl) || (element instanceof PasRecordDecl)) {
             if (Helper.hasHelpers((PascalStructType) element)) {
@@ -119,4 +123,9 @@ public class PascalLineMarkerProvider implements LineMarkerProvider {
         };
     }
 
+    @Nonnull
+    @Override
+    public Language getLanguage() {
+        return PascalLanguage.INSTANCE;
+    }
 }

@@ -1,12 +1,12 @@
 package com.siberika.idea.pascal.debugger.gdb;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.siberika.idea.pascal.debugger.CommandSender;
 import com.siberika.idea.pascal.debugger.PascalXDebugProcess;
 import com.siberika.idea.pascal.debugger.gdb.parser.GdbMiLine;
 import com.siberika.idea.pascal.debugger.gdb.parser.GdbMiParser;
 import com.siberika.idea.pascal.jps.util.PascalConsoleProcessAdapter;
 import com.siberika.idea.pascal.util.StrUtil;
+import consulo.logging.Logger;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

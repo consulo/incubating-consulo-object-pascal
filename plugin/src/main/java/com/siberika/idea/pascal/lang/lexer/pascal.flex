@@ -1,9 +1,10 @@
 package com.siberika.idea.pascal.lang.lexer;
 
-import com.intellij.lexer.FlexLexer;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.TokenType;
 import com.siberika.idea.pascal.lang.psi.PasTypes;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.TokenType;
+import consulo.language.lexer.FlexLexer;
+
 @SuppressWarnings("all")
 %%
 /*-*

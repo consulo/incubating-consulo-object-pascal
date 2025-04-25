@@ -1,13 +1,13 @@
 package com.siberika.idea.pascal.debugger.lldb;
 
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.util.SystemInfo;
 import com.siberika.idea.pascal.debugger.CommandSender;
 import com.siberika.idea.pascal.debugger.DebugBackend;
 import com.siberika.idea.pascal.debugger.PascalXDebugProcess;
 import com.siberika.idea.pascal.debugger.gdb.GdbVariableObject;
 import com.siberika.idea.pascal.debugger.gdb.parser.GdbMiLine;
 import com.siberika.idea.pascal.jps.sdk.PascalSdkData;
+import consulo.application.util.SystemInfo;
+import consulo.logging.Logger;
 
 public class LldbDebugBackend extends DebugBackend {
 

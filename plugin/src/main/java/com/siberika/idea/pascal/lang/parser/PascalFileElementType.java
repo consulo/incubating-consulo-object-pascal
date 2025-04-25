@@ -1,14 +1,19 @@
 package com.siberika.idea.pascal.lang.parser;
 
-import com.intellij.lang.*;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.stubs.PsiFileStub;
-import com.intellij.psi.tree.IStubFileElementType;
 import com.siberika.idea.pascal.PascalLanguage;
 import com.siberika.idea.pascal.PascalParserDefinition;
 import com.siberika.idea.pascal.module.PascalProjectService;
-import consulo.lang.LanguageVersion;
+import consulo.language.Language;
+import consulo.language.ast.ASTNode;
+import consulo.language.parser.ParserDefinition;
+import consulo.language.parser.PsiBuilder;
+import consulo.language.parser.PsiBuilderFactory;
+import consulo.language.parser.PsiParser;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.stub.IStubFileElementType;
+import consulo.language.psi.stub.PsiFileStub;
+import consulo.language.version.LanguageVersion;
+import consulo.project.Project;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -37,7 +42,7 @@ public class PascalFileElementType extends IStubFileElementType<PsiFileStub<Pasc
         service.setData(PascalProjectService.KEY_PARSING, psi.getContainingFile().getVirtualFile());
 
         final Language languageForParser = getLanguageForParser(psi);
-        PascalParserDefinition parserDefinition = (PascalParserDefinition) LanguageParserDefinitions.INSTANCE.forLanguage(languageForParser);
+        PascalParserDefinition parserDefinition = (PascalParserDefinition) ParserDefinition.forLanguage(project.getApplication(), languageForParser);
 
         final LanguageVersion tempLanguageVersion = chameleon.getUserData(LanguageVersion.KEY);
         final LanguageVersion languageVersion = tempLanguageVersion == null ? psi.getLanguageVersion() : tempLanguageVersion;

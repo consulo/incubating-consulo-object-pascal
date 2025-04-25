@@ -1,26 +1,18 @@
 package com.siberika.idea.pascal.editor.highlighter;
 
-import com.intellij.codeInsight.highlighting.HighlightUsagesHandlerBase;
-import com.intellij.featureStatistics.ProductivityFeatureNames;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.Consumer;
-import com.siberika.idea.pascal.lang.psi.PasBreakStatement;
-import com.siberika.idea.pascal.lang.psi.PasContinueStatement;
-import com.siberika.idea.pascal.lang.psi.PasEntityScope;
-import com.siberika.idea.pascal.lang.psi.PasExitStatement;
-import com.siberika.idea.pascal.lang.psi.PasForStatement;
-import com.siberika.idea.pascal.lang.psi.PasRaiseStatement;
-import com.siberika.idea.pascal.lang.psi.PasRepeatStatement;
-import com.siberika.idea.pascal.lang.psi.PasWhileStatement;
-import com.siberika.idea.pascal.lang.psi.PascalPsiElement;
+import com.siberika.idea.pascal.lang.psi.*;
+import consulo.codeEditor.Editor;
+import consulo.language.editor.highlight.usage.HighlightUsagesHandlerBase;
+import consulo.language.editor.util.ProductivityFeatureNames;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Highlight all BREAK and CONTINUE keywords within a loop as well as the loop keyword
@@ -40,7 +32,7 @@ public class PasHighlightBreakOutsHandler extends HighlightUsagesHandlerBase<Psi
 
     @Override
     protected void selectTargets(List<PsiElement> targets, Consumer<List<PsiElement>> selectionConsumer) {
-        selectionConsumer.consume(targets);
+        selectionConsumer.accept(targets);
     }
 
     @Override

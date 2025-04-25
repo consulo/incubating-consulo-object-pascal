@@ -1,20 +1,19 @@
 package com.siberika.idea.pascal.module;
 
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
-import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleConfigurationEditor;
-import com.intellij.openapi.options.ConfigurationException;
-import com.intellij.openapi.roots.CollectingContentIterator;
-import com.intellij.openapi.roots.ModuleFileIndex;
-import com.intellij.openapi.roots.ModuleRootManager;
-import com.intellij.openapi.roots.ui.configuration.ModuleConfigurationState;
-import com.intellij.openapi.ui.ComboBox;
-import com.intellij.openapi.ui.TextBrowseFolderListener;
-import com.intellij.openapi.ui.TextFieldWithBrowseButton;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.siberika.idea.pascal.PascalBundle;
 import com.siberika.idea.pascal.PascalFileType;
+import consulo.configurable.ConfigurationException;
+import consulo.content.CollectingContentIterator;
+import consulo.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.FileChooserDescriptorFactory;
+import consulo.ide.setting.module.ModuleConfigurationState;
+import consulo.module.Module;
+import consulo.module.content.ModuleFileIndex;
+import consulo.module.content.ModuleRootManager;
+import consulo.ui.ex.awt.ComboBox;
+import consulo.ui.ex.awt.TextBrowseFolderListener;
+import consulo.ui.ex.awt.TextFieldWithBrowseButton;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -28,7 +27,7 @@ import java.util.List;
  * Author: George Bakhtadze
  * Date: 14/01/2013
  */
-public class PascalModuleOptionsEditor implements ModuleConfigurationEditor {
+public class PascalModuleOptionsEditor {
     final ModuleConfigurationState state;
     final Module module;
 
@@ -42,28 +41,23 @@ public class PascalModuleOptionsEditor implements ModuleConfigurationEditor {
         this.module = module;
     }
 
-    @Override
     public void saveData() {
     }
 
-    @Override
     public void moduleStateChanged() {
     }
 
     @Nls
-    @Override
     public String getDisplayName() {
         return PascalBundle.message("ui.module.options.editor.name");
     }
 
     @Nullable
-    @Override
     public String getHelpTopic() {
         return null;
     }
 
     @Nullable
-    @Override
     public JComponent createComponent() {
         if (myComponent == null) {
             myComponent = createComponentImpl();
@@ -113,24 +107,20 @@ public class PascalModuleOptionsEditor implements ModuleConfigurationEditor {
         return panel;
     }
 
-    @Override
     public boolean isModified() {
         return true;
     }
 
-    @Override
     public void apply() throws ConfigurationException {
         PascalModuleType.setMainFile(module, (VirtualFile) mainFileCBox.getSelectedItem());
         PascalModuleType.setExeOutputPath(module, exePathEdit.getText());
     }
 
-    @Override
     public void reset() {
         mainFileCBox.setSelectedItem(PascalModuleType.getMainFile(module));
         exePathEdit.setText(PascalModuleType.getExeOutputPath(module));
     }
 
-    @Override
     public void disposeUIResources() {
     }
 }

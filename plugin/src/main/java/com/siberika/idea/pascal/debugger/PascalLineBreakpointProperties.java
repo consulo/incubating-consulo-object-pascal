@@ -1,6 +1,6 @@
 package com.siberika.idea.pascal.debugger;
 
-import com.intellij.xdebugger.breakpoints.XBreakpointProperties;
+import consulo.execution.debug.breakpoint.XBreakpointProperties;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

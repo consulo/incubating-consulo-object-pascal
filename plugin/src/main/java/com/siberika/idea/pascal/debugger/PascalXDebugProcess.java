@@ -1,41 +1,5 @@
 package com.siberika.idea.pascal.debugger;
 
-import com.intellij.diagnostic.logging.LogConsoleImpl;
-import com.intellij.execution.ExecutionResult;
-import com.intellij.execution.process.ProcessHandler;
-import com.intellij.execution.runners.ExecutionEnvironment;
-import com.intellij.execution.ui.ConsoleView;
-import com.intellij.execution.ui.ExecutionConsole;
-import com.intellij.execution.ui.RunnerLayoutUi;
-import com.intellij.execution.ui.layout.PlaceInGrid;
-import com.intellij.icons.AllIcons;
-import com.intellij.lang.Language;
-import com.intellij.openapi.actionSystem.ActionPlaces;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.DefaultActionGroup;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.project.DumbService;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.MessageType;
-import com.intellij.openapi.util.SystemInfo;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.testFramework.LightVirtualFile;
-import com.intellij.ui.content.Content;
-import com.intellij.xdebugger.XDebugProcess;
-import com.intellij.xdebugger.XDebugSession;
-import com.intellij.xdebugger.XDebuggerUtil;
-import com.intellij.xdebugger.XExpression;
-import com.intellij.xdebugger.XSourcePosition;
-import com.intellij.xdebugger.breakpoints.XBreakpointHandler;
-import com.intellij.xdebugger.evaluation.EvaluationMode;
-import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
-import com.intellij.xdebugger.frame.XStackFrame;
-import com.intellij.xdebugger.frame.XSuspendContext;
-import com.intellij.xdebugger.ui.XDebugTabLayouter;
 import com.siberika.idea.pascal.PascalBundle;
 import com.siberika.idea.pascal.PascalFileType;
 import com.siberika.idea.pascal.debugger.gdb.GdbDebugBackend;
@@ -48,6 +12,42 @@ import com.siberika.idea.pascal.debugger.gdb.parser.GdbStopReason;
 import com.siberika.idea.pascal.debugger.lldb.LldbDebugBackend;
 import com.siberika.idea.pascal.editor.ContextAwareVirtualFile;
 import com.siberika.idea.pascal.jps.sdk.PascalSdkData;
+import consulo.application.util.SystemInfo;
+import consulo.document.Document;
+import consulo.document.FileDocumentManager;
+import consulo.execution.ExecutionResult;
+import consulo.execution.configuration.log.LogConsoleImpl;
+import consulo.execution.debug.XDebugProcess;
+import consulo.execution.debug.XDebugSession;
+import consulo.execution.debug.XDebuggerUtil;
+import consulo.execution.debug.XSourcePosition;
+import consulo.execution.debug.breakpoint.XBreakpointHandler;
+import consulo.execution.debug.breakpoint.XExpression;
+import consulo.execution.debug.evaluation.EvaluationMode;
+import consulo.execution.debug.evaluation.XDebuggerEditorsProvider;
+import consulo.execution.debug.frame.XStackFrame;
+import consulo.execution.debug.frame.XSuspendContext;
+import consulo.execution.debug.ui.XDebugTabLayouter;
+import consulo.execution.icon.ExecutionIconGroup;
+import consulo.execution.runner.ExecutionEnvironment;
+import consulo.execution.ui.ExecutionConsole;
+import consulo.execution.ui.console.ConsoleView;
+import consulo.execution.ui.layout.PlaceInGrid;
+import consulo.execution.ui.layout.RunnerLayoutUi;
+import consulo.language.Language;
+import consulo.language.file.light.LightVirtualFile;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.logging.Logger;
+import consulo.process.ProcessHandler;
+import consulo.project.DumbService;
+import consulo.project.Project;
+import consulo.ui.NotificationType;
+import consulo.ui.ex.action.ActionPlaces;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.ui.ex.content.Content;
+import consulo.virtualFileSystem.fileType.FileType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -116,7 +116,7 @@ public class PascalXDebugProcess extends XDebugProcess {
         }
         );
         if (DumbService.isDumb(getSession().getProject())) {
-            getSession().reportMessage(PascalBundle.message("debug.features.unavailable.indexing"), MessageType.WARNING);
+            getSession().reportMessage(PascalBundle.message("debug.features.unavailable.indexing"), NotificationType.WARNING);
         }
     }
 
@@ -264,7 +264,7 @@ public class PascalXDebugProcess extends XDebugProcess {
                     return;
                 }
                 Content gdbConsoleContent = ui.createContent("PascalDebugConsoleContent", outputConsole.getComponent(),
-                        PascalBundle.message("debug.output.title"), AllIcons.Debugger.Console, outputConsole.getPreferredFocusableComponent());
+                        PascalBundle.message("debug.output.title"), ExecutionIconGroup.console(), outputConsole.getPreferredFocusableComponent());
                 gdbConsoleContent.setCloseable(false);
 
                 DefaultActionGroup consoleActions = new DefaultActionGroup();
@@ -309,7 +309,7 @@ public class PascalXDebugProcess extends XDebugProcess {
                 String msg = res.getResults().getString("msg");
                 if ((msg != null) && !handleError(msg)) {
                     getSession().reportMessage(PascalBundle.message("debug.error.response",
-                            msg.replace("\\n", "\n")), MessageType.ERROR);
+                            msg.replace("\\n", "\n")), NotificationType.ERROR);
                 }
             }
 //        } else if (!"(gdb)\n".equals(text)) {
@@ -362,7 +362,7 @@ public class PascalXDebugProcess extends XDebugProcess {
         setInferiorRunning(false);
         GdbStopReason reason = GdbStopReason.fromUid(stopContext.getResults().getString("reason"));
         String msg = null;
-        MessageType messageType = MessageType.INFO;
+        NotificationType messageType = NotificationType.INFO;
         if (reason != null) {
             switch (reason) {
                 case SIGNAL_RECEIVED: {
@@ -377,7 +377,7 @@ public class PascalXDebugProcess extends XDebugProcess {
                 case LOCATION_REACHED:
                 case FUNCTION_FINISHED: {
                     msg = reason.getUid();
-                    messageType = MessageType.WARNING;
+                    messageType = NotificationType.WARNING;
                     break;
                 }
                 case EXITED:
@@ -389,7 +389,7 @@ public class PascalXDebugProcess extends XDebugProcess {
                 }
                 case EXCEPTION: {
                     msg = reason.getUid() + ": " + stopContext.getResults().getString("exception");
-                    messageType = MessageType.ERROR;
+                    messageType = NotificationType.ERROR;
                     break;
                 }
             }

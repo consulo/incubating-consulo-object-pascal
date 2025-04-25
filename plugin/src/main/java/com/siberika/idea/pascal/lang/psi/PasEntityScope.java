@@ -1,9 +1,9 @@
 package com.siberika.idea.pascal.lang.psi;
 
-import com.intellij.psi.NavigatablePsiElement;
-import com.intellij.psi.SmartPsiElementPointer;
 import com.siberika.idea.pascal.lang.psi.impl.HasUniqueName;
 import com.siberika.idea.pascal.lang.psi.impl.PasField;
+import consulo.language.psi.NavigatablePsiElement;
+import consulo.language.psi.SmartPsiElementPointer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

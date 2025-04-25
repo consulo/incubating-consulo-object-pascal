@@ -1,30 +1,33 @@
 package com.siberika.idea.pascal.sdk;
 
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.projectRoots.*;
-import com.intellij.openapi.roots.OrderRootType;
-import com.intellij.openapi.util.SystemInfo;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VfsUtil;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileManager;
-import com.intellij.util.containers.SmartHashSet;
 import com.siberika.idea.pascal.PascalException;
 import com.siberika.idea.pascal.PascalIcons;
 import com.siberika.idea.pascal.jps.sdk.PascalCompilerFamily;
 import com.siberika.idea.pascal.jps.sdk.PascalSdkData;
 import com.siberika.idea.pascal.jps.sdk.PascalSdkUtil;
 import com.siberika.idea.pascal.jps.util.SysUtils;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.application.Application;
+import consulo.application.util.SystemInfo;
+import consulo.content.OrderRootType;
+import consulo.content.base.BinariesOrderRootType;
+import consulo.content.base.SourcesOrderRootType;
+import consulo.content.bundle.*;
+import consulo.logging.Logger;
 import consulo.platform.Platform;
-import consulo.roots.types.BinariesOrderRootType;
-import consulo.roots.types.SourcesOrderRootType;
+import consulo.platform.PlatformOperatingSystem;
 import consulo.ui.image.Image;
+import consulo.util.collection.SmartHashSet;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.LocalFileSystem;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
 import java.io.File;
 import java.net.URL;
 import java.util.*;
@@ -33,6 +36,7 @@ import java.util.*;
  * Author: George Bakhtadze
  * Date: 10/01/2013
  */
+@ExtensionImpl
 public class FPCSdkType extends BasePascalSdkType {
 
     private static final Logger LOG = Logger.getInstance(FPCSdkType.class.getName());
@@ -40,7 +44,7 @@ public class FPCSdkType extends BasePascalSdkType {
 
     @NotNull
     public static FPCSdkType getInstance() {
-        return SdkType.EP_NAME.findExtensionOrFail(FPCSdkType.class);
+        return Application.get().getExtensionPoint(SdkType.class).findExtensionOrFail(FPCSdkType.class);
     }
 
     public FPCSdkType() {
@@ -131,7 +135,7 @@ public class FPCSdkType extends BasePascalSdkType {
         File file = PascalSdkUtil.getPPUDumpExecutable(sdk.getHomePath() != null ? sdk.getHomePath() : "");
         data.setValue(PascalSdkData.Keys.DECOMPILER_COMMAND.getKey(), file.getAbsolutePath());
         StringBuilder sb = new StringBuilder("-Sa -gl -O3 ");
-        Platform.OperatingSystem operatingSystem = Platform.current().os();
+        PlatformOperatingSystem operatingSystem = Platform.current().os();
         if (operatingSystem.isWindows()) {
             sb.append("-dMSWINDOWS ");
         } else {
@@ -157,7 +161,7 @@ public class FPCSdkType extends BasePascalSdkType {
 
         URL builtins = FPCSdkType.class.getResource("/builtins.pas");
         if(builtins != null) {
-            String url = VfsUtil.convertFromUrl(builtins);
+            String url = VirtualFileUtil.convertFromUrl(builtins);
             // java plugin can be not installed
             url = url.replace("jar://", "zip://");
             
@@ -173,7 +177,7 @@ public class FPCSdkType extends BasePascalSdkType {
             for (String dir : LIBRARY_DIRS) {
                 VirtualFile vdir = getLibrary(sdk, target, dir);
                 if (vdir != null) {
-                    sdkModificator.addRoot(vdir, OrderRootType.CLASSES);
+                    sdkModificator.addRoot(vdir, BinariesOrderRootType.getInstance());
                 }
             }
         }
@@ -190,7 +194,7 @@ public class FPCSdkType extends BasePascalSdkType {
 
     @Override
     public boolean isRootTypeApplicable(@NotNull OrderRootType type) {
-        return type.equals(OrderRootType.SOURCES) || type.equals(OrderRootType.CLASSES);
+        return type.equals(SourcesOrderRootType.getInstance()) || type.equals(BinariesOrderRootType.getInstance());
     }
 
     @Nullable

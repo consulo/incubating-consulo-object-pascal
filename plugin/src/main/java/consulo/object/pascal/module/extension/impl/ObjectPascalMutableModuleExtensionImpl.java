@@ -1,18 +1,17 @@
 package consulo.object.pascal.module.extension.impl;
 
-import com.intellij.openapi.projectRoots.Sdk;
+import consulo.content.bundle.Sdk;
 import consulo.disposer.Disposable;
-import consulo.extension.ui.ModuleExtensionBundleBoxBuilder;
+import consulo.module.content.layer.ModuleRootLayer;
 import consulo.module.extension.MutableModuleInheritableNamedPointer;
+import consulo.module.ui.extension.ModuleExtensionBundleBoxBuilder;
 import consulo.object.pascal.module.extension.ObjectPascalModuleExtension;
 import consulo.object.pascal.module.extension.ObjectPascalMutableModuleExtension;
-import consulo.roots.ModuleRootLayer;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.VerticalLayout;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

@@ -1,12 +1,12 @@
 package com.siberika.idea.pascal.util;
 
-import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.codeStyle.NameUtil;
-import com.intellij.util.SmartList;
 import com.siberika.idea.pascal.lang.lexer.PascalFlexLexer;
 import com.siberika.idea.pascal.lang.psi.PascalNamedElement;
+import consulo.application.util.matcher.NameUtil;
+import consulo.document.util.TextRange;
+import consulo.language.psi.PsiElement;
+import consulo.util.collection.SmartList;
+import consulo.util.lang.Pair;
 import org.jetbrains.annotations.NotNull;
 
 import java.math.BigInteger;

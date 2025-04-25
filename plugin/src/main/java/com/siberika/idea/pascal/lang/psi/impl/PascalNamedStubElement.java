@@ -1,41 +1,25 @@
 package com.siberika.idea.pascal.lang.psi.impl;
 
-import com.intellij.extapi.psi.StubBasedPsiElementBase;
-import com.intellij.lang.ASTNode;
-import com.intellij.navigation.ItemPresentation;
-import com.intellij.openapi.project.DumbService;
-import com.intellij.openapi.roots.FileIndexFacade;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.search.LocalSearchScope;
-import com.intellij.psi.search.ProjectScopeImpl;
-import com.intellij.psi.search.SearchScope;
-import com.intellij.psi.stubs.IStubElementType;
-import com.intellij.util.IncorrectOperationException;
-import com.intellij.util.containers.SmartHashSet;
 import com.siberika.idea.pascal.lang.context.ContextUtil;
 import com.siberika.idea.pascal.lang.parser.PascalParserUtil;
-import com.siberika.idea.pascal.lang.psi.PasConstDeclaration;
-import com.siberika.idea.pascal.lang.psi.PasEntityScope;
-import com.siberika.idea.pascal.lang.psi.PasExportedRoutine;
-import com.siberika.idea.pascal.lang.psi.PasExportsSection;
-import com.siberika.idea.pascal.lang.psi.PasGenericTypeIdent;
-import com.siberika.idea.pascal.lang.psi.PasInterfaceTypeDecl;
-import com.siberika.idea.pascal.lang.psi.PasModule;
-import com.siberika.idea.pascal.lang.psi.PasTypeDecl;
-import com.siberika.idea.pascal.lang.psi.PasTypeDeclaration;
-import com.siberika.idea.pascal.lang.psi.PasUnitInterface;
-import com.siberika.idea.pascal.lang.psi.PasVarDeclaration;
-import com.siberika.idea.pascal.lang.psi.PascalModule;
-import com.siberika.idea.pascal.lang.psi.PascalNamedElement;
-import com.siberika.idea.pascal.lang.psi.PascalStructType;
-import com.siberika.idea.pascal.lang.psi.PascalStubElement;
-import com.siberika.idea.pascal.lang.psi.PascalVariableDeclaration;
+import com.siberika.idea.pascal.lang.psi.*;
 import com.siberika.idea.pascal.lang.psi.field.Flag;
 import com.siberika.idea.pascal.lang.references.ResolveUtil;
 import com.siberika.idea.pascal.lang.search.GotoSuper;
 import com.siberika.idea.pascal.lang.stub.PasNamedStub;
 import com.siberika.idea.pascal.util.PsiUtil;
 import com.siberika.idea.pascal.util.StrUtil;
+import consulo.content.scope.SearchScope;
+import consulo.language.ast.ASTNode;
+import consulo.language.impl.psi.stub.StubBasedPsiElementBase;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.language.psi.scope.LocalSearchScope;
+import consulo.language.psi.stub.IStubElementType;
+import consulo.language.util.IncorrectOperationException;
+import consulo.navigation.ItemPresentation;
+import consulo.project.DumbService;
+import consulo.util.collection.SmartHashSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -240,7 +224,7 @@ public abstract class PascalNamedStubElement<B extends PasNamedStub> extends Stu
         if (!isExported()) {
             return new LocalSearchScope(this.getContainingFile());
         }
-        return new ProjectScopeImpl(getProject(), FileIndexFacade.getInstance(getProject()));
+        return GlobalSearchScope.projectScope(getProject());
     }
 
     @Nullable

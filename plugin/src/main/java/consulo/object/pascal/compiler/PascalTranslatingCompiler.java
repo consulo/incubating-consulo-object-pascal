@@ -1,20 +1,5 @@
 package consulo.object.pascal.compiler;
 
-import com.intellij.execution.configurations.GeneralCommandLine;
-import com.intellij.execution.process.OSProcessHandler;
-import com.intellij.execution.process.ProcessAdapter;
-import com.intellij.execution.process.ProcessHandlerFactory;
-import com.intellij.openapi.compiler.CompileContext;
-import com.intellij.openapi.compiler.CompileScope;
-import com.intellij.openapi.compiler.TranslatingCompiler;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleUtilCore;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.VfsUtil;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.Chunk;
 import com.siberika.idea.pascal.PascalFileType;
 import com.siberika.idea.pascal.jps.builder.PascalCompilerMessager;
 import com.siberika.idea.pascal.jps.compiler.CompilerMessager;
@@ -22,13 +7,29 @@ import com.siberika.idea.pascal.jps.compiler.PascalBackendCompiler;
 import com.siberika.idea.pascal.jps.sdk.PascalCompilerFamily;
 import com.siberika.idea.pascal.jps.sdk.PascalSdkData;
 import com.siberika.idea.pascal.sdk.BasePascalSdkType;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.compiler.CompileContext;
 import consulo.compiler.ModuleCompilerPathsManager;
+import consulo.compiler.TranslatingCompiler;
+import consulo.compiler.scope.CompileScope;
+import consulo.content.base.BinariesOrderRootType;
+import consulo.content.base.SourcesOrderRootType;
+import consulo.content.bundle.Sdk;
+import consulo.language.content.ProductionContentFolderTypeProvider;
+import consulo.language.util.ModuleUtilCore;
+import consulo.module.Module;
 import consulo.object.pascal.module.extension.ObjectPascalModuleExtension;
-import consulo.roots.impl.ProductionContentFolderTypeProvider;
-import consulo.roots.types.BinariesOrderRootType;
-import consulo.roots.types.SourcesOrderRootType;
+import consulo.process.ProcessHandler;
+import consulo.process.cmd.GeneralCommandLine;
+import consulo.process.event.ProcessAdapter;
+import consulo.process.local.ProcessHandlerFactory;
+import consulo.util.collection.Chunk;
+import consulo.util.io.FileUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nonnull;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -39,6 +40,7 @@ import java.util.Set;
  * @author VISTALL
  * @since 12/07/2021
  */
+@ExtensionImpl
 public class PascalTranslatingCompiler implements TranslatingCompiler {
     @Override
     public boolean isCompilableFile(VirtualFile virtualFile, CompileContext compileContext) {
@@ -60,15 +62,15 @@ public class PascalTranslatingCompiler implements TranslatingCompiler {
         PascalBackendCompiler compiler = family != null ? PascalBackendCompiler.getCompiler(PascalCompilerFamily.of(family), messager) : null;
 
         String outputUrl = ModuleCompilerPathsManager.getInstance(module).getCompilerOutputUrl(ProductionContentFolderTypeProvider.getInstance());
-        String outputPath = VfsUtil.urlToPath(outputUrl);
+        String outputPath = VirtualFileUtil.urlToPath(outputUrl);
 
         FileUtil.createDirectory(new File(outputPath));
         try {
-            List<File> inputFilesAsList = VfsUtil.virtualToIoFiles(List.of(inputFiles));
+            List<File> inputFilesAsList = VirtualFileUtil.virtualToIoFiles(List.of(inputFiles));
 
             Set<File> sdkFiles = new LinkedHashSet<>();
-            sdkFiles.addAll(VfsUtil.virtualToIoFiles(List.of(sdk.getRootProvider().getFiles(BinariesOrderRootType.getInstance()))));
-            sdkFiles.addAll(VfsUtil.virtualToIoFiles(List.of(sdk.getRootProvider().getFiles(SourcesOrderRootType.getInstance()))));
+            sdkFiles.addAll(VirtualFileUtil.virtualToIoFiles(List.of(sdk.getRootProvider().getFiles(BinariesOrderRootType.getInstance()))));
+            sdkFiles.addAll(VirtualFileUtil.virtualToIoFiles(List.of(sdk.getRootProvider().getFiles(SourcesOrderRootType.getInstance()))));
 
             String[] command = compiler.createStartupCommand(sdk.getHomePath(), module.getName(), outputPath, new ArrayList<>(sdkFiles), List.of(), inputFilesAsList, null, true, true, null);
 
@@ -86,7 +88,7 @@ public class PascalTranslatingCompiler implements TranslatingCompiler {
         }
         GeneralCommandLine commandLine = new GeneralCommandLine(cmdLine);
 
-        OSProcessHandler handler = ProcessHandlerFactory.getInstance().createProcessHandler(commandLine);
+        ProcessHandler handler = ProcessHandlerFactory.getInstance().createProcessHandler(commandLine);
         ProcessAdapter adapter = compiler.getCompilerProcessAdapter(messager);
         handler.addProcessListener(adapter);
         handler.startNotify();

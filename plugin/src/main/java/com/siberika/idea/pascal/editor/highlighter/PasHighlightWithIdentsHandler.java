@@ -1,27 +1,21 @@
 package com.siberika.idea.pascal.editor.highlighter;
 
-import com.intellij.codeInsight.highlighting.HighlightUsagesHandlerBase;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.SmartPsiElementPointer;
-import com.intellij.psi.search.PsiElementProcessor;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.Consumer;
-import com.siberika.idea.pascal.lang.psi.PasEntityScope;
-import com.siberika.idea.pascal.lang.psi.PasExpr;
-import com.siberika.idea.pascal.lang.psi.PasExpression;
-import com.siberika.idea.pascal.lang.psi.PasFullyQualifiedIdent;
-import com.siberika.idea.pascal.lang.psi.PasSubIdent;
-import com.siberika.idea.pascal.lang.psi.PasWithStatement;
-import com.siberika.idea.pascal.lang.psi.PascalStructType;
+import com.siberika.idea.pascal.lang.psi.*;
 import com.siberika.idea.pascal.lang.psi.impl.PasField;
 import com.siberika.idea.pascal.lang.psi.impl.PascalExpression;
 import com.siberika.idea.pascal.util.PsiUtil;
+import consulo.codeEditor.Editor;
+import consulo.language.editor.highlight.usage.HighlightUsagesHandlerBase;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.SmartPsiElementPointer;
+import consulo.language.psi.resolve.PsiElementProcessor;
+import consulo.language.psi.util.PsiTreeUtil;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Highlight all identifiers in WITH statement which come from the scope under cursor or all identifiers from WITH scopes when cursor is on WITH keyword
@@ -41,7 +35,7 @@ public class PasHighlightWithIdentsHandler extends HighlightUsagesHandlerBase<Ps
 
     @Override
     protected void selectTargets(List<PsiElement> targets, Consumer<List<PsiElement>> selectionConsumer) {
-        selectionConsumer.consume(targets);
+        selectionConsumer.accept(targets);
     }
 
     @Override

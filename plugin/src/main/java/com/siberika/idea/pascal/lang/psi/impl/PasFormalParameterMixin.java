@@ -1,8 +1,8 @@
 package com.siberika.idea.pascal.lang.psi.impl;
 
-import com.intellij.lang.ASTNode;
 import com.siberika.idea.pascal.lang.psi.PasFormalParameter;
 import com.siberika.idea.pascal.lang.psi.PascalNamedElement;
+import consulo.language.ast.ASTNode;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;

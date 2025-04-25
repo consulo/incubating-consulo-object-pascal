@@ -1,18 +1,18 @@
 package com.siberika.idea.pascal.lang.compiled;
 
-import com.intellij.openapi.fileTypes.BinaryFileDecompiler;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleUtilCore;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectManager;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.siberika.idea.pascal.PascalBundle;
 import com.siberika.idea.pascal.jps.sdk.PascalSdkData;
 import com.siberika.idea.pascal.module.ModuleService;
 import com.siberika.idea.pascal.sdk.BasePascalSdkType;
 import com.siberika.idea.pascal.util.ModuleUtil;
+import consulo.content.bundle.Sdk;
+import consulo.language.util.ModuleUtilCore;
+import consulo.module.Module;
 import consulo.object.pascal.module.extension.ObjectPascalModuleExtension;
+import consulo.project.Project;
+import consulo.project.ProjectManager;
+import consulo.virtualFileSystem.BinaryFileDecompiler;
+import consulo.virtualFileSystem.VirtualFile;
 
 /**
  * Author: George Bakhtadze

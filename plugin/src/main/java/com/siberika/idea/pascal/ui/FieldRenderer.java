@@ -1,12 +1,12 @@
 package com.siberika.idea.pascal.ui;
 
-import com.intellij.ui.ColoredTreeCellRenderer;
-import com.intellij.ui.SimpleTextAttributes;
 import com.siberika.idea.pascal.PascalIcons;
 import com.siberika.idea.pascal.lang.psi.PasEntityScope;
 import com.siberika.idea.pascal.lang.psi.PascalNamedElement;
 import com.siberika.idea.pascal.lang.psi.impl.PasField;
 import com.siberika.idea.pascal.util.PsiUtil;
+import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;

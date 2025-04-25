@@ -1,13 +1,13 @@
 package consulo.object.pascal.run;
 
-import com.intellij.application.options.ModulesComboBox;
-import com.intellij.execution.CommonProgramRunConfigurationParameters;
-import com.intellij.execution.ui.CommonProgramParametersPanel;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleManager;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.LabeledComponent;
 import com.siberika.idea.pascal.run.PascalRunConfigurationParams;
+import consulo.execution.CommonProgramRunConfigurationParameters;
+import consulo.execution.ui.awt.CommonProgramParametersPanel;
+import consulo.module.Module;
+import consulo.module.ModuleManager;
+import consulo.module.ui.awt.ModulesComboBox;
+import consulo.project.Project;
+import consulo.ui.ex.awt.LabeledComponent;
 
 import javax.swing.*;
 

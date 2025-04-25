@@ -1,6 +1,6 @@
 package com.siberika.idea.pascal.sdk;
 
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 
 /**
  * Author: George Bakhtadze

@@ -1,29 +1,28 @@
 package com.siberika.idea.pascal.lang.compiled;
 
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.FileViewProvider;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
-import com.intellij.psi.stubs.BinaryFileStubBuilder;
-import com.intellij.psi.stubs.PsiFileStub;
-import com.intellij.psi.stubs.Stub;
-import com.intellij.util.indexing.FileContent;
-import com.siberika.idea.pascal.DCUFileType;
 import com.siberika.idea.pascal.PPUFileType;
 import com.siberika.idea.pascal.PascalLanguage;
 import com.siberika.idea.pascal.lang.parser.PascalFileElementType;
 import com.siberika.idea.pascal.module.ModuleService;
+import consulo.language.file.FileViewProvider;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiManager;
+import consulo.language.psi.stub.BinaryFileStubBuilder;
+import consulo.language.psi.stub.FileContent;
+import consulo.language.psi.stub.PsiFileStub;
+import consulo.language.psi.stub.Stub;
+import consulo.logging.Logger;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class PascalCompiledStubBuilder implements BinaryFileStubBuilder {
+public abstract class PascalCompiledStubBuilder implements BinaryFileStubBuilder {
 
     private static final Logger LOG = Logger.getInstance(PascalCompiledStubBuilder.class);
 
     @Override
     public boolean acceptsFile(VirtualFile virtualFile) {
-        return virtualFile.getFileType() == PPUFileType.INSTANCE || virtualFile.getFileType() == DCUFileType.INSTANCE;
+        return true;
     }
 
     @Override

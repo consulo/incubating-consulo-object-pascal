@@ -1,19 +1,41 @@
 package com.siberika.idea.pascal.lang.inspection;
 
-import com.intellij.codeInspection.LocalInspectionTool;
-import com.intellij.codeInspection.LocalInspectionToolSession;
-import com.intellij.codeInspection.ProblemsHolder;
-import com.intellij.psi.PsiElementVisitor;
-import com.siberika.idea.pascal.lang.psi.PasClassTypeDecl;
-import com.siberika.idea.pascal.lang.psi.PasNamedIdent;
-import com.siberika.idea.pascal.lang.psi.PasNamedIdentDecl;
-import com.siberika.idea.pascal.lang.psi.PasUsesClause;
-import com.siberika.idea.pascal.lang.psi.PasVisitor;
-import com.siberika.idea.pascal.lang.psi.PascalNamedElement;
-import com.siberika.idea.pascal.lang.psi.PascalRoutine;
+import com.siberika.idea.pascal.PascalLanguage;
+import com.siberika.idea.pascal.lang.psi.*;
+import consulo.language.Language;
+import consulo.language.editor.inspection.LocalInspectionTool;
+import consulo.language.editor.inspection.LocalInspectionToolSession;
+import consulo.language.editor.inspection.ProblemsHolder;
+import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
+import consulo.language.psi.PsiElementVisitor;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class PascalLocalInspectionBase extends LocalInspectionTool {
+    @Nullable
+    @Override
+    public Language getLanguage() {
+        return PascalLanguage.INSTANCE;
+    }
+
+    @Nonnull
+    @Override
+    public HighlightDisplayLevel getDefaultLevel() {
+        return HighlightDisplayLevel.WARNING;
+    }
+
+    @Nonnull
+    @Override
+    public String getGroupDisplayName() {
+        return "";
+    }
+
+    @Override
+    public boolean isEnabledByDefault() {
+        return true;
+    }
+
     protected void checkUses(PasUsesClause usesClause, ProblemsHolder holder, boolean isOnTheFly) {
     }
 
@@ -28,7 +50,7 @@ public abstract class PascalLocalInspectionBase extends LocalInspectionTool {
 
     @NotNull
     @Override
-    public PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly, @NotNull LocalInspectionToolSession session) {
+    public PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly, @NotNull LocalInspectionToolSession session, Object state) {
         return new PasVisitor() {
 
             @Override

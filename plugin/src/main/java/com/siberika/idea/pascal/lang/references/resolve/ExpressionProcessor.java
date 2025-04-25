@@ -1,8 +1,5 @@
 package com.siberika.idea.pascal.lang.references.resolve;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.impl.source.tree.LeafPsiElement;
-import com.intellij.psi.search.PsiElementProcessor;
 import com.siberika.idea.pascal.lang.parser.NamespaceRec;
 import com.siberika.idea.pascal.lang.psi.*;
 import com.siberika.idea.pascal.lang.psi.impl.PasField;
@@ -11,6 +8,9 @@ import com.siberika.idea.pascal.lang.references.ResolveContext;
 import com.siberika.idea.pascal.lang.search.routine.FieldMatcher;
 import com.siberika.idea.pascal.lang.search.routine.ParamCountFieldMatcher;
 import com.siberika.idea.pascal.util.ModuleUtil;
+import consulo.language.impl.psi.LeafPsiElement;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.resolve.PsiElementProcessor;
 import consulo.object.pascal.psi.PasBaseReferenceExpr;
 import org.jetbrains.annotations.NotNull;
 

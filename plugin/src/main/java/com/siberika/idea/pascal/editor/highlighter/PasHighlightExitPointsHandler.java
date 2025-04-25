@@ -1,28 +1,23 @@
 package com.siberika.idea.pascal.editor.highlighter;
 
-import com.intellij.codeInsight.highlighting.HighlightUsagesHandlerBase;
-import com.intellij.featureStatistics.ProductivityFeatureNames;
-import com.intellij.lang.injection.InjectedLanguageManager;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.Consumer;
-import com.siberika.idea.pascal.lang.psi.PasEntityScope;
-import com.siberika.idea.pascal.lang.psi.PasExitStatement;
-import com.siberika.idea.pascal.lang.psi.PasFullyQualifiedIdent;
-import com.siberika.idea.pascal.lang.psi.PasRaiseStatement;
-import com.siberika.idea.pascal.lang.psi.PasSubIdent;
-import com.siberika.idea.pascal.lang.psi.PascalPsiElement;
+import com.siberika.idea.pascal.lang.psi.*;
 import com.siberika.idea.pascal.lang.psi.impl.RoutineUtil;
 import com.siberika.idea.pascal.util.PsiUtil;
+import consulo.codeEditor.Editor;
+import consulo.document.util.TextRange;
+import consulo.language.editor.highlight.usage.HighlightUsagesHandlerBase;
+import consulo.language.editor.util.ProductivityFeatureNames;
+import consulo.language.inject.InjectedLanguageManager;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Highlight all EXIT and RAISE keywords or Result references (for functions) within nearest scope
@@ -46,7 +41,7 @@ public class PasHighlightExitPointsHandler extends HighlightUsagesHandlerBase<Ps
 
     @Override
     protected void selectTargets(List<PsiElement> targets, Consumer<List<PsiElement>> selectionConsumer) {
-        selectionConsumer.consume(targets);
+        selectionConsumer.accept(targets);
     }
 
     @Override
@@ -62,8 +57,8 @@ public class PasHighlightExitPointsHandler extends HighlightUsagesHandlerBase<Ps
         }
 
         @SuppressWarnings("unchecked")
-        Collection<PascalPsiElement> sts = PsiTreeUtil.findChildrenOfAnyType(scope, PascalHighlightHandlerFactory.isFunction(scope) ? CLASSES_FOR_FUNCTION : CLASSES);
-        for (PascalPsiElement st : sts) {
+        Collection<PsiElement> sts = PsiTreeUtil.findChildrenOfAnyType(scope, PascalHighlightHandlerFactory.isFunction(scope) ? CLASSES_FOR_FUNCTION : CLASSES);
+        for (PsiElement st : sts) {
             if (PsiUtil.getNearestAffectingScope(st) == scope) {
                 if (st instanceof PasFullyQualifiedIdent) {
                     List<PasSubIdent> subidents = ((PasFullyQualifiedIdent) st).getSubIdentList();

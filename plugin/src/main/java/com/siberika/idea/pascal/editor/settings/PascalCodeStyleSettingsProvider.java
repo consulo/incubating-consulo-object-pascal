@@ -1,15 +1,17 @@
 package com.siberika.idea.pascal.editor.settings;
 
-import com.intellij.openapi.options.Configurable;
-import com.intellij.psi.codeStyle.CodeStyleSettings;
-import com.intellij.psi.codeStyle.CodeStyleSettingsProvider;
-import com.intellij.psi.codeStyle.CustomCodeStyleSettings;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.configurable.Configurable;
+import consulo.language.codeStyle.CodeStyleSettings;
+import consulo.language.codeStyle.CustomCodeStyleSettings;
+import consulo.language.codeStyle.setting.CodeStyleSettingsProvider;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * Author: George Bakhtadze
  * Date: 15/05/2017
  */
+@ExtensionImpl
 public class PascalCodeStyleSettingsProvider extends CodeStyleSettingsProvider {
     @Override
     public String getConfigurableDisplayName() {

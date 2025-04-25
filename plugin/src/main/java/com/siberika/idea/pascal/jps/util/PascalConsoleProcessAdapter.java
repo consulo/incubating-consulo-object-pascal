@@ -1,7 +1,7 @@
 package com.siberika.idea.pascal.jps.util;
 
-import com.intellij.execution.process.ProcessAdapter;
-import com.intellij.execution.process.ProcessEvent;
+import consulo.process.event.ProcessAdapter;
+import consulo.process.event.ProcessEvent;
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NotNull;
 

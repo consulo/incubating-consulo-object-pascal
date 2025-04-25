@@ -1,28 +1,28 @@
 package com.siberika.idea.pascal.debugger;
 
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
-import com.intellij.xdebugger.XDebuggerUtil;
-import com.intellij.xdebugger.XSourcePosition;
-import com.intellij.xdebugger.frame.*;
-import com.intellij.xdebugger.frame.presentation.XErrorValuePresentation;
-import com.intellij.xdebugger.frame.presentation.XValuePresentation;
 import com.siberika.idea.pascal.PascalBundle;
 import com.siberika.idea.pascal.PascalIcons;
 import com.siberika.idea.pascal.debugger.gdb.GdbVariableObject;
 import com.siberika.idea.pascal.jps.sdk.PascalSdkData;
 import com.siberika.idea.pascal.util.DocUtil;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.application.ApplicationManager;
+import consulo.codeEditor.DefaultLanguageHighlighterColors;
+import consulo.document.Document;
+import consulo.execution.debug.XDebuggerUtil;
+import consulo.execution.debug.XSourcePosition;
+import consulo.execution.debug.frame.*;
+import consulo.execution.debug.frame.presentation.XErrorValuePresentation;
+import consulo.execution.debug.frame.presentation.XValuePresentation;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiManager;
+import consulo.project.Project;
 import consulo.ui.image.Image;
+import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nullable;
 import java.util.regex.Pattern;
 
 /**

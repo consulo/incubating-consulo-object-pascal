@@ -1,15 +1,10 @@
 package com.siberika.idea.pascal.util;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.openapi.util.Pair;
-import com.intellij.psi.PsiElement;
-import com.siberika.idea.pascal.lang.psi.PasClassState;
-import com.siberika.idea.pascal.lang.psi.PasClassTypeDecl;
-import com.siberika.idea.pascal.lang.psi.PasRecordDecl;
-import com.siberika.idea.pascal.lang.psi.PasTypes;
-import com.siberika.idea.pascal.lang.psi.PasVisibility;
-import com.siberika.idea.pascal.lang.psi.PascalStructType;
+import com.siberika.idea.pascal.lang.psi.*;
 import com.siberika.idea.pascal.lang.psi.impl.PasField;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.PsiElement;
+import consulo.util.lang.Pair;
 
 import java.util.List;
 

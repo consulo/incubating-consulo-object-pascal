@@ -1,19 +1,19 @@
 package com.siberika.idea.pascal.lang.folding;
 
 import com.siberika.idea.pascal.PascalBundle;
-import consulo.options.SimpleConfigurableByProperties;
+import consulo.configurable.SimpleConfigurableByProperties;
+import consulo.disposer.Disposable;
 import consulo.ui.CheckBox;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.VerticalLayout;
-
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class PascalFoldingOptionsProvider extends SimpleConfigurableByProperties {
     @RequiredUIAccess
     @Nonnull
     @Override
-    protected Component createLayout(PropertyBuilder propertyBuilder) {
+    protected Component createLayout(PropertyBuilder propertyBuilder, Disposable parent) {
         VerticalLayout root = VerticalLayout.create();
         PascalCodeFoldingSettings settings = PascalCodeFoldingSettings.getInstance();
 

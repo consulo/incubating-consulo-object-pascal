@@ -1,26 +1,29 @@
 package com.siberika.idea.pascal.editor.highlighter;
 
-import com.intellij.codeInsight.highlighting.HighlightUsagesHandlerBase;
-import com.intellij.codeInsight.highlighting.HighlightUsagesHandlerFactoryBase;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.siberika.idea.pascal.lang.psi.PasEntityScope;
-import com.siberika.idea.pascal.lang.psi.PasNamespaceIdent;
-import com.siberika.idea.pascal.lang.psi.PasSubIdent;
-import com.siberika.idea.pascal.lang.psi.PasUsesClause;
-import com.siberika.idea.pascal.lang.psi.PasWithStatement;
-import com.siberika.idea.pascal.lang.psi.PascalRoutine;
+import com.siberika.idea.pascal.lang.parser.PascalFile;
+import com.siberika.idea.pascal.lang.psi.*;
 import com.siberika.idea.pascal.lang.psi.impl.RoutineUtil;
 import com.siberika.idea.pascal.util.PsiUtil;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.codeEditor.Editor;
+import consulo.language.editor.highlight.usage.HighlightUsagesHandlerBase;
+import consulo.language.editor.highlight.usage.HighlightUsagesHandlerFactoryBase;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+@ExtensionImpl
 public class PascalHighlightHandlerFactory extends HighlightUsagesHandlerFactoryBase {
-
+    @RequiredReadAction
     @Nullable
     @Override
     public HighlightUsagesHandlerBase createHighlightUsagesHandler(@NotNull Editor editor, @NotNull PsiFile file, @NotNull PsiElement target) {
+        if (!(file instanceof PascalFile)) {
+            return null;
+        }
+
         if ("EXIT".equalsIgnoreCase(target.getText()) || "RAISE".equalsIgnoreCase(target.getText()) || isResultReference(target)) {
             return new PasHighlightExitPointsHandler(editor, file, target);
         }
@@ -57,7 +60,8 @@ public class PascalHighlightHandlerFactory extends HighlightUsagesHandlerFactory
         if (parent instanceof PasSubIdent) {
             parent = parent.getParent();
             return (parent instanceof PasNamespaceIdent) && (parent.getParent() instanceof PasUsesClause) ? (PasNamespaceIdent) parent : null;
-        } else {
+        }
+        else {
             return null;
         }
     }

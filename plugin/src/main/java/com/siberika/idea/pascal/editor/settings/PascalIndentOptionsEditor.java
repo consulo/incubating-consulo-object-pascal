@@ -1,9 +1,9 @@
 package com.siberika.idea.pascal.editor.settings;
 
-import com.intellij.application.options.SmartIndentOptionsEditor;
-import com.intellij.psi.codeStyle.CodeStyleSettings;
-import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import com.siberika.idea.pascal.PascalBundle;
+import consulo.language.codeStyle.CodeStyleSettings;
+import consulo.language.codeStyle.CommonCodeStyleSettings;
+import consulo.language.codeStyle.ui.setting.SmartIndentOptionsEditor;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;

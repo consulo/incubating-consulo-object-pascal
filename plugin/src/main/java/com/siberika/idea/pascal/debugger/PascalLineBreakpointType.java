@@ -1,10 +1,10 @@
 package com.siberika.idea.pascal.debugger;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
-import com.intellij.xdebugger.breakpoints.XLineBreakpointType;
-import com.intellij.xdebugger.breakpoints.ui.XBreakpointCustomPropertiesPanel;
+import consulo.execution.debug.breakpoint.XLineBreakpoint;
+import consulo.execution.debug.breakpoint.XLineBreakpointType;
+import consulo.execution.debug.breakpoint.ui.XBreakpointCustomPropertiesPanel;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

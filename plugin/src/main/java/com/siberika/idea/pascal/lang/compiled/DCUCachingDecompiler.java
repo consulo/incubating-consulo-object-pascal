@@ -4,16 +4,16 @@ import com.google.common.base.Joiner;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.progress.ProcessCanceledException;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.OrderRootType;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.siberika.idea.pascal.PascalBundle;
 import com.siberika.idea.pascal.PascalException;
 import com.siberika.idea.pascal.jps.util.SysUtils;
 import com.siberika.idea.pascal.sdk.BasePascalSdkType;
 import com.siberika.idea.pascal.sdk.DelphiSdkType;
+import consulo.component.ProcessCanceledException;
+import consulo.content.base.BinariesOrderRootType;
+import consulo.content.bundle.Sdk;
+import consulo.logging.Logger;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -116,7 +116,7 @@ public class DCUCachingDecompiler implements PascalCachingUnitDecompiler {
     }
 
     private static List<String> collectUnitPaths(Sdk sdk) {
-        VirtualFile[] sdkFiles = sdk.getRootProvider().getFiles(OrderRootType.CLASSES);
+        VirtualFile[] sdkFiles = sdk.getRootProvider().getFiles(BinariesOrderRootType.getInstance());
         Set<File> paths = com.siberika.idea.pascal.jps.util.FileUtil.retrievePaths(sdkFiles);
         List<String> result = new ArrayList<>(paths.size());
         for (File path : paths) {

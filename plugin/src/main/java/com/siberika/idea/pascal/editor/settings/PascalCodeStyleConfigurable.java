@@ -1,10 +1,10 @@
 package com.siberika.idea.pascal.editor.settings;
 
-import com.intellij.application.options.CodeStyleAbstractConfigurable;
-import com.intellij.application.options.CodeStyleAbstractPanel;
-import com.intellij.application.options.TabbedLanguageCodeStylePanel;
-import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.siberika.idea.pascal.PascalLanguage;
+import consulo.language.codeStyle.CodeStyleSettings;
+import consulo.language.codeStyle.ui.setting.CodeStyleAbstractConfigurable;
+import consulo.language.codeStyle.ui.setting.CodeStyleAbstractPanel;
+import consulo.language.codeStyle.ui.setting.TabbedLanguageCodeStylePanel;
 import org.jetbrains.annotations.NotNull;
 
 /**

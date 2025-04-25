@@ -1,12 +1,16 @@
 package com.siberika.idea.pascal.editor.completion;
 
-import com.intellij.codeInsight.completion.CompletionConfidence;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.util.ThreeState;
+import com.siberika.idea.pascal.PascalLanguage;
 import com.siberika.idea.pascal.lang.lexer.PascalLexer;
 import com.siberika.idea.pascal.lang.psi.PasTypes;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.Language;
+import consulo.language.ast.IElementType;
+import consulo.language.editor.completion.CompletionConfidence;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.util.lang.ThreeState;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.regex.Pattern;
@@ -15,6 +19,7 @@ import java.util.regex.Pattern;
  * Author: George Bakhtadze
  * Date: 01/10/2013
  */
+@ExtensionImpl
 public class PascalCompletionConfidence extends CompletionConfidence {
     @NotNull
     @Override
@@ -49,5 +54,11 @@ public class PascalCompletionConfidence extends CompletionConfidence {
         return (type == PasTypes.SUB_IDENT) || (type == PasTypes.NAME)
                 || (type == PasTypes.CALL_EXPR) || (type == PasTypes.INDEX_EXPR) || (type == PasTypes.DEREFERENCE_EXPR)
                 || (type == PasTypes.PAREN_EXPR) || (type == PasTypes.EXPRESSION);
+    }
+
+    @Nonnull
+    @Override
+    public Language getLanguage() {
+        return PascalLanguage.INSTANCE;
     }
 }

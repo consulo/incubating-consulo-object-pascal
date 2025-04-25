@@ -1,12 +1,16 @@
 package com.siberika.idea.pascal;
 
-import com.intellij.notification.NotificationDisplayType;
-import com.intellij.notification.NotificationGroup;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.projectRoots.SdkTable;
-import com.intellij.openapi.util.io.StreamUtil;
 import com.siberika.idea.pascal.sdk.FPCSdkType;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
+import consulo.content.bundle.Sdk;
+import consulo.content.bundle.SdkTable;
+import consulo.logging.Logger;
+import consulo.project.ui.notification.NotificationDisplayType;
+import consulo.project.ui.notification.NotificationGroup;
+import consulo.util.io.StreamUtil;
+import jakarta.inject.Singleton;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -18,7 +22,10 @@ import java.nio.file.Files;
  * Author: George Bakhtadze
  * Date: 30/11/2015
  */
-public class PascalAppService  {
+@ServiceAPI(ComponentScope.APPLICATION)
+@ServiceImpl
+@Singleton
+public class PascalAppService {
 
     private static final Logger LOG = Logger.getInstance(PascalAppService.class);
 
@@ -50,13 +57,15 @@ public class PascalAppService  {
             debugUnitDir.deleteOnExit();
             debugUnitFile.deleteOnExit();
             LOG.debug("Debug unit file: " + debugUnitFile.getAbsolutePath());
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             LOG.info("ERROR: failed to create debug unit temp file: " + e.getMessage());
         }
         try (InputStream data = PascalAppService.class.getResourceAsStream("/ipasdbg.pas");
              FileOutputStream os = new FileOutputStream(debugUnitFile)) {
-             StreamUtil.copyStreamContent(data, os);
-        } catch (IOException e) {
+            StreamUtil.copyStreamContent(data, os);
+        }
+        catch (IOException e) {
             LOG.info("ERROR: failed to prepare debug unit file: " + e.getMessage());
         }
         Sdk[] sdks = SdkTable.getInstance().getAllSdks();

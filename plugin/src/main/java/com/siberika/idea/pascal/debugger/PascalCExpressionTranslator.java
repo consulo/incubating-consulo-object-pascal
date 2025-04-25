@@ -1,21 +1,21 @@
 package com.siberika.idea.pascal.debugger;
 
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Computable;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.testFramework.LightVirtualFile;
 import com.siberika.idea.pascal.PascalBundle;
 import com.siberika.idea.pascal.PascalFileType;
 import com.siberika.idea.pascal.lang.psi.*;
 import com.siberika.idea.pascal.lang.psi.impl.PasExpressionImpl;
 import com.siberika.idea.pascal.lang.psi.impl.PascalExpression;
+import consulo.application.ApplicationManager;
+import consulo.application.util.function.Computable;
+import consulo.language.file.light.LightVirtualFile;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiManager;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.logging.Logger;
 import consulo.object.pascal.psi.PasBaseReferenceExpr;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
 
 import java.util.HashMap;
 import java.util.Map;

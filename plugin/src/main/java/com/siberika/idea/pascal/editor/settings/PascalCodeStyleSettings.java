@@ -1,7 +1,7 @@
 package com.siberika.idea.pascal.editor.settings;
 
-import com.intellij.psi.codeStyle.CodeStyleSettings;
-import com.intellij.psi.codeStyle.CustomCodeStyleSettings;
+import consulo.language.codeStyle.CodeStyleSettings;
+import consulo.language.codeStyle.CustomCodeStyleSettings;
 
 /**
  * Author: George Bakhtadze

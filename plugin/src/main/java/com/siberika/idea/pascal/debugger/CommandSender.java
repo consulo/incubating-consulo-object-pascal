@@ -1,8 +1,8 @@
 package com.siberika.idea.pascal.debugger;
 
-import com.intellij.execution.ui.ConsoleViewContentType;
-import com.intellij.openapi.diagnostic.Logger;
 import com.siberika.idea.pascal.debugger.gdb.parser.GdbMiLine;
+import consulo.execution.ui.console.ConsoleViewContentType;
+import consulo.logging.Logger;
 
 import java.io.IOException;
 import java.io.OutputStream;

@@ -1,8 +1,8 @@
 package com.siberika.idea.pascal.lang;
 
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.util.SmartList;
 import com.siberika.idea.pascal.jps.compiler.CompilerMessager;
+import consulo.logging.Logger;
+import consulo.util.collection.SmartList;
 
 import java.io.File;
 import java.nio.file.Path;

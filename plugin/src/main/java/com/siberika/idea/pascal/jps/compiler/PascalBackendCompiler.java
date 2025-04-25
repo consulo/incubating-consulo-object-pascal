@@ -1,21 +1,23 @@
 package com.siberika.idea.pascal.jps.compiler;
 
-import com.intellij.execution.process.BaseOSProcessHandler;
-import com.intellij.execution.process.ProcessAdapter;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.siberika.idea.pascal.jps.JpsPascalBundle;
 import com.siberika.idea.pascal.jps.sdk.PascalCompilerFamily;
 import com.siberika.idea.pascal.jps.sdk.PascalSdkData;
 import com.siberika.idea.pascal.jps.util.ParamMap;
+import consulo.logging.Logger;
+import consulo.process.ExecutionException;
+import consulo.process.ProcessHandler;
+import consulo.process.cmd.GeneralCommandLine;
+import consulo.process.event.ProcessAdapter;
+import consulo.process.local.ProcessHandlerFactory;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.PropertyKey;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,17 +52,25 @@ public abstract class PascalBackendCompiler {
     }
 
     public void launch(CompilerMessager messager, String[] cmdLine, File workingDir) throws IOException {
-        BaseOSProcessHandler handler = launchNoWait(messager, cmdLine, workingDir);
+        ProcessHandler handler = launchNoWait(messager, cmdLine, workingDir);
         handler.waitFor();
-        int exitCode = handler.getProcess().exitValue();
+        int exitCode = handler.getExitCode();
         if (exitCode != 0) {
             messager.warning(null, JpsPascalBundle.message("compiler.exit.code", exitCode), null, -1L, -1L);
         }
     }
 
-    public BaseOSProcessHandler launchNoWait(CompilerMessager messager, String[] cmdLine, File workingDir) throws IOException {
-        Process process = Runtime.getRuntime().exec(cmdLine, null, workingDir);
-        BaseOSProcessHandler handler = new BaseOSProcessHandler(process, cmdLine[0], Charset.defaultCharset());
+    public ProcessHandler launchNoWait(CompilerMessager messager, String[] cmdLine, File workingDir) throws IOException {
+        GeneralCommandLine commandLine = new GeneralCommandLine(cmdLine);
+        commandLine.setWorkDirectory(workingDir);
+
+        ProcessHandler handler;
+        try {
+            handler = ProcessHandlerFactory.getInstance().createProcessHandler(commandLine);
+        }
+        catch (ExecutionException e) {
+            throw new IOException(e);
+        }
         ProcessAdapter adapter = getCompilerProcessAdapter(messager);
         handler.addProcessListener(adapter);
         handler.startNotify();

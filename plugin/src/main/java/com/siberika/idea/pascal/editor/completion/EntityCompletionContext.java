@@ -1,13 +1,13 @@
 package com.siberika.idea.pascal.editor.completion;
 
-import com.intellij.codeInsight.completion.CompletionParameters;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.codeStyle.MinusculeMatcher;
-import com.intellij.psi.codeStyle.NameUtil;
-import com.intellij.util.SmartList;
 import com.siberika.idea.pascal.lang.context.Context;
 import com.siberika.idea.pascal.lang.psi.impl.PasField;
 import com.siberika.idea.pascal.util.StrUtil;
+import consulo.application.util.matcher.MinusculeMatcher;
+import consulo.application.util.matcher.NameUtil;
+import consulo.language.editor.completion.CompletionParameters;
+import consulo.util.collection.SmartList;
+import consulo.virtualFileSystem.VirtualFile;
 
 import java.util.Collection;
 import java.util.EnumSet;

@@ -1,19 +1,22 @@
 package com.siberika.idea.pascal.editor;
 
-import com.intellij.codeInsight.hints.InlayInfo;
-import com.intellij.codeInsight.hints.InlayParameterHintsProvider;
-import com.intellij.codeInsight.hints.MethodInfo;
-import com.intellij.psi.PsiElement;
-import com.intellij.util.SmartList;
+import com.siberika.idea.pascal.PascalLanguage;
 import com.siberika.idea.pascal.lang.psi.PasCallExpr;
 import com.siberika.idea.pascal.lang.psi.PasExpr;
 import com.siberika.idea.pascal.lang.psi.PasLiteralExpr;
 import com.siberika.idea.pascal.lang.psi.PascalRoutineEntity;
 import com.siberika.idea.pascal.lang.references.PasReferenceUtil;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.Language;
+import consulo.language.editor.inlay.InlayInfo;
+import consulo.language.editor.inlay.InlayParameterHintsProvider;
+import consulo.language.editor.inlay.MethodInfo;
+import consulo.language.psi.PsiElement;
+import consulo.util.collection.SmartList;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -22,6 +25,7 @@ import java.util.Set;
  * Author: George Bakhtadze
  * Date: 27/04/2017
  */
+@ExtensionImpl
 public class PascalParameterNameHints implements InlayParameterHintsProvider {
 
     private static final String OPTION_ID_PARAM_HINTS_NON_LITERALS = "pascal.paramHints.nonLiterals";
@@ -89,5 +93,11 @@ public class PascalParameterNameHints implements InlayParameterHintsProvider {
             }
         }
         return res;
+    }
+
+    @Nonnull
+    @Override
+    public Language getLanguage() {
+        return PascalLanguage.INSTANCE;
     }
 }

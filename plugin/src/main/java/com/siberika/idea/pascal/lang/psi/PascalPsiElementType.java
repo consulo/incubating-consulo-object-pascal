@@ -1,7 +1,7 @@
 package com.siberika.idea.pascal.lang.psi;
 
-import com.intellij.psi.tree.IElementType;
 import com.siberika.idea.pascal.PascalLanguage;
+import consulo.language.ast.IElementType;
 
 /**
  * Author: George Bakhtadze

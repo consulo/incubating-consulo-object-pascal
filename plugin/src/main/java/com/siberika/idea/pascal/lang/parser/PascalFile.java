@@ -1,7 +1,7 @@
 package com.siberika.idea.pascal.lang.parser;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 
 /**
  * Author: George Bakhtadze

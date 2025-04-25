@@ -1,11 +1,5 @@
 package com.siberika.idea.pascal.lang.references;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiErrorElement;
-import com.intellij.psi.PsiWhiteSpace;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.usages.impl.rules.UsageType;
-import com.intellij.usages.impl.rules.UsageTypeProvider;
 import com.siberika.idea.pascal.PascalBundle;
 import com.siberika.idea.pascal.editor.highlighter.PascalReadWriteAccessDetector;
 import com.siberika.idea.pascal.lang.context.CodePlace;
@@ -15,11 +9,19 @@ import com.siberika.idea.pascal.lang.psi.*;
 import com.siberika.idea.pascal.lang.psi.impl.PasField;
 import com.siberika.idea.pascal.lang.references.resolve.Resolve;
 import com.siberika.idea.pascal.util.PsiUtil;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiErrorElement;
+import consulo.language.psi.PsiWhiteSpace;
+import consulo.language.psi.util.PsiTreeUtil;
 import consulo.object.pascal.psi.PasBaseReferenceExpr;
+import consulo.usage.UsageType;
+import consulo.usage.UsageTypeProvider;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.atomic.AtomicReference;
 
+@ExtensionImpl
 public class PascalUsageTypeProvider implements UsageTypeProvider {
 
     private static final UsageType USAGE_PARENT = new UsageType(PascalBundle.message("usage.type.parent"));

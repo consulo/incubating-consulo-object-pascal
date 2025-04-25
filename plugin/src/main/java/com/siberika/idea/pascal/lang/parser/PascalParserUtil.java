@@ -1,46 +1,9 @@
 package com.siberika.idea.pascal.lang.parser;
 
-import com.intellij.lang.PsiBuilder;
-import com.intellij.lang.parser.GeneratedParserUtilBase;
-import com.intellij.navigation.ItemPresentation;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleUtilCore;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.impl.source.resolve.FileContextUtil;
-import com.intellij.psi.util.PsiTreeUtil;
 import com.siberika.idea.pascal.PascalIcons;
 import com.siberika.idea.pascal.PascalRTException;
 import com.siberika.idea.pascal.lang.compiled.CompiledFileImpl;
-import com.siberika.idea.pascal.lang.psi.PasClassField;
-import com.siberika.idea.pascal.lang.psi.PasClassHelperDecl;
-import com.siberika.idea.pascal.lang.psi.PasClassProperty;
-import com.siberika.idea.pascal.lang.psi.PasClassTypeDecl;
-import com.siberika.idea.pascal.lang.psi.PasClosureExpr;
-import com.siberika.idea.pascal.lang.psi.PasConstDeclaration;
-import com.siberika.idea.pascal.lang.psi.PasEntityScope;
-import com.siberika.idea.pascal.lang.psi.PasFullyQualifiedIdent;
-import com.siberika.idea.pascal.lang.psi.PasGenericTypeIdent;
-import com.siberika.idea.pascal.lang.psi.PasInterfaceTypeDecl;
-import com.siberika.idea.pascal.lang.psi.PasModule;
-import com.siberika.idea.pascal.lang.psi.PasNamedIdent;
-import com.siberika.idea.pascal.lang.psi.PasNamedIdentDecl;
-import com.siberika.idea.pascal.lang.psi.PasNamespaceIdent;
-import com.siberika.idea.pascal.lang.psi.PasObjectDecl;
-import com.siberika.idea.pascal.lang.psi.PasRecordDecl;
-import com.siberika.idea.pascal.lang.psi.PasRecordHelperDecl;
-import com.siberika.idea.pascal.lang.psi.PasTypeDecl;
-import com.siberika.idea.pascal.lang.psi.PasVarDeclaration;
-import com.siberika.idea.pascal.lang.psi.PascalIdentDecl;
-import com.siberika.idea.pascal.lang.psi.PascalModule;
-import com.siberika.idea.pascal.lang.psi.PascalNamedElement;
-import com.siberika.idea.pascal.lang.psi.PascalQualifiedIdent;
-import com.siberika.idea.pascal.lang.psi.PascalRoutine;
-import com.siberika.idea.pascal.lang.psi.PascalVariableDeclaration;
+import com.siberika.idea.pascal.lang.psi.*;
 import com.siberika.idea.pascal.lang.psi.impl.PasField;
 import com.siberika.idea.pascal.lang.psi.impl.PascalIdentDeclImpl;
 import com.siberika.idea.pascal.lang.references.PasReferenceUtil;
@@ -48,16 +11,23 @@ import com.siberika.idea.pascal.lang.references.ResolveUtil;
 import com.siberika.idea.pascal.lang.stub.PasIdentStub;
 import com.siberika.idea.pascal.sdk.BuiltinsParser;
 import com.siberika.idea.pascal.util.PsiUtil;
+import consulo.language.impl.parser.GeneratedParserUtilBase;
+import consulo.language.parser.PsiBuilder;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.language.util.ModuleUtilCore;
+import consulo.logging.Logger;
+import consulo.module.Module;
+import consulo.navigation.ItemPresentation;
+import consulo.project.Project;
 import consulo.ui.image.Image;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Author: George Bakhtadze
@@ -72,7 +42,7 @@ public class PascalParserUtil extends GeneratedParserUtilBase {
     public static final int MAX_STRUCT_TYPE_RESOLVE_RECURSION = 1000;
 
     public static boolean parsePascal(PsiBuilder builder_, int level, Parser parser) {
-        PsiFile file = builder_.getUserData(FileContextUtil.CONTAINING_FILE_KEY);
+        PsiFile file = builder_.getUserData(PsiFile.KEY);
         if ((file != null) && (file.getVirtualFile() != null)) {
             try {
                 String name = file.getVirtualFile().getName();

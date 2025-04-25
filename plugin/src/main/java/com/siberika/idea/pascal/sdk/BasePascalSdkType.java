@@ -2,13 +2,13 @@ package com.siberika.idea.pascal.sdk;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.projectRoots.*;
-import com.intellij.openapi.util.text.StringUtil;
 import com.siberika.idea.pascal.jps.sdk.PascalCompilerFamily;
 import com.siberika.idea.pascal.jps.sdk.PascalSdkData;
 import com.siberika.idea.pascal.jps.util.SysUtils;
 import com.siberika.idea.pascal.util.StrUtil;
+import consulo.content.bundle.*;
+import consulo.logging.Logger;
+import consulo.util.lang.StringUtil;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;

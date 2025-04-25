@@ -1,25 +1,6 @@
 package com.siberika.idea.pascal.lang;
 
-import com.intellij.lang.annotation.AnnotationHolder;
-import com.intellij.lang.annotation.ExternalAnnotator;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleUtilCore;
-import com.intellij.openapi.project.DumbAware;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.ModuleRootManager;
-import com.intellij.openapi.roots.OrderRootType;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.TokenSet;
+import com.siberika.idea.pascal.PascalLanguage;
 import com.siberika.idea.pascal.jps.compiler.CompilerMessager;
 import com.siberika.idea.pascal.jps.compiler.PascalBackendCompiler;
 import com.siberika.idea.pascal.jps.sdk.PascalCompilerFamily;
@@ -27,7 +8,31 @@ import com.siberika.idea.pascal.jps.sdk.PascalSdkData;
 import com.siberika.idea.pascal.lang.psi.PasTypes;
 import com.siberika.idea.pascal.module.ModuleService;
 import com.siberika.idea.pascal.sdk.BasePascalSdkType;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.application.ApplicationManager;
+import consulo.application.dumb.DumbAware;
+import consulo.codeEditor.Editor;
+import consulo.content.base.BinariesOrderRootType;
+import consulo.content.base.SourcesOrderRootType;
+import consulo.content.bundle.Sdk;
+import consulo.document.Document;
+import consulo.document.FileDocumentManager;
+import consulo.document.util.TextRange;
+import consulo.language.Language;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.TokenSet;
+import consulo.language.editor.annotation.AnnotationHolder;
+import consulo.language.editor.annotation.ExternalAnnotator;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.util.ModuleUtilCore;
+import consulo.logging.Logger;
+import consulo.module.Module;
+import consulo.module.content.ModuleRootManager;
 import consulo.object.pascal.module.extension.ObjectPascalModuleExtension;
+import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -36,9 +41,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+@ExtensionImpl
 public class PascalExternalAnnotator extends ExternalAnnotator<PascalAnnotatorInfo, PascalSyntaxCheckResult> implements DumbAware {
 
-    public static final Logger LOG = Logger.getInstance(PascalExternalAnnotator.class.getName());
+    public static final Logger LOG = Logger.getInstance(PascalExternalAnnotator.class);
 
     @Nullable
     @Override
@@ -91,8 +97,8 @@ public class PascalExternalAnnotator extends ExternalAnnotator<PascalAnnotatorIn
 
     private VirtualFile[] collectSourcePaths(Sdk sdk, Module module) {
         List<VirtualFile[]> urlLists = new ArrayList<>();
-        urlLists.add(sdk.getRootProvider().getFiles(OrderRootType.CLASSES));
-        urlLists.add(sdk.getRootProvider().getFiles(OrderRootType.SOURCES));
+        urlLists.add(sdk.getRootProvider().getFiles(BinariesOrderRootType.getInstance()));
+        urlLists.add(sdk.getRootProvider().getFiles(SourcesOrderRootType.getInstance()));
         urlLists.add(ModuleRootManager.getInstance(module).getSourceRoots());
         for (Module dependency : ModuleRootManager.getInstance(module).getDependencies()) {
             urlLists.add(ModuleRootManager.getInstance(dependency).getSourceRoots());
@@ -149,4 +155,9 @@ public class PascalExternalAnnotator extends ExternalAnnotator<PascalAnnotatorIn
         return (sdk != null) && (sdk.getSdkType() instanceof BasePascalSdkType);
     }
 
+    @Nonnull
+    @Override
+    public Language getLanguage() {
+        return PascalLanguage.INSTANCE;
+    }
 }

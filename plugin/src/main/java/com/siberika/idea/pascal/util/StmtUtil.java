@@ -1,20 +1,9 @@
 package com.siberika.idea.pascal.util;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.TokenSet;
-import com.siberika.idea.pascal.lang.psi.PasCaseElse;
-import com.siberika.idea.pascal.lang.psi.PasCaseItem;
-import com.siberika.idea.pascal.lang.psi.PasCompoundStatement;
-import com.siberika.idea.pascal.lang.psi.PasForStatement;
-import com.siberika.idea.pascal.lang.psi.PasHandler;
-import com.siberika.idea.pascal.lang.psi.PasIfElseStatement;
-import com.siberika.idea.pascal.lang.psi.PasIfStatement;
-import com.siberika.idea.pascal.lang.psi.PasIfThenStatement;
-import com.siberika.idea.pascal.lang.psi.PasStatement;
-import com.siberika.idea.pascal.lang.psi.PasTypes;
-import com.siberika.idea.pascal.lang.psi.PasWhileStatement;
-import com.siberika.idea.pascal.lang.psi.PasWithStatement;
+import com.siberika.idea.pascal.lang.psi.*;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.TokenSet;
+import consulo.language.psi.PsiElement;
 
 public class StmtUtil {
     private static final TokenSet TOKENS_STRUCTURED_STATEMENT = TokenSet.create(PasTypes.BEGIN, PasTypes.DO, PasTypes.FOR,

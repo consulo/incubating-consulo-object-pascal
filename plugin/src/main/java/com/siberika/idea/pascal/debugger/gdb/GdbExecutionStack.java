@@ -1,13 +1,13 @@
 package com.siberika.idea.pascal.debugger.gdb;
 
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.xdebugger.frame.XExecutionStack;
-import com.intellij.xdebugger.frame.XStackFrame;
 import com.siberika.idea.pascal.debugger.CommandSender;
 import com.siberika.idea.pascal.debugger.DebugThread;
 import com.siberika.idea.pascal.debugger.PascalXDebugProcess;
 import com.siberika.idea.pascal.debugger.gdb.parser.GdbMiLine;
 import com.siberika.idea.pascal.debugger.gdb.parser.GdbMiResults;
+import consulo.execution.debug.frame.XExecutionStack;
+import consulo.execution.debug.frame.XStackFrame;
+import consulo.logging.Logger;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;

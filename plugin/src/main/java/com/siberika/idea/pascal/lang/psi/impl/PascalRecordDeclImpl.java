@@ -1,9 +1,9 @@
 package com.siberika.idea.pascal.lang.psi.impl;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.stubs.IStubElementType;
 import com.siberika.idea.pascal.lang.psi.PascalRecordDecl;
 import com.siberika.idea.pascal.lang.stub.struct.PasRecordDeclStub;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.stub.IStubElementType;
 
 public abstract class PascalRecordDeclImpl extends PasStubStructTypeImpl<PascalRecordDecl, PasRecordDeclStub> implements PascalRecordDecl {
 

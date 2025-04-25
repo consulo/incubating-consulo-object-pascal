@@ -1,9 +1,9 @@
 package com.siberika.idea.pascal.run;
 
-import com.intellij.openapi.options.ConfigurationException;
-import com.intellij.openapi.options.SettingsEditor;
-import com.intellij.openapi.project.Project;
+import consulo.configurable.ConfigurationException;
+import consulo.execution.configuration.ui.SettingsEditor;
 import consulo.object.pascal.run.PascalProgramParametersPanel;
+import consulo.project.Project;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;

@@ -1,14 +1,15 @@
 package com.siberika.idea.pascal.compiler;
 
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.compiler.*;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.util.Computable;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.pom.Navigatable;
-import com.intellij.psi.search.FilenameIndex;
-import com.intellij.psi.search.GlobalSearchScope;
 import com.siberika.idea.pascal.PascalFileType;
+import consulo.application.ApplicationManager;
+import consulo.application.util.function.Computable;
+import consulo.compiler.*;
+import consulo.compiler.event.CompilationStatusListener;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.language.psi.search.FilenameIndex;
+import consulo.module.Module;
+import consulo.navigation.Navigatable;
+import consulo.virtualFileSystem.VirtualFile;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -21,7 +22,7 @@ import java.util.List;
 public class Task implements CompileTask {
     @Override
     public boolean execute(CompileContext context) {
-        CompilerManager.getInstance(context.getProject()).addCompilationStatusListener(new MyListener());
+      // TODO  CompilerManager.getInstance(context.getProject()).addCompilationStatusListener(new MyListener());
         checkMainFile(context);
         return true;
     }
@@ -68,7 +69,7 @@ public class Task implements CompileTask {
     private static class MyListener implements CompilationStatusListener {
         @Override
         public void compilationFinished(boolean aborted, int errors, int warnings, CompileContext compileContext) {
-            CompilerManager.getInstance(compileContext.getProject()).removeCompilationStatusListener(this);
+            // TODO CompilerManager.getInstance(compileContext.getProject()).removeCompilationStatusListener(this);
             ApplicationManager.getApplication().invokeLater(new Runnable() {
                 @Override
                 public void run() {

@@ -1,12 +1,12 @@
 package com.siberika.idea.pascal.lang.psi.impl;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.stubs.IStubElementType;
 import com.siberika.idea.pascal.lang.psi.PasClassParent;
 import com.siberika.idea.pascal.lang.psi.PasTypeID;
 import com.siberika.idea.pascal.lang.psi.PascalHelperDecl;
 import com.siberika.idea.pascal.lang.stub.struct.PasHelperDeclStub;
 import com.siberika.idea.pascal.util.StrUtil;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.stub.IStubElementType;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class PascalRecordHelperDeclImpl extends PasStubStructTypeImpl<PascalHelperDecl, PasHelperDeclStub> implements PascalHelperDecl {

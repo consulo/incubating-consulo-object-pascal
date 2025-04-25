@@ -1,40 +1,35 @@
 package com.siberika.idea.pascal.ide.actions;
 
-import com.intellij.codeInsight.intention.impl.BaseIntentionAction;
-import com.intellij.ide.DataManager;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleUtil;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.psi.search.ProjectScope;
-import com.intellij.psi.stubs.StubIndex;
-import com.intellij.util.IncorrectOperationException;
 import com.siberika.idea.pascal.PascalBundle;
 import com.siberika.idea.pascal.PascalLanguage;
 import com.siberika.idea.pascal.lang.PascalImportOptimizer;
 import com.siberika.idea.pascal.lang.context.CodePlace;
 import com.siberika.idea.pascal.lang.context.Context;
-import com.siberika.idea.pascal.lang.psi.PasModule;
-import com.siberika.idea.pascal.lang.psi.PascalModule;
-import com.siberika.idea.pascal.lang.psi.PascalNamedElement;
-import com.siberika.idea.pascal.lang.psi.PascalRoutine;
-import com.siberika.idea.pascal.lang.psi.PascalStubElement;
+import com.siberika.idea.pascal.lang.psi.*;
 import com.siberika.idea.pascal.lang.stub.PascalUnitSymbolIndex;
 import com.siberika.idea.pascal.util.EditorUtil;
 import com.siberika.idea.pascal.util.PsiUtil;
+import consulo.application.ApplicationManager;
+import consulo.codeEditor.Editor;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
+import consulo.language.editor.intention.BaseIntentionAction;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.language.psi.stub.StubIndex;
+import consulo.language.util.IncorrectOperationException;
+import consulo.language.util.ModuleUtilCore;
+import consulo.module.Module;
+import consulo.project.Project;
+import consulo.ui.ex.action.AnActionEvent;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 
-import static com.intellij.openapi.actionSystem.ActionPlaces.EDITOR_POPUP;
 import static com.siberika.idea.pascal.PascalBundle.message;
+import static consulo.ui.ex.action.ActionPlaces.EDITOR_POPUP;
 
 /**
  * Author: George Bakhtadze
@@ -121,8 +116,8 @@ public class UsesActions {
         }
 
         synchronized private void lazyInit() {
-            Module module = ModuleUtil.findModuleForPsiElement(namedElement);
-            final GlobalSearchScope scope = module != null ? GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module, false) : ProjectScope.getAllScope(namedElement.getProject());
+            Module module = ModuleUtilCore.findModuleForPsiElement(namedElement);
+            final GlobalSearchScope scope = module != null ? GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module, false) : GlobalSearchScope.allScope(namedElement.getProject());
             String searchFor = namedElement.getName();
             String searchForUpper = searchFor.toUpperCase();
             for (PascalNamedElement element : StubIndex.getElements(PascalUnitSymbolIndex.KEY, searchForUpper, namedElement.getProject(), scope, PascalNamedElement.class)) {
@@ -151,7 +146,6 @@ public class UsesActions {
 
         @Nls
         @NotNull
-        @Override
         public String getFamilyName() {
             return "Pascal";
         }

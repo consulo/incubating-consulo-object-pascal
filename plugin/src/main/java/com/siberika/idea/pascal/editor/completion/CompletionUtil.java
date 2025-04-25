@@ -1,32 +1,5 @@
 package com.siberika.idea.pascal.editor.completion;
 
-import com.intellij.codeInsight.completion.*;
-import com.intellij.codeInsight.lookup.LookupElement;
-import com.intellij.codeInsight.lookup.LookupElementBuilder;
-import com.intellij.ide.DataManager;
-import com.intellij.lang.ASTNode;
-import com.intellij.openapi.actionSystem.ActionManager;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.io.FileUtilRt;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiErrorElement;
-import com.intellij.psi.SmartPsiElementPointer;
-import com.intellij.psi.codeStyle.MinusculeMatcher;
-import com.intellij.psi.codeStyle.NameUtil;
-import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.psi.search.ProjectScope;
-import com.intellij.psi.stubs.StubIndex;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.TokenSet;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.Processor;
-import com.intellij.util.SmartList;
 import com.siberika.idea.pascal.PascalBundle;
 import com.siberika.idea.pascal.PascalIcons;
 import com.siberika.idea.pascal.ide.actions.UsesActions;
@@ -43,8 +16,34 @@ import com.siberika.idea.pascal.util.DocUtil;
 import com.siberika.idea.pascal.util.EditorUtil;
 import com.siberika.idea.pascal.util.PsiUtil;
 import com.siberika.idea.pascal.util.StrUtil;
+import consulo.application.util.matcher.MinusculeMatcher;
+import consulo.application.util.matcher.NameUtil;
+import consulo.codeEditor.Editor;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
+import consulo.language.ast.ASTNode;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.TokenSet;
+import consulo.language.editor.completion.CompletionParameters;
+import consulo.language.editor.completion.CompletionResultSet;
+import consulo.language.editor.completion.lookup.*;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiErrorElement;
+import consulo.language.psi.SmartPsiElementPointer;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.language.psi.stub.StubIndex;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.language.util.ModuleUtilCore;
 import consulo.object.pascal.psi.PasBaseReferenceExpr;
+import consulo.project.Project;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.image.Image;
+import consulo.util.collection.SmartList;
+import consulo.util.io.FileUtil;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -67,7 +66,7 @@ class CompletionUtil {
                 if (content.contains(PLACEHOLDER_GUID)) {
                     content = content.replaceAll(PLACEHOLDER_GUID, UUID.randomUUID().toString());
                 }
-                content = content.replaceAll(PLACEHOLDER_FILENAME, FileUtilRt.getNameWithoutExtension(context.getFile().getName()));
+                content = content.replaceAll(PLACEHOLDER_FILENAME, FileUtil.getNameWithoutExtension(context.getFile().getName()));
                 int caretPos = context.getEditor().getCaretModel().getOffset();
                 DocUtil.adjustDocument(context.getEditor(), caretPos, content);
                 context.commitDocument();
@@ -77,7 +76,8 @@ class CompletionUtil {
                     if (block != null) {
                         DocUtil.reformat(block, true);
                     }
-                } else {
+                }
+                else {
                     DocUtil.reformatInSeparateCommand(context.getProject(), context.getFile(), context.getEditor());
                 }
             }
@@ -86,49 +86,49 @@ class CompletionUtil {
     private static final TokenSet TS_DO_THEN_OF = TokenSet.create(PasTypes.DO, PasTypes.THEN, PasTypes.OF, PasTypes.ELSE);
     private static final String TYPE_UNTYPED = "<untyped>";
     static final TokenSet UNIT_SECTIONS = TokenSet.create(
-            PasTypes.INTERFACE, PasTypes.IMPLEMENTATION,
-            PasTypes.INITIALIZATION, PasTypes.FINALIZATION
+        PasTypes.INTERFACE, PasTypes.IMPLEMENTATION,
+        PasTypes.INITIALIZATION, PasTypes.FINALIZATION
     );
     static final TokenSet TOP_LEVEL_DECLARATIONS = TokenSet.create(PasTypes.CONTAINS, PasTypes.REQUIRES);
     static final TokenSet DIRECTIVE_METHOD = TokenSet.create(
-            PasTypes.REINTRODUCE, PasTypes.OVERLOAD, PasTypes.MESSAGE, PasTypes.STATIC, PasTypes.DYNAMIC, PasTypes.OVERRIDE, PasTypes.VIRTUAL,
-            PasTypes.CDECL, PasTypes.PASCAL, PasTypes.REGISTER, PasTypes.SAFECALL, PasTypes.STDCALL, PasTypes.EXPORT,
-            PasTypes.ABSTRACT, PasTypes.FINAL, PasTypes.INLINE, PasTypes.ASSEMBLER,
-            PasTypes.DEPRECATED, PasTypes.EXPERIMENTAL, PasTypes.PLATFORM, PasTypes.LIBRARY, PasTypes.DISPID
+        PasTypes.REINTRODUCE, PasTypes.OVERLOAD, PasTypes.MESSAGE, PasTypes.STATIC, PasTypes.DYNAMIC, PasTypes.OVERRIDE, PasTypes.VIRTUAL,
+        PasTypes.CDECL, PasTypes.PASCAL, PasTypes.REGISTER, PasTypes.SAFECALL, PasTypes.STDCALL, PasTypes.EXPORT,
+        PasTypes.ABSTRACT, PasTypes.FINAL, PasTypes.INLINE, PasTypes.ASSEMBLER,
+        PasTypes.DEPRECATED, PasTypes.EXPERIMENTAL, PasTypes.PLATFORM, PasTypes.LIBRARY, PasTypes.DISPID
     );
     static final TokenSet DIRECTIVE_ROUTINE = TokenSet.create(
-            PasTypes.OVERLOAD, PasTypes.INLINE, PasTypes.ASSEMBLER,
-            PasTypes.CDECL, PasTypes.PASCAL, PasTypes.REGISTER, PasTypes.SAFECALL, PasTypes.STDCALL, PasTypes.EXPORT,
-            PasTypes.DEPRECATED, PasTypes.EXPERIMENTAL, PasTypes.PLATFORM, PasTypes.LIBRARY
+        PasTypes.OVERLOAD, PasTypes.INLINE, PasTypes.ASSEMBLER,
+        PasTypes.CDECL, PasTypes.PASCAL, PasTypes.REGISTER, PasTypes.SAFECALL, PasTypes.STDCALL, PasTypes.EXPORT,
+        PasTypes.DEPRECATED, PasTypes.EXPERIMENTAL, PasTypes.PLATFORM, PasTypes.LIBRARY
     );
     static final TokenSet VALUES = TokenSet.create(PasTypes.NIL, PasTypes.FALSE, PasTypes.TRUE);
     static final TokenSet STATEMENTS_IN_CYCLE = TokenSet.create(PasTypes.BREAK, PasTypes.CONTINUE);
     static final TokenSet STATEMENTS = TokenSet.create(
-            PasTypes.FOR, PasTypes.WHILE, PasTypes.REPEAT,
-            PasTypes.IF, PasTypes.CASE, PasTypes.WITH,
-            PasTypes.GOTO, PasTypes.EXIT,
-            PasTypes.TRY, PasTypes.RAISE,
-            PasTypes.END
+        PasTypes.FOR, PasTypes.WHILE, PasTypes.REPEAT,
+        PasTypes.IF, PasTypes.CASE, PasTypes.WITH,
+        PasTypes.GOTO, PasTypes.EXIT,
+        PasTypes.TRY, PasTypes.RAISE,
+        PasTypes.END
     );
     static final TokenSet DECLARATIONS_IMPL = TokenSet.create(
-            PasTypes.CONSTRUCTOR, PasTypes.DESTRUCTOR
+        PasTypes.CONSTRUCTOR, PasTypes.DESTRUCTOR
     );
     static final TokenSet DECLARATIONS_INTF = TokenSet.create(
-            PasTypes.VAR, PasTypes.CONST, PasTypes.TYPE, PasTypes.THREADVAR, PasTypes.RESOURCESTRING,
-            PasTypes.PROCEDURE, PasTypes.FUNCTION
+        PasTypes.VAR, PasTypes.CONST, PasTypes.TYPE, PasTypes.THREADVAR, PasTypes.RESOURCESTRING,
+        PasTypes.PROCEDURE, PasTypes.FUNCTION
     );
     static final TokenSet MODULE_HEADERS = TokenSet.create(PasTypes.PROGRAM, PasTypes.UNIT, PasTypes.LIBRARY, PasTypes.PACKAGE);
     static final TokenSet STRUCT_DECLARATIONS = TokenSet.create(
-            PasTypes.PROCEDURE, PasTypes.FUNCTION, PasTypes.CONSTRUCTOR, PasTypes.DESTRUCTOR,
-            PasTypes.OPERATOR, PasTypes.PROPERTY, PasTypes.END
+        PasTypes.PROCEDURE, PasTypes.FUNCTION, PasTypes.CONSTRUCTOR, PasTypes.DESTRUCTOR,
+        PasTypes.OPERATOR, PasTypes.PROPERTY, PasTypes.END
     );
     static final TokenSet VISIBILITY = TokenSet.create(PasTypes.PRIVATE, PasTypes.PROTECTED, PasTypes.PUBLIC, PasTypes.PUBLISHED, PasTypes.AUTOMATED);
     static final TokenSet TS_BEGIN = TokenSet.create(PasTypes.BEGIN);
     static final TokenSet TS_ELSE = TokenSet.create(PasTypes.ELSE);
     static final TokenSet DECLARATIONS_LOCAL = TokenSet.create(PasTypes.VAR, PasTypes.CONST, PasTypes.TYPE, PasTypes.PROCEDURE, PasTypes.FUNCTION);
     static final TokenSet TYPE_DECLARATIONS = TokenSet.create(
-            PasTypes.CLASS, PasTypes.OBJC_CLASS, PasTypes.DISPINTERFACE, PasTypes.RECORD, PasTypes.OBJECT,
-            PasTypes.SET, PasTypes.FILE, PasTypes.ARRAY
+        PasTypes.CLASS, PasTypes.OBJC_CLASS, PasTypes.DISPINTERFACE, PasTypes.RECORD, PasTypes.OBJECT,
+        PasTypes.SET, PasTypes.FILE, PasTypes.ARRAY
     );
     static final TokenSet PROPERTY_SPECIFIERS = TokenSet.create(PasTypes.READ, PasTypes.WRITE);
 
@@ -162,22 +162,16 @@ class CompletionUtil {
     private static Collection<PascalStubElement> findSymbols(Project project, String key) {
         Collection<PascalStubElement> result = new SmartList<>();
         final MinusculeMatcher matcher = NameUtil.buildMatcher(key).build();
-        final GlobalSearchScope scope = ProjectScope.getAllScope(project);
-        StubIndex.getInstance().processAllKeys(PascalSymbolIndex.KEY, new Processor<String>() {
-            @Override
-            public boolean process(final String key) {
-                if (matcher.matches(key)) {
-                    StubIndex.getInstance().processElements(PascalSymbolIndex.KEY, key, project, scope,
-                            PascalNamedElement.class, new Processor<PascalNamedElement>() {
-                                @Override
-                                public boolean process(PascalNamedElement namedElement) {
-                                    result.add((PascalStubElement) namedElement);
-                                    return true;
-                                }
-                            });
-                }
-                return true;
+        final GlobalSearchScope scope = GlobalSearchScope.allScope(project);
+        StubIndex.getInstance().processAllKeys(PascalSymbolIndex.KEY, key1 -> {
+            if (matcher.matches(key1)) {
+                StubIndex.getInstance().processElements(PascalSymbolIndex.KEY, key1, project, scope,
+                    PascalNamedElement.class, namedElement -> {
+                        result.add((PascalStubElement) namedElement);
+                        return true;
+                    });
             }
+            return true;
         }, scope, null);
         return result;
     }
@@ -312,7 +306,7 @@ class CompletionUtil {
                 }
             }
         }
-        for (VirtualFile file : PasReferenceUtil.findUnitFiles(pos.getProject(), com.intellij.openapi.module.ModuleUtil.findModuleForPsiElement(pos))) {
+        for (VirtualFile file : PasReferenceUtil.findUnitFiles(pos.getProject(), ModuleUtilCore.findModuleForPsiElement(pos))) {
             if (!excludedUnits.contains(file.getNameWithoutExtension().toUpperCase())) {
                 LookupElementBuilder lookupElement = LookupElementBuilder.create(file.getNameWithoutExtension());
                 result.caseInsensitive().addElement(lookupElement.withTypeText(file.getExtension() != null ? file.getExtension() : "", false));
@@ -358,10 +352,10 @@ class CompletionUtil {
             public void handleInsert(InsertionContext context, LookupElement item) {
                 boolean toInterface = ContextUtil.belongsToInterface(parameters.getPosition());
                 UsesActions.AddUnitAction actAddUnit = new UsesActions.AddUnitAction(PascalBundle.message("action.add.uses", unitName),
-                        unitName, toInterface);
+                    unitName, toInterface);
                 actAddUnit.invoke(parameters.getOriginalFile().getProject(), parameters.getEditor(), parameters.getOriginalFile());
                 EditorUtil.showInformationHint(parameters.getEditor(), PascalBundle.message("action.unit.search.added", unitName,
-                        PascalBundle.message(toInterface ? "unit.section.interface": "unit.section.implementation")));
+                    PascalBundle.message(toInterface ? "unit.section.interface" : "unit.section.implementation")));
                 handleRoutineNameInsertion(context.getEditor(), content);
             }
         });
@@ -376,7 +370,8 @@ class CompletionUtil {
                 if (sb.length() != 1) {
                     caretPH = "";
                     sb.append("; ");
-                } else {
+                }
+                else {
                     caretPH = DocUtil.PLACEHOLDER_CARET;
                 }
                 sb.append(namedIdentDecl.getName()).append(": ").append(caretPH);
@@ -433,26 +428,30 @@ class CompletionUtil {
                     }
                     if ((mod != ParamModifier.VAR) && (mod != ParamModifier.OUT)) {
                         completionContext.likelyTypes = EnumSet.of(PasField.FieldType.VARIABLE, PasField.FieldType.CONSTANT, PasField.FieldType.PROPERTY, PasField.FieldType.ROUTINE);
-                    } else {
+                    }
+                    else {
                         completionContext.likelyTypes = EnumSet.of(PasField.FieldType.VARIABLE);
                         completionContext.deniedTypes = EnumSet.of(PasField.FieldType.CONSTANT, PasField.FieldType.PROPERTY, PasField.FieldType.ROUTINE, PasField.FieldType.TYPE, PasField.FieldType.UNIT);
                     }
                 }
-            } else if (ctx.contains(CodePlace.ASSIGN_LEFT) && ctx.getPosition() instanceof PasStatement) {
+            }
+            else if (ctx.contains(CodePlace.ASSIGN_LEFT) && ctx.getPosition() instanceof PasStatement) {
                 PasAssignPart assignPart = PsiTreeUtil.findChildOfType(ctx.getPosition(), PasAssignPart.class);
                 if (assignPart != null) {
                     completionContext.deniedName = retrieveNames(result, assignPart.getExpression());
                     completionContext.likelyTypes = EnumSet.of(PasField.FieldType.VARIABLE, PasField.FieldType.PROPERTY);
                     completionContext.deniedTypes = EnumSet.of(PasField.FieldType.CONSTANT, PasField.FieldType.TYPE, PasField.FieldType.ROUTINE, PasField.FieldType.UNIT);
                 }
-            } else if (ctx.contains(CodePlace.ASSIGN_RIGHT) && ctx.getPosition() instanceof PasAssignPart) {
+            }
+            else if (ctx.contains(CodePlace.ASSIGN_RIGHT) && ctx.getPosition() instanceof PasAssignPart) {
                 PsiElement parent = ctx.getPosition().getParent();
                 if (parent instanceof PasStatement) {
                     completionContext.deniedName = retrieveNames(result, ((PasStatement) parent).getExpression());
                     completionContext.likelyTypes = EnumSet.of(PasField.FieldType.VARIABLE, PasField.FieldType.PROPERTY, PasField.FieldType.CONSTANT, PasField.FieldType.ROUTINE);
                 }
             }
-        } else if (ctx.getPrimary() == CodePlace.TYPE_ID) {
+        }
+        else if (ctx.getPrimary() == CodePlace.TYPE_ID) {
             PsiElement parent = ctx.getPosition() != null ? ctx.getPosition().getParent() : null;
             if (parent instanceof PasTypeDecl) {
                 PsiElement decl = parent.getParent();
@@ -460,9 +459,11 @@ class CompletionUtil {
                     for (PascalNamedElement element : ((PascalVariableDeclaration) decl).getNamedIdentDeclList()) {
                         result.add(element.getNamePart());
                     }
-                } else if (decl instanceof PasConstDeclaration) {
+                }
+                else if (decl instanceof PasConstDeclaration) {
                     result.add(((PasConstDeclaration) decl).getNamePart());
-                } else if (decl instanceof PasTypeDeclaration) {
+                }
+                else if (decl instanceof PasTypeDeclaration) {
                     result.add(((PasTypeDeclaration) decl).getGenericTypeIdent().getNamePart());
                 }
             }

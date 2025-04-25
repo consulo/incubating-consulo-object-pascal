@@ -2,3 +2,4 @@ out
 gen
 .consulo/
 target/
+plugin/sandbox

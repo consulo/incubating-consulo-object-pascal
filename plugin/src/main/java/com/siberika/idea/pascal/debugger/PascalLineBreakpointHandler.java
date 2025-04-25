@@ -1,14 +1,14 @@
 package com.siberika.idea.pascal.debugger;
 
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.xdebugger.XDebuggerManager;
-import com.intellij.xdebugger.breakpoints.XBreakpointHandler;
-import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
 import com.siberika.idea.pascal.debugger.gdb.GdbSuspendContext;
 import com.siberika.idea.pascal.debugger.gdb.parser.GdbMiLine;
 import com.siberika.idea.pascal.debugger.gdb.parser.GdbMiResults;
+import consulo.application.ApplicationManager;
+import consulo.execution.debug.XDebuggerManager;
+import consulo.execution.debug.breakpoint.XBreakpointHandler;
+import consulo.execution.debug.breakpoint.XLineBreakpoint;
+import consulo.logging.Logger;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;

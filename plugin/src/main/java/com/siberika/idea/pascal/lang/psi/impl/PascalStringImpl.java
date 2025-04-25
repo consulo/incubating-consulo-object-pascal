@@ -1,13 +1,13 @@
 package com.siberika.idea.pascal.lang.psi.impl;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.openapi.util.ProperTextRange;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.LiteralTextEscaper;
-import com.intellij.psi.PsiLanguageInjectionHost;
-import com.intellij.psi.impl.source.tree.LeafElement;
 import com.siberika.idea.pascal.lang.psi.PascalPsiElement;
+import consulo.document.util.ProperTextRange;
+import consulo.document.util.TextRange;
+import consulo.language.ast.ASTNode;
+import consulo.language.impl.ast.LeafElement;
+import consulo.language.psi.LiteralTextEscaper;
+import consulo.language.psi.PsiLanguageInjectionHost;
+import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

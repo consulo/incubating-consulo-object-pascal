@@ -1,12 +1,5 @@
 package com.siberika.idea.pascal.lang.references.resolve;
 
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.SmartPsiElementPointer;
-import com.intellij.psi.stubs.StubElement;
-import com.intellij.util.Processor;
 import com.siberika.idea.pascal.lang.parser.NamespaceRec;
 import com.siberika.idea.pascal.lang.parser.PascalFile;
 import com.siberika.idea.pascal.lang.psi.*;
@@ -18,6 +11,13 @@ import com.siberika.idea.pascal.lang.references.ResolveUtil;
 import com.siberika.idea.pascal.lang.search.Helper;
 import com.siberika.idea.pascal.util.ModuleUtil;
 import com.siberika.idea.pascal.util.PsiUtil;
+import consulo.application.util.function.Processor;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.SmartPsiElementPointer;
+import consulo.language.psi.stub.StubElement;
+import consulo.logging.Logger;
+import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;

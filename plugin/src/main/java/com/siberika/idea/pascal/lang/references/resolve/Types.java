@@ -1,6 +1,5 @@
 package com.siberika.idea.pascal.lang.references.resolve;
 
-import com.intellij.psi.PsiElement;
 import com.siberika.idea.pascal.lang.parser.NamespaceRec;
 import com.siberika.idea.pascal.lang.psi.PasEntityScope;
 import com.siberika.idea.pascal.lang.psi.PasFullyQualifiedIdent;
@@ -10,6 +9,7 @@ import com.siberika.idea.pascal.lang.psi.impl.PascalExpression;
 import com.siberika.idea.pascal.lang.references.PasReferenceUtil;
 import com.siberika.idea.pascal.lang.references.ResolveContext;
 import com.siberika.idea.pascal.util.ModuleUtil;
+import consulo.language.psi.PsiElement;
 
 import java.util.List;
 

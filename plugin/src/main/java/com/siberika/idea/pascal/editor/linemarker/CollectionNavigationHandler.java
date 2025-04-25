@@ -1,18 +1,18 @@
 package com.siberika.idea.pascal.editor.linemarker;
 
-import com.intellij.codeInsight.daemon.GutterIconNavigationHandler;
-import com.intellij.codeInsight.daemon.impl.PsiElementListNavigator;
-import com.intellij.codeInsight.navigation.BackgroundUpdaterTask;
-import com.intellij.openapi.progress.ProgressIndicator;
-import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.project.DumbService;
-import com.intellij.psi.NavigatablePsiElement;
-import com.intellij.psi.PsiElement;
-import com.intellij.util.Processor;
-import com.intellij.util.Query;
-import com.intellij.util.containers.SmartHashSet;
 import com.siberika.idea.pascal.PascalBundle;
 import com.siberika.idea.pascal.util.EditorUtil;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressManager;
+import consulo.application.util.function.Processor;
+import consulo.application.util.query.Query;
+import consulo.language.editor.gutter.GutterIconNavigationHandler;
+import consulo.language.editor.ui.PsiElementListNavigator;
+import consulo.language.editor.ui.navigation.BackgroundUpdaterTask;
+import consulo.language.psi.NavigatablePsiElement;
+import consulo.language.psi.PsiElement;
+import consulo.project.DumbService;
+import consulo.util.collection.SmartHashSet;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;

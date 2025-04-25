@@ -1,44 +1,51 @@
 package com.siberika.idea.pascal;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.ParserDefinition;
-import com.intellij.lang.PsiParser;
-import com.intellij.lexer.Lexer;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.FileViewProvider;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.TokenType;
-import com.intellij.psi.tree.IFileElementType;
-import com.intellij.psi.tree.TokenSet;
 import com.siberika.idea.pascal.lang.lexer.PascalLexer;
 import com.siberika.idea.pascal.lang.parser.PascalFileElementType;
 import com.siberika.idea.pascal.lang.parser.PascalParser;
 import com.siberika.idea.pascal.lang.parser.impl.PascalFileImpl;
 import com.siberika.idea.pascal.lang.psi.PasTypes;
 import com.siberika.idea.pascal.module.PascalProjectService;
-import consulo.lang.LanguageVersion;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.Language;
+import consulo.language.ast.ASTNode;
+import consulo.language.ast.IFileElementType;
+import consulo.language.ast.TokenSet;
+import consulo.language.ast.TokenType;
+import consulo.language.file.FileViewProvider;
+import consulo.language.lexer.Lexer;
+import consulo.language.parser.ParserDefinition;
+import consulo.language.parser.PsiParser;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.version.LanguageVersion;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
-
-import javax.annotation.Nonnull;
 
 /**
  * Author: George Bakhtadze
  * Date: 12/9/12
  */
+@ExtensionImpl
 public class PascalParserDefinition implements ParserDefinition {
 
     public static final IFileElementType PAS_FILE_ELEMENT_TYPE = new PascalFileElementType("PAS_FILE", PascalLanguage.INSTANCE);
     public static final TokenSet WS = TokenSet.create(TokenType.WHITE_SPACE);
     public static final TokenSet LITERALS = TokenSet.create(PasTypes.STRING_FACTOR, PasTypes.STRING_FACTOR);
 
-    @NotNull
     public Lexer createLexer(@Nonnull Project project) {
-        PascalProjectService service = project.getComponent(PascalProjectService.class);
+        PascalProjectService service = project.getInstance(PascalProjectService.class);
         Object parsing = service.getData(PascalProjectService.KEY_PARSING);
         service.remove(PascalProjectService.KEY_PARSING);
         return new PascalLexer.ParsingPascalLexer(project, parsing instanceof VirtualFile ? (VirtualFile) parsing : null);
+    }
+
+    @Nonnull
+    @Override
+    public Language getLanguage() {
+        return PascalLanguage.INSTANCE;
     }
 
     @NotNull

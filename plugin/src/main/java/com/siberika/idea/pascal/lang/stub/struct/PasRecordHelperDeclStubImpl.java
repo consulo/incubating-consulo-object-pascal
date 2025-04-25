@@ -1,7 +1,7 @@
 package com.siberika.idea.pascal.lang.stub.struct;
 
-import com.intellij.psi.stubs.StubElement;
 import com.siberika.idea.pascal.lang.psi.PascalHelperDecl;
+import consulo.language.psi.stub.StubElement;
 
 import java.util.List;
 

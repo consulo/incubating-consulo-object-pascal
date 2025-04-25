@@ -1,9 +1,9 @@
 package com.siberika.idea.pascal.lang.compiled;
 
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.psi.FileViewProvider;
-import com.intellij.psi.PsiManager;
 import com.siberika.idea.pascal.PPUFileType;
+import consulo.language.file.FileViewProvider;
+import consulo.language.psi.PsiManager;
+import consulo.virtualFileSystem.fileType.FileType;
 import org.jetbrains.annotations.NotNull;
 
 /**

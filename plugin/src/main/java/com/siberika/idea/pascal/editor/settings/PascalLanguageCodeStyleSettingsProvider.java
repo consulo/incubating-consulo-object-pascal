@@ -1,14 +1,15 @@
 package com.siberika.idea.pascal.editor.settings;
 
-import com.intellij.application.options.IndentOptionsEditor;
-import com.intellij.lang.Language;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.util.io.StreamUtil;
-import com.intellij.psi.codeStyle.CodeStyleSettingsCustomizable;
-import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
-import com.intellij.psi.codeStyle.LanguageCodeStyleSettingsProvider;
 import com.siberika.idea.pascal.PascalBundle;
 import com.siberika.idea.pascal.PascalLanguage;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.Language;
+import consulo.language.codeStyle.CommonCodeStyleSettings;
+import consulo.language.codeStyle.setting.CodeStyleSettingsCustomizable;
+import consulo.language.codeStyle.setting.IndentOptionsEditor;
+import consulo.language.codeStyle.setting.LanguageCodeStyleSettingsProvider;
+import consulo.logging.Logger;
+import consulo.util.io.StreamUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -18,9 +19,10 @@ import java.io.InputStream;
  * Author: George Bakhtadze
  * Date: 15/05/2017
  */
+@ExtensionImpl
 public class PascalLanguageCodeStyleSettingsProvider extends LanguageCodeStyleSettingsProvider {
 
-    private static final Logger LOG = Logger.getInstance(PascalLanguageCodeStyleSettingsProvider.class.getName());
+    private static final Logger LOG = Logger.getInstance(PascalLanguageCodeStyleSettingsProvider.class);
 
     private static final String GROUP_AROUND_OPERATORS = "Around Operators";
 

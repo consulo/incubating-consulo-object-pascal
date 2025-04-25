@@ -1,14 +1,14 @@
 package com.siberika.idea.pascal.jps.compiler;
 
-import com.intellij.execution.process.ProcessAdapter;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.siberika.idea.pascal.jps.JpsPascalBundle;
 import com.siberika.idea.pascal.jps.builder.DelphiCompilerProcessAdapter;
 import com.siberika.idea.pascal.jps.sdk.PascalSdkData;
 import com.siberika.idea.pascal.jps.sdk.PascalSdkUtil;
 import com.siberika.idea.pascal.jps.util.FileUtil;
 import com.siberika.idea.pascal.jps.util.ParamMap;
+import consulo.process.event.ProcessAdapter;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

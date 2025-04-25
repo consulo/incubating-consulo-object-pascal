@@ -1,8 +1,9 @@
 package com.siberika.idea.pascal.debugger.settings;
 
-import com.intellij.openapi.options.Configurable;
-import com.intellij.xdebugger.settings.DebuggerSettingsCategory;
-import com.intellij.xdebugger.settings.XDebuggerSettings;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.configurable.Configurable;
+import consulo.execution.debug.setting.DebuggerSettingsCategory;
+import consulo.execution.debug.setting.XDebuggerSettings;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -12,8 +13,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+@ExtensionImpl
 public class PascalDebuggerSettings extends XDebuggerSettings<Element> {
-    protected PascalDebuggerSettings() {
+    public PascalDebuggerSettings() {
         super("pascal");
     }
 

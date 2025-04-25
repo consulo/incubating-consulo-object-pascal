@@ -1,6 +1,6 @@
 package com.siberika.idea.pascal.lang;
 
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 
 public class PascalAnnotatorInfo {
     private final PsiFile file;

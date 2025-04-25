@@ -1,16 +1,16 @@
 package com.siberika.idea.pascal.ide.intention;
 
-import com.intellij.codeInsight.intention.BaseElementAtCaretIntentionAction;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.IncorrectOperationException;
 import com.siberika.idea.pascal.PascalBundle;
 import com.siberika.idea.pascal.lang.psi.PasCompoundStatement;
 import com.siberika.idea.pascal.lang.psi.PasStatement;
 import com.siberika.idea.pascal.lang.psi.PasStmtEmpty;
 import com.siberika.idea.pascal.util.StmtUtil;
+import consulo.codeEditor.Editor;
+import consulo.language.editor.intention.BaseElementAtCaretIntentionAction;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.language.util.IncorrectOperationException;
+import consulo.project.Project;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 
@@ -26,7 +26,6 @@ class RemoveCompoundStatement extends BaseElementAtCaretIntentionAction {
 
     @Nls(capitalization = Nls.Capitalization.Sentence)
     @NotNull
-    @Override
     public String getFamilyName() {
         return "Statement/" + getClass().getSimpleName();
     }

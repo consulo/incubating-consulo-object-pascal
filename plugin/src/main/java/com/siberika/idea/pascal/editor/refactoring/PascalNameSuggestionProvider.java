@@ -1,30 +1,17 @@
 package com.siberika.idea.pascal.editor.refactoring;
 
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.codeStyle.SuggestedNameInfo;
-import com.intellij.refactoring.rename.NameSuggestionProvider;
-import com.intellij.util.SmartList;
-import com.intellij.util.containers.SmartHashSet;
 import com.siberika.idea.pascal.PascalLanguage;
 import com.siberika.idea.pascal.lang.context.CodePlace;
 import com.siberika.idea.pascal.lang.context.Context;
-import com.siberika.idea.pascal.lang.psi.PasArrayType;
-import com.siberika.idea.pascal.lang.psi.PasClassField;
-import com.siberika.idea.pascal.lang.psi.PasClassProperty;
-import com.siberika.idea.pascal.lang.psi.PasClassPropertySpecifier;
-import com.siberika.idea.pascal.lang.psi.PasClassTypeTypeDecl;
-import com.siberika.idea.pascal.lang.psi.PasConstDeclaration;
-import com.siberika.idea.pascal.lang.psi.PasGenericTypeIdent;
-import com.siberika.idea.pascal.lang.psi.PasNamedIdentDecl;
-import com.siberika.idea.pascal.lang.psi.PasPointerType;
-import com.siberika.idea.pascal.lang.psi.PasSetType;
-import com.siberika.idea.pascal.lang.psi.PasTypeDecl;
-import com.siberika.idea.pascal.lang.psi.PasTypeDeclaration;
-import com.siberika.idea.pascal.lang.psi.PasTypeID;
-import com.siberika.idea.pascal.lang.psi.PascalRoutine;
-import com.siberika.idea.pascal.lang.psi.PascalVariableDeclaration;
+import com.siberika.idea.pascal.lang.psi.*;
 import com.siberika.idea.pascal.util.StrUtil;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.editor.refactoring.rename.NameSuggestionProvider;
+import consulo.language.editor.refactoring.rename.SuggestedNameInfo;
+import consulo.language.psi.PsiElement;
+import consulo.util.collection.SmartHashSet;
+import consulo.util.collection.SmartList;
+import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -33,9 +20,15 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+@ExtensionImpl
 public class PascalNameSuggestionProvider implements NameSuggestionProvider {
 
-    private enum TypeMod {POINTER, ARRAY, SET, METACLASS}
+    private enum TypeMod {
+        POINTER,
+        ARRAY,
+        SET,
+        METACLASS
+    }
 
     @Nullable
     @Override
@@ -61,19 +54,23 @@ public class PascalNameSuggestionProvider implements NameSuggestionProvider {
             List<TypeMod> mods = new SmartList<>();
             String name = retrieveTypeModsAndName(((PasTypeDeclaration) position).getTypeDecl(), mods);
             suggestNames(name, mods, StrUtil.ElementType.TYPE, result);
-        } else if (position instanceof PascalVariableDeclaration) {
+        }
+        else if (position instanceof PascalVariableDeclaration) {
             List<TypeMod> mods = new SmartList<>();
             String name = retrieveTypeModsAndName(((PascalVariableDeclaration) position).getTypeDecl(), mods);
             suggestNames(name, mods, position instanceof PasClassField ? StrUtil.ElementType.FIELD : StrUtil.ElementType.VAR, result);
-        } else if (position instanceof PasClassProperty) {
+        }
+        else if (position instanceof PasClassProperty) {
             PasTypeID typeId = ((PasClassProperty) position).getTypeID();
             String name = typeId != null ? typeId.getFullyQualifiedIdent().getNamePart() : null;
             suggestNames(name, Collections.emptyList(), StrUtil.ElementType.PROPERTY, result);
-        } else if (position instanceof PasConstDeclaration) {
+        }
+        else if (position instanceof PasConstDeclaration) {
             List<TypeMod> mods = new SmartList<>();
             String name = retrieveTypeModsAndName(((PasConstDeclaration) position).getTypeDecl(), mods);
             suggestNames(name, mods, StrUtil.ElementType.CONST, result);
-        } else if (position instanceof PasClassPropertySpecifier) {
+        }
+        else if (position instanceof PasClassPropertySpecifier) {
             PsiElement prop = position.getParent();
             if (prop instanceof PasClassProperty) {
                 final PasNamedIdentDecl nameIdent = ((PasClassProperty) prop).getNamedIdentDecl();
@@ -82,18 +79,21 @@ public class PascalNameSuggestionProvider implements NameSuggestionProvider {
                     result.add("Set" + nameIdent.getName());
                 }
             }
-        } else if ((position instanceof PascalRoutine) && ((context == null) || context.contains(CodePlace.ROUTINE_HEADER))) {
+        }
+        else if ((position instanceof PascalRoutine) && ((context == null) || context.contains(CodePlace.ROUTINE_HEADER))) {
             PascalRoutine routine = (PascalRoutine) position;
             if (routine.isConstructor()) {
                 result.add("Create");
-            } else {
+            }
+            else {
                 String typeStr = routine.getFunctionTypeStr();
                 List<String> paramTypes = routine.getFormalParameterTypes();
                 if (!StringUtil.isEmpty(typeStr)) {
                     if (paramTypes.size() > 0) {
                         suggestNames(typeStr, "Calc", result);
                         suggestNames(typeStr, "Create", result);
-                    } else {
+                    }
+                    else {
                         suggestNames(typeStr, "Get", result);
                     }
                 }
@@ -123,7 +123,8 @@ public class PascalNameSuggestionProvider implements NameSuggestionProvider {
                     String sn1 = calcSuggestedName(mods, type == StrUtil.ElementType.TYPE, pointerSuffix).replace("#", sName);
                     if (type == StrUtil.ElementType.FIELD) {
                         result.add("F" + sn1);
-                    } else if ((type == StrUtil.ElementType.TYPE) && (sName.charAt(0) == '#')) {
+                    }
+                    else if ((type == StrUtil.ElementType.TYPE) && (sName.charAt(0) == '#')) {
                         result.add("T" + sn1);
                     }
                     result.add(sn1);
@@ -137,27 +138,32 @@ public class PascalNameSuggestionProvider implements NameSuggestionProvider {
             PasTypeID typeId = decl.getTypeID();
             if (typeId != null) {
                 return typeId.getFullyQualifiedIdent().getNamePart();
-            } else {
+            }
+            else {
                 PasPointerType ptr = decl.getPointerType();
                 if (ptr != null) {
                     mods.add(TypeMod.POINTER);
                     decl = ptr.getTypeDecl();
-                } else {
+                }
+                else {
                     PasArrayType arr = decl.getArrayType();
                     if (arr != null) {
                         mods.add(TypeMod.ARRAY);
                         decl = arr.getTypeDecl();
-                    } else {
+                    }
+                    else {
                         PasSetType set = decl.getSetType();
                         if (set != null) {
                             mods.add(TypeMod.SET);
                             decl = set.getTypeDecl();
-                        } else {
+                        }
+                        else {
                             PasClassTypeTypeDecl metaclass = decl.getClassTypeTypeDecl();
                             if (metaclass != null) {
                                 mods.add(TypeMod.METACLASS);
                                 return metaclass.getTypeID().getFullyQualifiedIdent().getNamePart();
-                            } else {
+                            }
+                            else {
                                 decl = null;
                             }
                         }
@@ -179,7 +185,8 @@ public class PascalNameSuggestionProvider implements NameSuggestionProvider {
                     if (forType && (0 == i)) {
                         sb.insert(0, "P");
                         prefixed = true;
-                    } else {
+                    }
+                    else {
                         sb.append(pointerSuffix);
                     }
                     break;
@@ -196,7 +203,8 @@ public class PascalNameSuggestionProvider implements NameSuggestionProvider {
                     if (forType && (0 == i)) {
                         sb.insert(0, "C");
                         prefixed = true;
-                    } else {
+                    }
+                    else {
                         sb.append("Class");
                     }
                 }
@@ -211,7 +219,8 @@ public class PascalNameSuggestionProvider implements NameSuggestionProvider {
     private static String typeNameToVarName(String typeName) {
         if (typeName.startsWith("T")) {
             return (typeName.length() > 1 && isPascalIdentifierStart(typeName.charAt(1)) ? "" : "_") + typeName.substring(1);
-        } else {
+        }
+        else {
             return typeName;
         }
     }

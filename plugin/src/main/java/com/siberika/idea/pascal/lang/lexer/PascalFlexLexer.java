@@ -1,6 +1,6 @@
 package com.siberika.idea.pascal.lang.lexer;
 
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
 
 import java.util.regex.Pattern;
 

@@ -1,28 +1,30 @@
 package com.siberika.idea.pascal;
 
-import com.intellij.openapi.project.DumbService;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.io.FileUtilRt;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.psi.stubs.StubIndex;
-import com.intellij.psi.util.PsiUtilCore;
-import com.intellij.util.Processors;
-import com.intellij.util.SmartList;
 import com.siberika.idea.pascal.lang.psi.PascalModule;
 import com.siberika.idea.pascal.lang.stub.PascalModuleIndex;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.ide.IconDescriptor;
-import consulo.ide.IconDescriptorUpdater;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.application.util.function.Processors;
+import consulo.language.icon.IconDescriptor;
+import consulo.language.icon.IconDescriptorUpdater;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiUtilCore;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.language.psi.stub.StubIndex;
+import consulo.project.DumbService;
+import consulo.project.Project;
 import consulo.ui.image.Image;
+import consulo.util.collection.SmartList;
+import consulo.util.io.FileUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
 import java.util.Collection;
 
+@ExtensionImpl
 public class PascalFileIconProvider implements IconDescriptorUpdater {
     @RequiredReadAction
     @Override
@@ -37,7 +39,7 @@ public class PascalFileIconProvider implements IconDescriptorUpdater {
 
     @Nullable
     public Image getIcon(@NotNull VirtualFile file, int flags, @Nullable Project project) {
-        String ext = FileUtilRt.getExtension(file.getName());
+        String ext = FileUtil.getExtension(file.getName());
         if (PascalFileType.PROGRAM_EXTENSIONS.contains(ext)) {
             return PascalIcons.FILE_PROGRAM;
         } else if ("inc".equalsIgnoreCase(ext)) {

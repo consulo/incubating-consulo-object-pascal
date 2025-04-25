@@ -1,12 +1,13 @@
 package com.siberika.idea.pascal.debugger.settings;
 
-import com.intellij.openapi.options.SearchableConfigurable;
-import com.intellij.ui.JBColor;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
-import com.intellij.util.ReflectionUtil;
-import com.intellij.util.ui.JBUI;
 import com.siberika.idea.pascal.PascalBundle;
+import consulo.annotation.DeprecationInfo;
+import consulo.configurable.SearchableConfigurable;
+import consulo.ui.ex.JBColor;
+import consulo.ui.ex.awt.JBUI;
+import consulo.util.lang.reflect.ReflectionUtil;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -16,6 +17,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+@Deprecated
+@DeprecationInfo("Prefer SimpleConfigurableByProperties")
 public abstract class AbstractConfigurable<T> implements SearchableConfigurable {
 
     private final String bundlePrefix;
@@ -49,7 +52,12 @@ public abstract class AbstractConfigurable<T> implements SearchableConfigurable 
 
     protected T doApply(T instance) {
         for (Control control : controlMap.values()) {
-            ReflectionUtil.setField(instance.getClass(), instance, null, control.fieldName, UIUtils.getValue(control.component, control.fieldType));
+            try {
+                control.field.set(instance, UIUtils.getValue(control.component, control.fieldType));
+            }
+            catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
         }
         return instance;
     }
@@ -101,9 +109,11 @@ public abstract class AbstractConfigurable<T> implements SearchableConfigurable 
     private static class Control {
         private final String fieldName;
         private final Type fieldType;
+        private final Field field;
         private JComponent component;
 
         public Control(Field field) {
+            this.field = field;
             this.fieldName = field.getName();
             this.fieldType = convertType(field.getType());
         }

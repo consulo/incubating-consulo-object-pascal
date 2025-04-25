@@ -1,7 +1,10 @@
 package com.siberika.idea.pascal.lang.folding;
 
-import com.intellij.openapi.components.ServiceManager;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.ide.ServiceManager;
 
+@ServiceAPI(ComponentScope.APPLICATION)
 public abstract class PascalCodeFoldingSettings {
     public static PascalCodeFoldingSettings getInstance() {
         return ServiceManager.getService(PascalCodeFoldingSettings.class);

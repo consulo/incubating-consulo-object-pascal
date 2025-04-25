@@ -1,8 +1,8 @@
 package com.siberika.idea.pascal.jps.builder;
 
-import com.intellij.openapi.compiler.CompileContext;
-import com.intellij.openapi.diagnostic.Logger;
 import com.siberika.idea.pascal.jps.compiler.CompilerMessager;
+import consulo.compiler.CompileContext;
+import consulo.logging.Logger;
 
 import java.util.Arrays;
 import java.util.List;
@@ -63,21 +63,21 @@ public class PascalCompilerMessager implements CompilerMessager {
 
     @Override
     public void hint(String msgId, String msg, String path, long line, long column) {
-        context.addMessage(com.intellij.openapi.compiler.CompilerMessageCategory.INFORMATION, msg, path, (int)line, (int)column);
+        context.addMessage(consulo.compiler.CompilerMessageCategory.INFORMATION, msg, path, (int)line, (int)column);
     }
 
     @Override
     public void info(String msgId, String msg, String path, long line, long column) {
-        context.addMessage(com.intellij.openapi.compiler.CompilerMessageCategory.INFORMATION, msg, path, (int) line, (int) column);
+        context.addMessage(consulo.compiler.CompilerMessageCategory.INFORMATION, msg, path, (int) line, (int) column);
     }
 
     @Override
     public void warning(String msgId, String msg, String path, long line, long column) {
-        context.addMessage(com.intellij.openapi.compiler.CompilerMessageCategory.WARNING, msg, path, (int) line, (int) column);
+        context.addMessage(consulo.compiler.CompilerMessageCategory.WARNING, msg, path, (int) line, (int) column);
     }
 
     @Override
     public void error(String msgId, String msg, String path, long line, long column) {
-        context.addMessage(com.intellij.openapi.compiler.CompilerMessageCategory.ERROR, msg, path, (int) line, (int) column);
+        context.addMessage(consulo.compiler.CompilerMessageCategory.ERROR, msg, path, (int) line, (int) column);
     }
 }

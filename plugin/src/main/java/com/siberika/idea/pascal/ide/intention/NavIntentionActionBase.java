@@ -1,6 +1,6 @@
 package com.siberika.idea.pascal.ide.intention;
 
-import com.intellij.codeInsight.intention.BaseElementAtCaretIntentionAction;
+import consulo.language.editor.intention.BaseElementAtCaretIntentionAction;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 
@@ -8,7 +8,6 @@ public abstract class NavIntentionActionBase extends BaseElementAtCaretIntention
 
     @Nls(capitalization = Nls.Capitalization.Sentence)
     @NotNull
-    @Override
     public String getFamilyName() {
         return "Navigation/" + getClass().getSimpleName();
     }

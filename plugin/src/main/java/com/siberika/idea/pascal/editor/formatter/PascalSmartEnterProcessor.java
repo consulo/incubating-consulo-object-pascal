@@ -1,44 +1,35 @@
 package com.siberika.idea.pascal.editor.formatter;
 
-import com.intellij.codeInsight.editorActions.smartEnter.SmartEnterProcessor;
-import com.intellij.featureStatistics.FeatureUsageTracker;
-import com.intellij.lang.ASTNode;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiErrorElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.codeStyle.CodeStyleManager;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.siberika.idea.pascal.lang.psi.PasAssignPart;
-import com.siberika.idea.pascal.lang.psi.PasCallExpr;
-import com.siberika.idea.pascal.lang.psi.PasEntityScope;
-import com.siberika.idea.pascal.lang.psi.PasExpression;
-import com.siberika.idea.pascal.lang.psi.PasForStatement;
-import com.siberika.idea.pascal.lang.psi.PasFromExpression;
-import com.siberika.idea.pascal.lang.psi.PasFullyQualifiedIdent;
-import com.siberika.idea.pascal.lang.psi.PasIfStatement;
-import com.siberika.idea.pascal.lang.psi.PasParenExpr;
-import com.siberika.idea.pascal.lang.psi.PasRepeatStatement;
-import com.siberika.idea.pascal.lang.psi.PasStatement;
-import com.siberika.idea.pascal.lang.psi.PasTypes;
-import com.siberika.idea.pascal.lang.psi.PasWhileStatement;
-import com.siberika.idea.pascal.lang.psi.PascalPsiElement;
-import com.siberika.idea.pascal.lang.psi.PascalVariableDeclaration;
+import com.siberika.idea.pascal.PascalLanguage;
+import com.siberika.idea.pascal.lang.psi.*;
 import com.siberika.idea.pascal.lang.psi.impl.PascalExpression;
 import com.siberika.idea.pascal.util.DocUtil;
 import com.siberika.idea.pascal.util.EditorUtil;
 import com.siberika.idea.pascal.util.PsiUtil;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.codeEditor.Editor;
+import consulo.document.Document;
+import consulo.document.util.TextRange;
+import consulo.externalService.statistic.FeatureUsageTracker;
+import consulo.language.Language;
+import consulo.language.ast.ASTNode;
+import consulo.language.ast.IElementType;
+import consulo.language.codeStyle.CodeStyleManager;
+import consulo.language.editor.action.SmartEnterProcessor;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiErrorElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.project.Project;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * Author: George Bakhtadze
  * Date: 17/02/2015
  */
+@ExtensionImpl
 public class PascalSmartEnterProcessor extends SmartEnterProcessor {
 
     @Override
@@ -315,4 +306,9 @@ public class PascalSmartEnterProcessor extends SmartEnterProcessor {
         return doc.getLineNumber(first.getTextRange().getStartOffset()) == doc.getLineNumber(second.getTextRange().getStartOffset());
     }
 
+    @Nonnull
+    @Override
+    public Language getLanguage() {
+        return PascalLanguage.INSTANCE;
+    }
 }

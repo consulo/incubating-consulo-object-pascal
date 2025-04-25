@@ -1,18 +1,18 @@
 package com.siberika.idea.pascal.lang.stub.struct;
 
-import com.intellij.lang.LighterAST;
-import com.intellij.lang.LighterASTNode;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.stubs.IndexSink;
-import com.intellij.psi.stubs.StubElement;
-import com.intellij.psi.stubs.StubInputStream;
-import com.intellij.psi.stubs.StubOutputStream;
-import com.intellij.util.SmartList;
 import com.siberika.idea.pascal.lang.psi.PascalHelperDecl;
 import com.siberika.idea.pascal.lang.psi.impl.PasClassHelperDeclImpl;
 import com.siberika.idea.pascal.lang.stub.PascalHelperIndex;
 import com.siberika.idea.pascal.lang.stub.PascalSymbolIndex;
 import com.siberika.idea.pascal.lang.stub.StubUtil;
+import consulo.language.ast.LighterAST;
+import consulo.language.ast.LighterASTNode;
+import consulo.language.psi.stub.IndexSink;
+import consulo.language.psi.stub.StubElement;
+import consulo.language.psi.stub.StubInputStream;
+import consulo.language.psi.stub.StubOutputStream;
+import consulo.util.collection.SmartList;
+import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;

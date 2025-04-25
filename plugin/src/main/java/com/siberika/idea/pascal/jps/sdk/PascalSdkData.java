@@ -1,8 +1,8 @@
 package com.siberika.idea.pascal.jps.sdk;
 
 import com.google.common.collect.ImmutableMap;
-import com.intellij.openapi.projectRoots.SdkAdditionalData;
-import com.intellij.openapi.util.SystemInfo;
+import consulo.application.util.SystemInfo;
+import consulo.content.bundle.SdkAdditionalData;
 
 import java.util.HashMap;
 import java.util.Map;

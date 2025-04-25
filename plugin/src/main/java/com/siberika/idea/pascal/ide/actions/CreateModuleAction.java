@@ -1,23 +1,23 @@
 package com.siberika.idea.pascal.ide.actions;
 
-import com.intellij.ide.actions.CreateFileFromTemplateDialog;
-import com.intellij.ide.actions.CreateTemplateInPackageAction;
-import com.intellij.ide.fileTemplates.FileTemplate;
-import com.intellij.ide.fileTemplates.FileTemplateManager;
-import com.intellij.ide.fileTemplates.FileTemplateUtil;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.impl.DirectoryIndex;
-import com.intellij.openapi.util.Condition;
-import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.util.IncorrectOperationException;
-import com.intellij.util.SmartList;
-import com.intellij.util.containers.ContainerUtil;
 import com.siberika.idea.pascal.PascalBundle;
 import com.siberika.idea.pascal.PascalFileType;
 import com.siberika.idea.pascal.PascalIcons;
+import consulo.fileTemplate.FileTemplate;
+import consulo.fileTemplate.FileTemplateManager;
+import consulo.fileTemplate.FileTemplateUtil;
+import consulo.ide.action.CreateFileFromTemplateDialog;
+import consulo.ide.action.CreateTemplateInPackageAction;
+import consulo.language.psi.PsiDirectory;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.util.IncorrectOperationException;
+import consulo.module.content.DirectoryIndex;
+import consulo.project.Project;
 import consulo.ui.image.Image;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.collection.SmartList;
+import consulo.util.lang.function.Condition;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -55,7 +55,7 @@ public class CreateModuleAction extends CreateTemplateInPackageAction<PsiFile> {
         for (FileTemplate fileTemplate : getApplicableTemplates(directory.getProject())) {
             final String templateName = fileTemplate.getName();
             final String shortName = getTemplateShortName(templateName);
-            final Image icon = getTemplateIcon();
+            final Image icon = getPopupTemplateIcon();
             builder.addKind(shortName, icon, templateName);
         }
     }
@@ -82,7 +82,7 @@ public class CreateModuleAction extends CreateTemplateInPackageAction<PsiFile> {
         return createClass(className, packageName, directory, templateName, CreateModuleAction.class.getClassLoader());
     }
 
-    private static PsiElement createClass(String className, String packageName, PsiDirectory directory, String templateName, @Nullable java.lang.ClassLoader classLoader)
+    private static PsiElement createClass(String className, String packageName, PsiDirectory directory, String templateName, @Nullable ClassLoader classLoader)
             throws Exception {
         final Properties props = new Properties(FileTemplateManager.getInstance(directory.getProject()).getDefaultProperties());
         props.setProperty(FileTemplate.ATTRIBUTE_NAME, className);
@@ -117,7 +117,7 @@ public class CreateModuleAction extends CreateTemplateInPackageAction<PsiFile> {
     }
 
     @NotNull
-    private static Image getTemplateIcon() {
+    private static Image getPopupTemplateIcon() {
         return PascalIcons.GENERAL;
     }
 

@@ -1,12 +1,12 @@
 package com.siberika.idea.pascal.lang.psi.impl;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.SmartList;
 import com.siberika.idea.pascal.lang.psi.PasTypeDecl;
 import com.siberika.idea.pascal.lang.psi.PasTypeID;
 import com.siberika.idea.pascal.lang.psi.PascalRoutineEntity;
 import com.siberika.idea.pascal.lang.psi.field.ParamModifier;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.util.collection.SmartList;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;

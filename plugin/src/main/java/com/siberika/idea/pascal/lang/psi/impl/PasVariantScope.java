@@ -1,10 +1,10 @@
 package com.siberika.idea.pascal.lang.psi.impl;
 
-import com.intellij.psi.SmartPsiElementPointer;
 import com.siberika.idea.pascal.lang.psi.PasEntityScope;
 import com.siberika.idea.pascal.lang.psi.PasWithStatement;
 import com.siberika.idea.pascal.lang.psi.PascalNamedElement;
 import com.siberika.idea.pascal.lang.psi.PascalRoutine;
+import consulo.language.psi.SmartPsiElementPointer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

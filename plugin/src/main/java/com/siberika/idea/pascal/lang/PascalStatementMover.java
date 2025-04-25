@@ -1,38 +1,23 @@
 package com.siberika.idea.pascal.lang;
 
-import com.intellij.codeInsight.editorActions.moveUpDown.LineMover;
-import com.intellij.codeInsight.editorActions.moveUpDown.LineRange;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.LogicalPosition;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.PsiComment;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.util.PsiTreeUtil;
 import com.siberika.idea.pascal.lang.parser.PascalFile;
-import com.siberika.idea.pascal.lang.psi.PasBlockGlobal;
-import com.siberika.idea.pascal.lang.psi.PasBlockLocal;
-import com.siberika.idea.pascal.lang.psi.PasClassMethodResolution;
-import com.siberika.idea.pascal.lang.psi.PasClassProperty;
-import com.siberika.idea.pascal.lang.psi.PasCompoundStatement;
-import com.siberika.idea.pascal.lang.psi.PasConstDeclaration;
-import com.siberika.idea.pascal.lang.psi.PasConstSection;
-import com.siberika.idea.pascal.lang.psi.PasExportsSection;
-import com.siberika.idea.pascal.lang.psi.PasHandler;
-import com.siberika.idea.pascal.lang.psi.PasImplDeclSection;
-import com.siberika.idea.pascal.lang.psi.PasLabelDeclSection;
-import com.siberika.idea.pascal.lang.psi.PasProcBodyBlock;
-import com.siberika.idea.pascal.lang.psi.PasStatement;
-import com.siberika.idea.pascal.lang.psi.PasTypeDeclaration;
-import com.siberika.idea.pascal.lang.psi.PasTypeSection;
-import com.siberika.idea.pascal.lang.psi.PasVarDeclaration;
-import com.siberika.idea.pascal.lang.psi.PasVarSection;
-import com.siberika.idea.pascal.lang.psi.PascalRoutine;
+import com.siberika.idea.pascal.lang.psi.*;
 import com.siberika.idea.pascal.util.DocUtil;
 import com.siberika.idea.pascal.util.PsiUtil;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.LogicalPosition;
+import consulo.document.Document;
+import consulo.document.util.TextRange;
+import consulo.language.editor.moveUpDown.LineMover;
+import consulo.language.editor.moveUpDown.LineRange;
+import consulo.language.psi.PsiComment;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
 
+@ExtensionImpl
 public class PascalStatementMover extends LineMover {
     @Override
     public boolean checkAvailable(@NotNull Editor editor, @NotNull PsiFile file, @NotNull MoveInfo info, boolean down) {

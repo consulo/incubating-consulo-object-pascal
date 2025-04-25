@@ -1,9 +1,9 @@
 package com.siberika.idea.pascal.lang.context;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.util.PsiTreeUtil;
 import com.siberika.idea.pascal.lang.psi.*;
 import com.siberika.idea.pascal.util.PsiUtil;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.util.PsiTreeUtil;
 import consulo.object.pascal.psi.PasBaseReferenceExpr;
 
 public class ContextUtil {

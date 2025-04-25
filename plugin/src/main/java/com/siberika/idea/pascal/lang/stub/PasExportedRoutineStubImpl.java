@@ -1,11 +1,11 @@
 package com.siberika.idea.pascal.lang.stub;
 
-import com.intellij.psi.stubs.StubElement;
 import com.siberika.idea.pascal.lang.psi.PascalExportedRoutine;
 import com.siberika.idea.pascal.lang.psi.field.Flag;
 import com.siberika.idea.pascal.lang.psi.field.ParamModifier;
 import com.siberika.idea.pascal.lang.psi.impl.PasField;
 import com.siberika.idea.pascal.lang.psi.impl.RoutineUtil;
+import consulo.language.psi.stub.StubElement;
 
 import java.util.List;
 

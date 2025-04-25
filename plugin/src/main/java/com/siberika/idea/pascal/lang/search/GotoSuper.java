@@ -1,45 +1,46 @@
 package com.siberika.idea.pascal.lang.search;
 
-import com.intellij.lang.LanguageCodeInsightActionHandler;
-import com.intellij.openapi.application.QueryExecutorBase;
-import com.intellij.openapi.application.ReadAction;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.ThrowableComputable;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.SmartPsiElementPointer;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.EmptyQuery;
-import com.intellij.util.ExecutorsQuery;
-import com.intellij.util.Processor;
-import com.intellij.util.Query;
 import com.siberika.idea.pascal.PascalBundle;
+import com.siberika.idea.pascal.PascalLanguage;
 import com.siberika.idea.pascal.PascalRTException;
-import com.siberika.idea.pascal.lang.psi.PasEntityScope;
-import com.siberika.idea.pascal.lang.psi.PascalInterfaceDecl;
-import com.siberika.idea.pascal.lang.psi.PascalNamedElement;
-import com.siberika.idea.pascal.lang.psi.PascalRoutine;
-import com.siberika.idea.pascal.lang.psi.PascalStructType;
+import com.siberika.idea.pascal.lang.psi.*;
 import com.siberika.idea.pascal.lang.psi.impl.PasField;
 import com.siberika.idea.pascal.lang.references.PasReferenceUtil;
 import com.siberika.idea.pascal.util.EditorUtil;
 import com.siberika.idea.pascal.util.PsiUtil;
 import com.siberika.idea.pascal.util.StrUtil;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.application.ReadAction;
+import consulo.application.util.function.ThrowableComputable;
+import consulo.application.util.query.EmptyQuery;
+import consulo.application.util.query.ExecutorsQuery;
+import consulo.application.util.query.Query;
+import consulo.codeEditor.Editor;
+import consulo.language.Language;
+import consulo.language.editor.action.GotoSuperActionHander;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.SmartPsiElementPointer;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.project.util.query.QueryExecutorBase;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.function.Predicate;
 
 /**
  * Author: George Bakhtadze
  * Date: 02/07/2015
  */
-public class GotoSuper implements LanguageCodeInsightActionHandler {
+@ExtensionImpl
+public class GotoSuper implements GotoSuperActionHander {
 
-    private static final Logger LOG = Logger.getInstance(GotoSuper.class.getName());
+    private static final Logger LOG = Logger.getInstance(GotoSuper.class);
 
     private static final EmptyQuery<PasEntityScope> GOTO_SUPER_EMPTY_QUERY = new EmptyQuery<>();
 
@@ -61,9 +62,11 @@ public class GotoSuper implements LanguageCodeInsightActionHandler {
         PasEntityScope scope = getScopeByElement(element);
         if (scope instanceof PascalRoutine) {
             return (scope.getContainingScope() instanceof PascalStructType) && (searchForRoutine((PascalRoutine) scope).findFirst() != null);
-        } else if (scope instanceof PascalStructType) {
+        }
+        else if (scope instanceof PascalStructType) {
             return !scope.getParentScope().isEmpty();
-        } else {
+        }
+        else {
             return false;
         }
     }
@@ -78,9 +81,11 @@ public class GotoSuper implements LanguageCodeInsightActionHandler {
 
         if (entity instanceof PascalRoutine) {
             return searchForRoutine((PascalRoutine) entity);
-        } else if (entity instanceof PascalStructType) {
+        }
+        else if (entity instanceof PascalStructType) {
             return searchForStruct((PascalStructType) entity);
-        } else {
+        }
+        else {
             return GOTO_SUPER_EMPTY_QUERY;
         }
     }
@@ -97,7 +102,8 @@ public class GotoSuper implements LanguageCodeInsightActionHandler {
         PascalRoutine routine = PsiTreeUtil.getParentOfType(element, PascalRoutine.class, false);
         if (routine != null) {
             return routine;
-        } else {
+        }
+        else {
             return PsiUtil.getStructByElement(element);
         }
     }
@@ -113,7 +119,7 @@ public class GotoSuper implements LanguageCodeInsightActionHandler {
      * @return true if processing is finished normally and false if it's interrupted due to consumer returned false
      */
     static boolean extractMethodsByName(Collection<PasEntityScope> scopes, PascalRoutine routine,
-                                               boolean handleParents, int recursionCount, Processor<? super PasEntityScope> consumer) {
+                                        boolean handleParents, int recursionCount, Predicate<? super PasEntityScope> consumer) {
         if (recursionCount > MAX_RECURSION_COUNT) {
             throw new IllegalStateException("Recursion limit reached");
         }
@@ -125,14 +131,14 @@ public class GotoSuper implements LanguageCodeInsightActionHandler {
         return true;
     }
 
-    static boolean extractMethodsByName(PasEntityScope scope, PascalRoutine routine, boolean handleParents, int recursionCount, Processor<? super PasEntityScope> consumer) {
+    static boolean extractMethodsByName(PasEntityScope scope, PascalRoutine routine, boolean handleParents, int recursionCount, Predicate<? super PasEntityScope> consumer) {
         if (scope != null) {
             if (scope instanceof PascalStructType) {
                 PasField field = scope.getField(StrUtil.getMethodName(PsiUtil.getFieldName(routine)));
                 if ((field != null) && (field.fieldType == PasField.FieldType.ROUTINE)) {
                     PascalNamedElement el = field.getElement();
                     if (el instanceof PascalRoutine) {
-                        if (!consumer.process((PascalRoutine) el)) {
+                        if (!consumer.test((PascalRoutine) el)) {
                             return false;
                         }
                     }
@@ -169,6 +175,12 @@ public class GotoSuper implements LanguageCodeInsightActionHandler {
         return false;
     }
 
+    @Nonnull
+    @Override
+    public Language getLanguage() {
+        return PascalLanguage.INSTANCE;
+    }
+
     private static class QueryExecutorRoutine extends QueryExecutorBase<PasEntityScope, OptionsRoutine> {
 
         QueryExecutorRoutine() {
@@ -176,7 +188,7 @@ public class GotoSuper implements LanguageCodeInsightActionHandler {
         }
 
         @Override
-        public void processQuery(@NotNull OptionsRoutine options, @NotNull Processor<? super PasEntityScope> consumer) {
+        public void processQuery(@NotNull OptionsRoutine options, @NotNull Predicate<? super PasEntityScope> consumer) {
             PasEntityScope scope = options.element.getContainingScope();
             if (scope instanceof PascalStructType) {
                 extractMethodsByName(PsiUtil.extractSmartPointers(scope.getParentScope()), options.element, true, 0, consumer);
@@ -192,11 +204,11 @@ public class GotoSuper implements LanguageCodeInsightActionHandler {
         }
 
         @Override
-        public void processQuery(@NotNull OptionsStruct options, @NotNull Processor<? super PasEntityScope> consumer) {
+        public void processQuery(@NotNull OptionsStruct options, @NotNull Predicate<? super PasEntityScope> consumer) {
             retrieveParentStructs(consumer, options.element, 0);
         }
 
-        private static boolean retrieveParentStructs(Processor<? super PasEntityScope> consumer, PasEntityScope struct, final int recursionCount) {
+        private static boolean retrieveParentStructs(Predicate<? super PasEntityScope> consumer, PasEntityScope struct, final int recursionCount) {
             if (recursionCount > PasReferenceUtil.MAX_RECURSION_COUNT) {
                 LOG.error("Too much recursion during retrieving parents: " + struct.getUniqueName());
                 return false;
@@ -204,7 +216,7 @@ public class GotoSuper implements LanguageCodeInsightActionHandler {
             if (struct instanceof PascalStructType) {
                 for (SmartPsiElementPointer<PasEntityScope> parent : struct.getParentScope()) {
                     PasEntityScope el = parent.getElement();
-                    if (!consumer.process(el)) {
+                    if (!consumer.test(el)) {
                         return false;
                     }
                     if (!struct.equals(el)) {

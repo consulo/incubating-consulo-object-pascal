@@ -1,31 +1,30 @@
 package com.siberika.idea.pascal.util;
 
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleManager;
-import com.intellij.openapi.module.ModuleUtilCore;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.projectRoots.SdkAdditionalData;
-import com.intellij.openapi.roots.ProjectFileIndex;
-import com.intellij.openapi.util.Computable;
-import com.intellij.openapi.util.io.FileUtilRt;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.search.FileTypeIndex;
-import com.intellij.psi.search.FilenameIndex;
-import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.util.CommonProcessors;
-import com.intellij.util.SmartList;
-import com.intellij.util.containers.ArrayListSet;
-import com.intellij.util.indexing.FileBasedIndex;
+import com.google.common.io.Files;
 import com.siberika.idea.pascal.jps.sdk.PascalSdkData;
 import com.siberika.idea.pascal.jps.util.FileUtil;
 import com.siberika.idea.pascal.module.PascalModuleType;
+import consulo.application.ApplicationManager;
+import consulo.application.util.function.CommonProcessors;
+import consulo.application.util.function.Computable;
+import consulo.content.bundle.Sdk;
+import consulo.content.bundle.SdkAdditionalData;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.language.psi.search.FileTypeIndex;
+import consulo.language.psi.search.FilenameIndex;
+import consulo.language.psi.stub.FileBasedIndex;
+import consulo.language.util.ModuleUtilCore;
+import consulo.logging.Logger;
+import consulo.module.Module;
+import consulo.module.ModuleManager;
+import consulo.module.content.ProjectFileIndex;
 import consulo.object.pascal.module.extension.ObjectPascalModuleExtension;
+import consulo.project.Project;
+import consulo.util.collection.SmartList;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -59,7 +58,7 @@ public class ModuleUtil {
             @Override
             public Collection<VirtualFile> compute() {
                 Collection<VirtualFile> res = new SmartList<VirtualFile>();
-                Set<String> nameVariants = new ArrayListSet<String>();
+                Set<String> nameVariants = new HashSet<>();
                 String nameExt = name + "." + fileType.getDefaultExtension();
                 nameVariants.add(nameExt);
                 nameVariants.add(nameExt.toUpperCase());
@@ -136,7 +135,7 @@ public class ModuleUtil {
                 }
             }
 
-            Module module = com.intellij.openapi.module.ModuleUtil.findModuleForFile(referencing, project);
+            Module module = ModuleUtilCore.findModuleForFile(referencing, project);
 
 //            return module != null ? trySearchPath(name, GlobalSearchScope.moduleWithDependenciesScope(module)) : null;
             return module != null ? trySearchPath(project, name, GlobalSearchScope.projectScope(project)) : null;
@@ -146,7 +145,7 @@ public class ModuleUtil {
     }
 
     public static Sdk getSdk(Project project, VirtualFile virtualFile) {
-        Module module = virtualFile != null ? com.intellij.openapi.module.ModuleUtil.findModuleForFile(virtualFile, project) : null;
+        Module module = virtualFile != null ? ModuleUtilCore.findModuleForFile(virtualFile, project) : null;
         Sdk sdk = module != null ? ModuleUtilCore.getSdk(module, ObjectPascalModuleExtension.class) : null;
         return sdk;
     }
@@ -167,7 +166,7 @@ public class ModuleUtil {
         if (!files.isEmpty()) {
             return files.iterator().next();
         } else {
-            String nameWoExt = FileUtilRt.getNameWithoutExtension(name);
+            String nameWoExt = Files.getNameWithoutExtension(name);
             for (String ext : INCLUDE_EXTENSIONS) {
                 files = searchInPathByName(project, nameWoExt + "." + ext, scope);
                 if (!files.isEmpty()) {
@@ -205,7 +204,7 @@ public class ModuleUtil {
     }
 
     public static List<String> retrieveUnitNamespaces(PsiElement parentIdent) {
-        return retrieveUnitNamespaces(com.intellij.openapi.module.ModuleUtil.findModuleForPsiElement(parentIdent), parentIdent.getProject());
+        return retrieveUnitNamespaces(ModuleUtilCore.findModuleForPsiElement(parentIdent), parentIdent.getProject());
     }
 
     // TODO: cache at SDK

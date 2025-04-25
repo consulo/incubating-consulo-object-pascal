@@ -1,14 +1,15 @@
 package com.siberika.idea.pascal;
 
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.FileTypeConsumer;
-import com.intellij.openapi.fileTypes.FileTypeFactory;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.virtualFileSystem.fileType.FileTypeConsumer;
+import consulo.virtualFileSystem.fileType.FileTypeFactory;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * User: George Bakhtadze
  * Date: 09.12.2012
  */
+@ExtensionImpl
 public class PascalFileTypeFactory extends FileTypeFactory {
   @Override
   public void createFileTypes(@NotNull FileTypeConsumer fileTypeConsumer) {
@@ -16,9 +17,10 @@ public class PascalFileTypeFactory extends FileTypeFactory {
       fileTypeConsumer.consume(PPUFileType.INSTANCE, "ppu");
       fileTypeConsumer.consume(DCUFileType.INSTANCE, "dcu");
 
-      FileType xmlFileType = fileTypeConsumer.getStandardFileTypeByName("XML");
-      if(xmlFileType != null) {
-          fileTypeConsumer.consume(xmlFileType, "lpi;dproj");
-      }
+      // TODO !
+//      FileType xmlFileType = fileTypeConsumer.getStandardFileTypeByName("XML");
+//      if(xmlFileType != null) {
+//          fileTypeConsumer.consume(xmlFileType, "lpi;dproj");
+//      }
   }
 }

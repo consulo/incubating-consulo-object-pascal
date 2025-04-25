@@ -1,24 +1,14 @@
 package com.siberika.idea.pascal.editor.formatter;
 
-import com.intellij.formatting.Block;
-import com.intellij.formatting.FormattingModel;
-import com.intellij.formatting.FormattingModelBuilder;
-import com.intellij.formatting.FormattingModelProvider;
-import com.intellij.formatting.SpacingBuilder;
-import com.intellij.formatting.Wrap;
-import com.intellij.formatting.WrapType;
-import com.intellij.lang.ASTNode;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.codeStyle.CodeStyleSettings;
-import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import com.siberika.idea.pascal.PascalLanguage;
 import com.siberika.idea.pascal.editor.settings.PascalCodeStyleSettings;
 import com.siberika.idea.pascal.lang.lexer.PascalLexer;
 import com.siberika.idea.pascal.lang.psi.PasTypes;
+import consulo.language.Language;
+import consulo.language.codeStyle.*;
+import consulo.language.psi.PsiElement;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Author: George Bakhtadze
@@ -34,17 +24,20 @@ public class PascalFormatter implements FormattingModelBuilder {
 
     @NotNull
     @Override
-    public FormattingModel createModel(PsiElement element, CodeStyleSettings settings) {
+    public FormattingModel createModel(@Nonnull FormattingContext formattingContext) {
+        PsiElement element = formattingContext.getPsiElement();
+        CodeStyleSettings settings = formattingContext.getCodeStyleSettings();
+
         CommonCodeStyleSettings set = settings.getCommonSettings(PascalLanguage.INSTANCE);
         Wrap wrap = set.WRAP_LONG_LINES ? Wrap.createWrap(WrapType.NORMAL, true) : Wrap.createWrap(WrapType.NONE, true);
         Block block = new PascalBlock(element.getNode(), settings, wrap, null);
         return FormattingModelProvider.createFormattingModelForPsiFile(element.getContainingFile(), block, settings);
     }
 
-    @Nullable
+    @Nonnull
     @Override
-    public TextRange getRangeAffectingIndent(PsiFile file, int offset, ASTNode elementAtOffset) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public Language getLanguage() {
+        return PascalLanguage.INSTANCE;
     }
 
     static SpacingBuilder createSpacingBuilder(CodeStyleSettings settings) {

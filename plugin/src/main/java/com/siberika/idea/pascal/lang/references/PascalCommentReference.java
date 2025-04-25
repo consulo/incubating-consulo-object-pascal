@@ -1,17 +1,12 @@
 package com.siberika.idea.pascal.lang.references;
 
-import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiComment;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
-import com.intellij.psi.PsiReferenceBase;
-import com.intellij.psi.util.PsiUtilCore;
 import com.siberika.idea.pascal.lang.lexer.PascalFlexLexerImpl;
 import com.siberika.idea.pascal.lang.psi.PasTypes;
 import com.siberika.idea.pascal.sdk.Define;
 import com.siberika.idea.pascal.util.ModuleUtil;
+import consulo.document.util.TextRange;
+import consulo.language.psi.*;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

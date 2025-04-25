@@ -1,16 +1,17 @@
 package com.siberika.idea.pascal.lang.compiled;
 
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.util.indexing.DataIndexer;
-import com.intellij.util.indexing.DefaultFileTypeSpecificInputFilter;
-import com.intellij.util.indexing.FileBasedIndex;
-import com.intellij.util.indexing.FileContent;
-import com.intellij.util.indexing.ID;
-import com.intellij.util.indexing.ScalarIndexExtension;
-import com.intellij.util.io.EnumeratorStringDescriptor;
-import com.intellij.util.io.KeyDescriptor;
 import com.siberika.idea.pascal.DCUFileType;
 import com.siberika.idea.pascal.PPUFileType;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.index.io.DataIndexer;
+import consulo.index.io.EnumeratorStringDescriptor;
+import consulo.index.io.ID;
+import consulo.index.io.KeyDescriptor;
+import consulo.language.psi.stub.DefaultFileTypeSpecificInputFilter;
+import consulo.language.psi.stub.FileBasedIndex;
+import consulo.language.psi.stub.FileContent;
+import consulo.language.psi.stub.ScalarIndexExtension;
+import consulo.virtualFileSystem.fileType.FileType;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -19,6 +20,7 @@ import java.util.Collections;
 import java.util.List;
 
 // Fake index class needed to disable intellisense file size limit on indexing for compiled files via getFileTypesWithSizeLimitNotApplicable() method
+@ExtensionImpl
 public class PascalFakeCompiledIndex extends ScalarIndexExtension<String> {
 
     public static final ID<String,Void> NAME = ID.create("PascalFakeIndex");
