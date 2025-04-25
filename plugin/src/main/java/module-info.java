@@ -11,4 +11,5 @@ module com.siberika.idea.pascal {
     requires java.desktop;
 
     opens com.siberika.idea.pascal.lang.folding to consulo.util.xml.serializer;
+    opens com.siberika.idea.pascal.ide.actions to consulo.component.impl;
 }
