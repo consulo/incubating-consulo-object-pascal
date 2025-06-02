@@ -18,7 +18,7 @@ public class StubUtil {
 
     public static <T extends Enum<T>> T readEnum(StubInputStream dataStream, Class<T> clazz) throws IOException {
         String name = readName(dataStream);
-        return (name != null) && !name.equals(ENUM_NULL) ? T.valueOf(clazz, name) : null;
+        return (name != null) && !name.equals(ENUM_NULL) ? Enum.valueOf(clazz, name) : null;
     }
 
     public static String readName(StubInputStream dataStream) throws IOException {
@@ -27,6 +27,10 @@ public class StubUtil {
     }
 
     public static void printStub(String msg, StubElement stub) {
+        if (!Boolean.FALSE) {
+            return;
+        }
+
         String stubStr = "?";
         if (stub instanceof PasModuleStub) {
             stubStr = "[M]" + ((PasModuleStub) stub).getName();
@@ -46,7 +50,7 @@ public class StubUtil {
         } else if (parent instanceof PasClassDeclStub) {
             parentStr = "[C]" + ((PasClassDeclStub) parent).getName();
         }
-        //System.out.println(String.format(msg + ": %s ^ %s", stubStr, parentStr));
+        System.out.println(String.format(msg + ": %s ^ %s", stubStr, parentStr));
     }
 
     public static void writeStringCollection(StubOutputStream dataStream, Collection<String> collection) throws IOException {
