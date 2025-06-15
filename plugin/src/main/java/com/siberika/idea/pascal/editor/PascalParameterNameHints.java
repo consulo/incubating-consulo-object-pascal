@@ -1,5 +1,6 @@
 package com.siberika.idea.pascal.editor;
 
+import com.siberika.idea.pascal.PascalBundle;
 import com.siberika.idea.pascal.PascalLanguage;
 import com.siberika.idea.pascal.lang.psi.PasCallExpr;
 import com.siberika.idea.pascal.lang.psi.PasExpr;
@@ -8,10 +9,12 @@ import com.siberika.idea.pascal.lang.psi.PascalRoutineEntity;
 import com.siberika.idea.pascal.lang.references.PasReferenceUtil;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.Language;
+import consulo.language.editor.inlay.HintInfo;
 import consulo.language.editor.inlay.InlayInfo;
 import consulo.language.editor.inlay.InlayParameterHintsProvider;
-import consulo.language.editor.inlay.MethodInfo;
+import consulo.language.editor.inlay.Option;
 import consulo.language.psi.PsiElement;
+import consulo.localize.LocalizeValue;
 import consulo.util.collection.SmartList;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -29,7 +32,11 @@ import java.util.Set;
 public class PascalParameterNameHints implements InlayParameterHintsProvider {
 
     private static final String OPTION_ID_PARAM_HINTS_NON_LITERALS = "pascal.paramHints.nonLiterals";
-    //private static final Option OPTION_PARAM_HINTS_NON_LITERALS = new Option(OPTION_ID_PARAM_HINTS_NON_LITERALS, PascalBundle.message(OPTION_ID_PARAM_HINTS_NON_LITERALS), false);
+    private static final Option OPTION_PARAM_HINTS_NON_LITERALS = new Option(
+        OPTION_ID_PARAM_HINTS_NON_LITERALS,
+        LocalizeValue.localizeTODO(PascalBundle.message(OPTION_ID_PARAM_HINTS_NON_LITERALS)),
+        false
+    );
 
     @NotNull
     @Override
@@ -43,15 +50,9 @@ public class PascalParameterNameHints implements InlayParameterHintsProvider {
 
     @Nullable
     @Override
-    public MethodInfo getMethodInfo(@Nonnull PsiElement psiElement) {
+    public HintInfo.MethodInfo getHintInfo(@Nonnull PsiElement psiElement) {
         return null;
     }
-
-    //    @Nullable
-//    @Override
-//    public HintInfo getHintInfo(PsiElement psiElement) {
-//        return null;
-//    }
 
     @NotNull
     @Override
@@ -59,16 +60,22 @@ public class PascalParameterNameHints implements InlayParameterHintsProvider {
         return Collections.emptySet();
     }
 
-//    @NotNull
-//    @Override
-//    public List<Option> getSupportedOptions() {
-//        return Collections.singletonList(PascalParameterNameHints.OPTION_PARAM_HINTS_NON_LITERALS);
-//    }
-//
-//    @Override
-//    public boolean isBlackListSupported() {
-//        return false;
-//    }
+    @NotNull
+    @Override
+    public List<Option> getSupportedOptions() {
+        return Collections.singletonList(PascalParameterNameHints.OPTION_PARAM_HINTS_NON_LITERALS);
+    }
+
+    @Override
+    public boolean isBlackListSupported() {
+        return false;
+    }
+
+    @Nonnull
+    @Override
+    public LocalizeValue getPreviewFileText() {
+        return LocalizeValue.of();
+    }
 
     private List<InlayInfo> getParameters(PasCallExpr callExpr) {
         int count = callExpr.getArgumentList().getExprList().size();
@@ -88,7 +95,7 @@ public class PascalParameterNameHints implements InlayParameterHintsProvider {
         List<PasExpr> exprList = callExpr.getArgumentList().getExprList();
         for (int i = 0; i < exprList.size(); i++) {
             PsiElement arg = exprList.get(i);
-            if (/*OPTION_PARAM_HINTS_NON_LITERALS.get() ||*/ (arg instanceof PasLiteralExpr)) {
+            if (OPTION_PARAM_HINTS_NON_LITERALS.get() || (arg instanceof PasLiteralExpr)) {
                 res.add(new InlayInfo(parameters.get(i), arg.getTextRange().getStartOffset()));
             }
         }
