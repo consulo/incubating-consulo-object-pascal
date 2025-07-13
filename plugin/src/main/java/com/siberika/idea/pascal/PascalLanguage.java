@@ -1,7 +1,6 @@
 package com.siberika.idea.pascal;
 
 import consulo.language.Language;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * User: George Bakhtadze
@@ -11,18 +10,12 @@ public class PascalLanguage extends Language {
 
     public static final PascalLanguage INSTANCE = new PascalLanguage();
 
-    protected PascalLanguage() {
+    private PascalLanguage() {
         super("Pascal");
     }
 
     @Override
     public boolean isCaseSensitive() {
         return false;
-    }
-
-    @NotNull
-    @Override
-    public String getDisplayName() {
-        return "Pascal Source";
     }
 }
