@@ -2,6 +2,8 @@ package com.siberika.idea.pascal.debugger.settings;
 
 import com.siberika.idea.pascal.PascalBundle;
 import consulo.configurable.SearchableConfigurable;
+import consulo.localize.LocalizeValue;
+import consulo.object.pascal.localize.ObjectPascalLocalize;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -14,8 +16,8 @@ public class TypeRenderersConfigurable implements SearchableConfigurable {
     private TypeRenderersTable table;
 
     @Override
-    public String getDisplayName() {
-        return PascalBundle.message("debug.settings.type.renderers");
+    public LocalizeValue getDisplayName() {
+        return ObjectPascalLocalize.debugSettingsTypeRenderers();
     }
 
     @Override

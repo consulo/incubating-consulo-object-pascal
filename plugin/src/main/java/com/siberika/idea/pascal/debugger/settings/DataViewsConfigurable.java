@@ -1,7 +1,8 @@
 package com.siberika.idea.pascal.debugger.settings;
 
-import com.siberika.idea.pascal.PascalBundle;
 import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
+import consulo.object.pascal.localize.ObjectPascalLocalize;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -13,8 +14,8 @@ public class DataViewsConfigurable extends AbstractConfigurable<PascalDebuggerVi
     }
 
     @Override
-    public String getDisplayName() {
-        return PascalBundle.message("debug.settings.general");
+    public LocalizeValue getDisplayName() {
+        return ObjectPascalLocalize.debugSettingsGeneral();
     }
 
     @Override

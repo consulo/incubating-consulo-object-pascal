@@ -1,18 +1,14 @@
 package com.siberika.idea.pascal.editor.highlighter;
 
-import com.siberika.idea.pascal.PascalBundle;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.HighlighterColors;
-import consulo.colorScheme.TextAttributesKey;
 import consulo.colorScheme.setting.AttributesDescriptor;
-import consulo.colorScheme.setting.ColorDescriptor;
 import consulo.language.editor.colorScheme.setting.ColorSettingsPage;
 import consulo.language.editor.highlight.SyntaxHighlighter;
+import consulo.localize.LocalizeValue;
+import consulo.object.pascal.localize.ObjectPascalLocalize;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.Map;
 
 /**
 * Author: George Bakhtadze
@@ -38,46 +34,39 @@ public class PascalColorsPage implements ColorSettingsPage {
             "end.\n";
 
     private static final AttributesDescriptor[] ATTRS = new AttributesDescriptor[]{
-            new AttributesDescriptor(PascalBundle.message("color.settings.keyword"), PascalSyntaxHighlighter.KEYWORDS),
-            new AttributesDescriptor(PascalBundle.message("color.settings.number"), PascalSyntaxHighlighter.NUMBERS),
-            new AttributesDescriptor(PascalBundle.message("color.settings.string"), PascalSyntaxHighlighter.STRING),
-            new AttributesDescriptor(PascalBundle.message("color.settings.comment"), PascalSyntaxHighlighter.COMMENT),
-            new AttributesDescriptor(PascalBundle.message("color.settings.operator"), PascalSyntaxHighlighter.OPERATORS),
-            new AttributesDescriptor(PascalBundle.message("color.settings.parentheses"), PascalSyntaxHighlighter.PARENTHESES),
-            new AttributesDescriptor(PascalBundle.message("color.settings.symbol"), PascalSyntaxHighlighter.SYMBOLS),
-            new AttributesDescriptor(PascalBundle.message("color.settings.semicolon"), PascalSyntaxHighlighter.SEMICOLON),
-            new AttributesDescriptor(PascalBundle.message("color.settings.error"), HighlighterColors.BAD_CHARACTER),
+            new AttributesDescriptor(ObjectPascalLocalize.colorSettingsKeyword(), PascalSyntaxHighlighter.KEYWORDS),
+            new AttributesDescriptor(ObjectPascalLocalize.colorSettingsNumber(), PascalSyntaxHighlighter.NUMBERS),
+            new AttributesDescriptor(ObjectPascalLocalize.colorSettingsString(), PascalSyntaxHighlighter.STRING),
+            new AttributesDescriptor(ObjectPascalLocalize.colorSettingsComment(), PascalSyntaxHighlighter.COMMENT),
+            new AttributesDescriptor(ObjectPascalLocalize.colorSettingsOperator(), PascalSyntaxHighlighter.OPERATORS),
+            new AttributesDescriptor(ObjectPascalLocalize.colorSettingsParentheses(), PascalSyntaxHighlighter.PARENTHESES),
+            new AttributesDescriptor(ObjectPascalLocalize.colorSettingsSymbol(), PascalSyntaxHighlighter.SYMBOLS),
+            new AttributesDescriptor(ObjectPascalLocalize.colorSettingsSemicolon(), PascalSyntaxHighlighter.SEMICOLON),
+            new AttributesDescriptor(ObjectPascalLocalize.colorSettingsError(), HighlighterColors.BAD_CHARACTER),
     };
 
+    @Override
     @NotNull
-    public String getDisplayName() {
-        return PascalBundle.message("color.settings.name");
+    public LocalizeValue getDisplayName() {
+        return ObjectPascalLocalize.colorSettingsName();
     }
 
+    @Override
     @NotNull
     public AttributesDescriptor[] getAttributeDescriptors() {
         return ATTRS;
     }
 
-    @NotNull
-    public ColorDescriptor[] getColorDescriptors() {
-        return ColorDescriptor.EMPTY_ARRAY;
-    }
-
+    @Override
     @NotNull
     public SyntaxHighlighter getHighlighter() {
         return new PascalSyntaxHighlighter(null, null);
     }
 
+    @Override
     @NonNls
     @NotNull
     public String getDemoText() {
         return DEMO_TEXT;
     }
-
-    @Nullable
-    public Map<String, TextAttributesKey> getAdditionalHighlightingTagToDescriptorMap() {
-        return null;
-    }
-
 }

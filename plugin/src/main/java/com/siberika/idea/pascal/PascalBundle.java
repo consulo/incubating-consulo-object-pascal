@@ -1,6 +1,8 @@
 package com.siberika.idea.pascal;
 
+import consulo.annotation.internal.MigratedExtensionsTo;
 import consulo.application.CommonBundle;
+import consulo.object.pascal.localize.ObjectPascalLocalize;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.PropertyKey;
 
@@ -12,6 +14,8 @@ import java.util.ResourceBundle;
  * Author: George Bakhtadze
  * Date: 1/5/13
  */
+@Deprecated
+@MigratedExtensionsTo(ObjectPascalLocalize.class)
 public class PascalBundle {
 
   private static Reference<ResourceBundle> ourBundle;

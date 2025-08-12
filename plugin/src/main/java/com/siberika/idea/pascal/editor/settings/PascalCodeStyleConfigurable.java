@@ -5,6 +5,7 @@ import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.ui.setting.CodeStyleAbstractConfigurable;
 import consulo.language.codeStyle.ui.setting.CodeStyleAbstractPanel;
 import consulo.language.codeStyle.ui.setting.TabbedLanguageCodeStylePanel;
+import consulo.object.pascal.localize.ObjectPascalLocalize;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -13,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class PascalCodeStyleConfigurable extends CodeStyleAbstractConfigurable {
     public PascalCodeStyleConfigurable(@NotNull CodeStyleSettings settings, CodeStyleSettings cloneSettings) {
-        super(settings, cloneSettings, "Pascal");
+        super(settings, cloneSettings, ObjectPascalLocalize.colorSettingsName());
     }
 
     @Override

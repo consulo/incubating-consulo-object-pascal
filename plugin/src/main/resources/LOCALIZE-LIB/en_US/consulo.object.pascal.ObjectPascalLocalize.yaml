@@ -1,0 +1,472 @@
+action.add.uses:
+    text: Add unit "{0}" to uses clause
+action.create.const:
+    text: Declare constant
+action.create.enumConst:
+    text: Add enumeration constant
+action.create.field:
+    text: Declare field
+action.create.getter:
+    text: Create getter
+action.create.method:
+    text: Create method
+action.create.nestedConst:
+    text: Declare nested constant
+action.create.nestedType:
+    text: Declare nested type
+action.create.new.module:
+    text: Create Module
+action.create.parameter:
+    text: Add parameter
+action.create.property:
+    text: Declare property
+action.create.routine:
+    text: Create routine
+action.create.setter:
+    text: Create setter
+action.create.type:
+    text: Declare type
+action.create.unit:
+    text: Create unit
+action.create.var:
+    text: Declare variable
+action.declare.method:
+    text: Add method declaration
+action.declare.method.all:
+    text: Complete class declaration
+action.declare.routine:
+    text: Add to interface
+action.declare.routine.all:
+    text: Add all to interface
+action.error.cantmodify:
+    text: Can't modify document
+action.error.find.position:
+    text: Unable to determine correct position
+action.error.notinstruct:
+    text: Should be within structured type declaration or implementation
+action.familyName:
+    text: Pascal
+action.file.rename:
+    text: Rename file
+action.fix.create.field:
+    text: Create field for parameter {0}
+action.fix.create.property:
+    text: Create property for parameter {0}
+action.fix.routine.to.function:
+    text: Turn procedure to function
+action.fix.routine.to.function.family:
+    text: Turn procedure to function
+action.fix.routine.to.procedure:
+    text: Turn function to procedure
+action.fix.routine.to.procedure.family:
+    text: Turn function to procedure
+action.fix.signature.synchronize:
+    text: Synchronize routine signature
+action.fix.signature.synchronize.family:
+    text: Synchronize signature
+action.fix.statement.add.compound:
+    text: Add compound statement
+action.fix.statement.remove.compound:
+    text: Remove compound statement
+action.fix.struct.goto.descending:
+    text: Go to descending
+action.fix.struct.goto.super:
+    text: Go to ancestor
+action.ident.exclude:
+    text: Exclude identifier from check
+action.ident.remove:
+    text: Remove declaration
+action.implement:
+    text: Add implementation
+action.implement.all:
+    text: Complete class implementation
+action.implement.method:
+    text: Add implementation of {0}
+action.inherited.add:
+    text: Add inherited call
+action.module.rename:
+    text: Rename module
+action.override:
+    text: Override
+action.reformat:
+    text: Reformat code
+action.result.assignment.add:
+    text: Add result assignment
+action.unit.search:
+    text: Add a unit containing "{0}" to uses clause
+action.unit.search.added:
+    text: Added unit "{0}" to {1} section
+action.unit.search.found:
+    text: Add unit "{0}" to uses clause
+action.unit.search.notfound:
+    text: No units containing "{0}" found
+action.uses.exclude:
+    text: Exclude unit from check
+action.uses.move:
+    text: Move to implementation uses clause
+action.uses.optimize:
+    text: Optimize uses clause
+action.uses.remove:
+    text: Remove from uses clause
+action.with.remove:
+    text: Remove WITH block
+ann.error.missing.implementation:
+    text: Missing implementation
+ann.error.missing.method.declaration:
+    text: Missing method declaration
+ann.error.missing.routine.declaration:
+    text: No declaration in interface
+ann.error.undeclared.identifier:
+    text: Undeclared identifier
+ann.error.unit.name.notmatch:
+    text: Unit and file name do not match
+app.title:
+    text: I-Pascal
+app.welcome.text:
+    text: Need a feature? Found a bug? <b><a href="http://www.siberika.com/ipascal.htm#a-help">Leave feedback!</a></b><br/><br/>Learn <b><a href="http://www.siberika.com/whatsnew.html">what's new in this version</a></b>
+app.welcome.title:
+    text: Welcome to I-Pascal
+before.launch.prepare.build:
+    text: Build preparation step
+before.run.delete.fail:
+    text: 'Failed to delete old executable: {0}'
+before.run.title:
+    text: Run preparation task
+breakpoint.settings.ignore.count:
+    text: Ignore count
+color.settings.comment:
+    text: Comment
+color.settings.error:
+    text: Error
+color.settings.keyword:
+    text: Keyword
+color.settings.name:
+    text: Pascal
+color.settings.number:
+    text: Number
+color.settings.operator:
+    text: Operator
+color.settings.parentheses:
+    text: Parentheses
+color.settings.semicolon:
+    text: Semicolon
+color.settings.string:
+    text: String
+color.settings.symbol:
+    text: Symbol
+common.module:
+    text: module
+compile.commandLine:
+    text: 'Compiler command: {0}'
+compile.errorCall:
+    text: Error calling external compiler
+compile.mainfile.found:
+    text: 'Setting main file to: {0}'
+compile.mainfile.notfound:
+    text: Can't find any suitable main file
+compile.no.mainfile:
+    text: No main file specified for module {0} in module settings. Trying to set automatically.
+compile.noCompiler:
+    text: 'Invalid compiler executable: {0}'
+compile.noOutputDir:
+    text: No output dir
+compile.noSdkHomePath:
+    text: Can't find sdk home path
+compile.noSource:
+    text: No source to compile. Set main file in module settings.
+compile.skipRTL:
+    text: 'SDK source path belongs to RTL:'
+compiler.exit.code:
+    text: 'Compiler exit code: {0}'
+completion.defines.source.builtin:
+    text: <built-in>
+completion.defines.source.commandLine:
+    text: <command line>
+debug.breakpoint.notFound:
+    text: Breakpoint not registered in the debugger
+debug.error.memory.read:
+    text: Error reading memory for "{0}"
+debug.error.response:
+    text: |-
+        Debugger error:
+        {0}
+debug.error.subfields.disabled:
+    text: Retrieval of subfields is disabled in debugger settings
+debug.expression.array.lower.invalid:
+    text: 'Invalid array lower bound: {0}'
+debug.expression.array.size.error:
+    text: Can't determine array element size
+debug.expression.array.upper.invalid:
+    text: 'Invalid array upper bound: {0}'
+debug.expression.no.parent:
+    text: Parent not found
+debug.expression.no.result:
+    text: No expression result returned
+debug.expression.operation:
+    text: operation
+debug.expression.parsing.error:
+    text: Error parsing expression
+debug.expression.range:
+    text: range
+debug.expression.range.invalid:
+    text: Invalid range
+debug.expression.range.multiple:
+    text: Only one range allowed
+debug.expression.unsupported:
+    text: 'Unsupported {0}: "{1}"'
+debug.features.unavailable.indexing:
+    text: Some features not available during indexing
+debug.notify.stopped:
+    text: 'Program stopped: {0}.'
+debug.output.title:
+    text: Output
+debug.settings.general:
+    text: Pascal
+debug.settings.general.limitChars:
+    text: String length limit
+debug.settings.general.limitChilds:
+    text: Child values limit
+debug.settings.general.limitElements:
+    text: Array length limit
+debug.settings.general.limitValueSize:
+    text: Max value size in bytes
+debug.settings.general.refineDynamicArrays:
+    text: Dynamic array values refine
+debug.settings.general.refineOpenArrays:
+    text: Open array values refine
+debug.settings.general.refineStrings:
+    text: 'String values refin '
+debug.settings.general.refineStructured:
+    text: Structured types refine
+debug.settings.general.showNonPrintable:
+    text: Show non-printable characters
+debug.settings.general.tab.title:
+    text: General
+debug.settings.type.renderers:
+    text: Pascal Type Renderers
+debug.settings.typeRenderers.duplicate:
+    text: Duplicate
+debug.settings.typeRenderers.empty:
+    text: No entries
+debug.settings.typeRenderers.type:
+    text: Type
+debug.settings.typeRenderers.value:
+    text: Expression
+decompile.empty.result:
+    text: Calling decompiler returned empty result
+decompile.file.notfound:
+    text: Can''t find file "{0}"
+decompile.io.error:
+    text: I/O error occured during decompilation.
+decompile.no.module:
+    text: Can''t determine module which file {0} belongs to.
+decompile.parse.error:
+    text: "A parsing error occured during decompilation. ppudump output: \n{0}"
+decompile.unit.not.found:
+    text: 'Unit not found: {0}'
+decompile.unknown.error:
+    text: "An unknown error occurred during decompilation. ppudump output: \n{0}"
+decompile.unknown.exception:
+    text: "An error occurred during decompilation: \n{0}"
+decompile.version.error:
+    text: 'Wrong version of ppudump: {0}. At least {1} required.'
+decompile.wrong.delphi:
+    text: |-
+        Not a valid decompiler executable: {0}
+        Supported decompiler for Delphi: http://hmelnov.icc.ru/DCU/index.eng.html
+decompile.wrong.ppudump:
+    text: 'Not a valid decompiler executable: {0}'
+decompile.wrong.sdk:
+    text: Can''t decompile, project SDK not set.
+decompile.wrong.sdktype:
+    text: Can''t decompile. Project SDK is not a Free Pascal SDK.
+decompile.wrong.sdktype.delphi:
+    text: Can''t decompile. Project SDK is not a Delphi SDK.
+decompiled.unit.files:
+    text: 'files:'
+decompiled.unit.footer:
+    text: '''{''compiled code''}'''
+decompiled.unit.header:
+    text: '''{''Decompiled unit interface''}'''
+error.exit.code:
+    text: "{0} exit code is {1}, error output: \n{2}"
+execution.noExecutable:
+    text: Can't find executable file. Module main file is not specified?
+general.module:
+    text: 'Module: {0}'
+inspection.warn.destructor.no.inherited:
+    text: 'W0004: No inherited call in destructor'
+inspection.warn.function.no.result.assignment:
+    text: 'W0007: No result assignment in a function'
+inspection.warn.methods.not.implemented:
+    text: 'W0005: Class does not implement method {0}'
+inspection.warn.unused.global.ident:
+    text: 'W0006: Global identifier declared but never used'
+inspection.warn.unused.local.ident:
+    text: 'W0003: Identifier declared but never used'
+inspection.warn.unused.unit:
+    text: 'W0001: Unused unit'
+inspection.warn.unused.unit.interface:
+    text: 'W0002: Used only in implementation'
+navigate.goto.super.impossible.reindex:
+    text: Ancestor entities search not possible during reindex
+navigate.helper.impossible.reindex:
+    text: Navigation to helpers is not possible during index update
+navigate.info.goto.super.noitems:
+    text: No ancestor entities found
+navigate.info.helper.noitems:
+    text: No helpers found
+navigate.info.subclassed.noitems:
+    text: No such methods in subclasses
+navigate.info.used.by.noitems:
+    text: No dependent modules found
+navigate.status.found:
+    text: found
+navigate.subclassed.impossible.reindex:
+    text: Navigation to descending classes or methods is not possible during index update
+navigate.title.goto.helper:
+    text: Find helpers
+navigate.title.goto.helper.search:
+    text: Searching for Helpers
+navigate.title.goto.subclassed:
+    text: Go to subclasses
+navigate.title.goto.subclassed.search:
+    text: Searching for Descending Classes or Methods in Subclasses
+navigate.title.goto.super:
+    text: Go to ancestors
+navigate.title.goto.super.search:
+    text: Searching for Ancestor Entities
+navigate.title.toggle.section:
+    text: Toggle section
+navigate.title.used.by:
+    text: Used by units
+navigate.title.used.by.search:
+    text: Searching for Dependent Modules
+navigate.used.by.impossible.reindex:
+    text: Dependent modules search unavailable during index update
+pascal.paramHints.nonLiterals:
+    text: Show parameter hints for non-literals
+popup.expressions.title:
+    text: Expressions
+progress.creating.module:
+    text: Creating module
+style.settings.blanklines.after.modulehead:
+    text: 'Before section:'
+style.settings.blanklines.after.uses:
+    text: 'After uses clause:'
+style.settings.blanklines.around.routine.declaration:
+    text: 'Around routine declaration:'
+style.settings.blanklines.around.routine.definition:
+    text: 'Around routine definition:'
+style.settings.blanklines.before.end:
+    text: 'Before ''end'':'
+style.settings.blanklines.before.uses:
+    text: 'Before uses clause:'
+style.settings.indent.begin_end:
+    text: Indent begin/end block
+style.settings.spaces.around.assignment:
+    text: Assignment operators
+style.settings.spaces.around.decleq:
+    text: '''='' in declarations'
+style.settings.spaces.around.operations:
+    text: Operations
+style.settings.spaces.around.range:
+    text: '''..'''
+style.settings.spaces.group.declarations:
+    text: In declarations
+style.settings.spaces.within.routine.call.paren:
+    text: Routine call parentheses
+style.settings.spaces.within.routine.decl.paren:
+    text: Routine declaration parentheses
+style.settings.wrap.actual.arguments:
+    text: Actual arguments
+style.settings.wrap.begin.newline:
+    text: '''begin'' on new line'
+style.settings.wrap.call.chains:
+    text: Chained routine calls
+style.settings.wrap.formal.parameters:
+    text: Formal parameters
+style.settings.wrap.keep.simple.routines:
+    text: Simple routines in one line
+style.settings.wrap.keep.simple.sections:
+    text: Simple sections in one line
+title.choose.directory:
+    text: Choose Directory
+title.choose.file:
+    text: Choose File
+title.override.methods:
+    text: Override methods for {0}
+ui.module.options.editor.exePath.label:
+    text: 'Executable output path:'
+ui.module.options.editor.mainFile.label:
+    text: 'Main file:'
+ui.module.options.editor.name:
+    text: Settings
+ui.sdkSettings.compiler.command:
+    text: 'Compiler command:'
+ui.sdkSettings.compiler.namespaces:
+    text: Unit namespaces
+ui.sdkSettings.compiler.options:
+    text: 'Additional compiler options:'
+ui.sdkSettings.compiler.options.debug:
+    text: 'Debugging compiler options:'
+ui.sdkSettings.debug.backend:
+    text: 'Debugger backend:'
+ui.sdkSettings.debug.break.fullnames:
+    text: Use full file names for breakpoints
+ui.sdkSettings.decompiler.command:
+    text: 'Decompiler command:'
+ui.sdkSettings.delphi.starter.warning:
+    text: Compilation is not available with Starter Edition as no command line compiler included.
+ui.sdkSettings.gdb.call.getters:
+    text: Call getters (DWARF v3 required)
+ui.sdkSettings.gdb.command:
+    text: 'Debugger executable:'
+ui.sdkSettings.gdb.disassembly.format:
+    text: 'Disassembler format:'
+ui.sdkSettings.gdb.options:
+    text: 'Debugger options:'
+ui.sdkSettings.gdb.redirect.console:
+    text: Redirect program console output
+ui.sdkSettings.gdb.resolve.names:
+    text: Correct identifier names
+ui.sdkSettings.gdb.retrieve.childs:
+    text: Retrieve subfields of structured variables
+ui.sdkSettings.gdb.use.gdbinit:
+    text: Use settings from .gdbinit
+ui.sdkSettings.lldb.variables.warning:
+    text: Executable should point to lldb-mi. To view local variables while debugging the "-godwarfcpp" compiler switch needed.
+ui.sdkSettings.syntax.check.mode:
+    text: 'Syntax check mode:'
+ui.sdkSettings.tab.debugger:
+    text: Debugger
+ui.sdkSettings.tab.general:
+    text: General
+ui.sdkSwitch.title:
+    text: Switch Project SDK
+ui.settings.folding.collapse.enums:
+    text: Enum constants
+ui.settings.folding.with:
+    text: Show fully qualified identifiers in WITH blocks
+unit.section.implementation:
+    text: implementation
+unit.section.interface:
+    text: interface
+usage.type.call:
+    text: Routine call
+usage.type.declaration.const:
+    text: Constant declaration
+usage.type.declaration.field:
+    text: Field declaration
+usage.type.declaration.parameter:
+    text: Routine parameter declaration
+usage.type.declaration.property:
+    text: Property declaration
+usage.type.declaration.type:
+    text: Type declaration
+usage.type.declaration.var:
+    text: Variable declaration
+usage.type.except:
+    text: Except statement
+usage.type.parent:
+    text: Parent of a structured type
