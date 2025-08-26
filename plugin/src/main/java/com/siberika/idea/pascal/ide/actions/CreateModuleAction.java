@@ -1,6 +1,5 @@
 package com.siberika.idea.pascal.ide.actions;
 
-import com.siberika.idea.pascal.PascalBundle;
 import com.siberika.idea.pascal.PascalFileType;
 import com.siberika.idea.pascal.PascalIcons;
 import consulo.fileTemplate.FileTemplate;
@@ -12,17 +11,19 @@ import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.module.content.DirectoryIndex;
+import consulo.object.pascal.localize.ObjectPascalLocalize;
 import consulo.project.Project;
 import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SmartList;
-import consulo.util.lang.function.Condition;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Properties;
+import java.util.function.Predicate;
 
 /**
  * Author: George Bakhtadze
@@ -32,10 +33,11 @@ public class CreateModuleAction extends CreateTemplateInPackageAction<PsiFile> {
     private static final String PASCAL_TEMPLATE_PREFIX = "Pascal";
 
     public CreateModuleAction() {
-        super(PascalBundle.message("action.create.new.module"),
-                PascalBundle.message("action.create.new.module"),
-                PascalIcons.GENERAL,
-                true);
+        super(ObjectPascalLocalize.actionCreateNewModule(),
+            ObjectPascalLocalize.actionCreateNewModule(),
+            PascalIcons.GENERAL,
+            true
+        );
     }
 
     @Nullable
@@ -51,18 +53,18 @@ public class CreateModuleAction extends CreateTemplateInPackageAction<PsiFile> {
 
     @Override
     protected void buildDialog(Project project, PsiDirectory directory, CreateFileFromTemplateDialog.Builder builder) {
-        builder.setTitle(PascalBundle.message("action.create.new.module"));
+        builder.setTitle(ObjectPascalLocalize.actionCreateNewModule());
         for (FileTemplate fileTemplate : getApplicableTemplates(directory.getProject())) {
             final String templateName = fileTemplate.getName();
             final String shortName = getTemplateShortName(templateName);
             final Image icon = getPopupTemplateIcon();
-            builder.addKind(shortName, icon, templateName);
+            builder.addKind(LocalizeValue.of(shortName), icon, templateName);
         }
     }
 
     @Override
-    protected String getActionName(PsiDirectory directory, String newName, String templateName) {
-        return PascalBundle.message("progress.creating.module", newName);
+    protected LocalizeValue getActionName(PsiDirectory directory, String newName, String templateName) {
+        return ObjectPascalLocalize.progressCreatingModule();
     }
 
     @Nullable
@@ -78,12 +80,12 @@ public class CreateModuleAction extends CreateTemplateInPackageAction<PsiFile> {
     }
 
     private static PsiElement createClass(String className, String packageName, @NotNull PsiDirectory directory, final String templateName)
-            throws Exception {
+        throws Exception {
         return createClass(className, packageName, directory, templateName, CreateModuleAction.class.getClassLoader());
     }
 
     private static PsiElement createClass(String className, String packageName, PsiDirectory directory, String templateName, @Nullable ClassLoader classLoader)
-            throws Exception {
+        throws Exception {
         final Properties props = new Properties(FileTemplateManager.getInstance(directory.getProject()).getDefaultProperties());
         props.setProperty(FileTemplate.ATTRIBUTE_NAME, className);
         props.setProperty(FileTemplate.ATTRIBUTE_PACKAGE_NAME, packageName);
@@ -94,15 +96,10 @@ public class CreateModuleAction extends CreateTemplateInPackageAction<PsiFile> {
     }
 
     private static List<FileTemplate> getApplicableTemplates(Project project) {
-        return getApplicableTemplates(project, new Condition<FileTemplate>() {
-            @Override
-            public boolean value(FileTemplate fileTemplate) {
-                return PascalFileType.INSTANCE.getDefaultExtension().equals(fileTemplate.getExtension());
-            }
-        });
+        return getApplicableTemplates(project, fileTemplate -> PascalFileType.INSTANCE.getDefaultExtension().equals(fileTemplate.getExtension()));
     }
 
-    private static List<FileTemplate> getApplicableTemplates(Project project, Condition<FileTemplate> filter) {
+    private static List<FileTemplate> getApplicableTemplates(Project project, Predicate<FileTemplate> filter) {
         List<FileTemplate> applicableTemplates = new SmartList<FileTemplate>();
         applicableTemplates.addAll(ContainerUtil.findAll(FileTemplateManager.getInstance(project).getInternalTemplates(), filter));
         applicableTemplates.addAll(ContainerUtil.findAll(FileTemplateManager.getInstance(project).getAllTemplates(), filter));
@@ -120,5 +117,4 @@ public class CreateModuleAction extends CreateTemplateInPackageAction<PsiFile> {
     private static Image getPopupTemplateIcon() {
         return PascalIcons.GENERAL;
     }
-
 }
