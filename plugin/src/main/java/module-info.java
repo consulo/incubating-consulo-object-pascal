@@ -14,4 +14,5 @@ module com.siberika.idea.pascal {
 
     opens com.siberika.idea.pascal.lang.folding to consulo.util.xml.serializer;
     opens com.siberika.idea.pascal.ide.actions to consulo.component.impl;
+    opens com.siberika.idea.pascal.editor.settings to consulo.util.xml.serializer;
 }
