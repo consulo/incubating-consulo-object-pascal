@@ -1,6 +1,5 @@
 package com.siberika.idea.pascal.ide.intention;
 
-import com.siberika.idea.pascal.PascalBundle;
 import com.siberika.idea.pascal.editor.PascalActionDeclare;
 import com.siberika.idea.pascal.ide.actions.SectionToggle;
 import com.siberika.idea.pascal.ide.actions.quickfix.IdentQuickFixes;
@@ -21,31 +20,25 @@ import consulo.language.psi.PsiReference;
 import consulo.language.psi.scope.LocalSearchScope;
 import consulo.language.psi.search.ReferencesSearch;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
+import consulo.object.pascal.localize.ObjectPascalLocalize;
 import consulo.project.Project;
 import consulo.util.lang.StringUtil;
-import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
+import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.atomic.AtomicReference;
 
 class CreateFieldForParamAction extends BaseElementAtCaretIntentionAction {
-
     PascalNamedElement namedElement;
 
-    @NotNull
+    @Nonnull
     @Override
-    public String getText() {
-        return PascalBundle.message("action.fix.create.field", namedElement != null ? namedElement.getName() : "");
-    }
-
-    @Nls(capitalization = Nls.Capitalization.Sentence)
-    @NotNull
-    public String getFamilyName() {
-        return "Parameter/" + getClass().getSimpleName();
+    public LocalizeValue getText() {
+        return ObjectPascalLocalize.actionFixCreateField(namedElement != null ? namedElement.getName() : "");
     }
 
     @Override
-    public boolean isAvailable(@NotNull Project project, Editor editor, @NotNull PsiElement element) {
+    public boolean isAvailable(@Nonnull Project project, Editor editor, @Nonnull PsiElement element) {
         if (!PsiUtil.isElementUsable(element)) {
             return false;
         }
@@ -58,16 +51,18 @@ class CreateFieldForParamAction extends BaseElementAtCaretIntentionAction {
             if (routine != null) {
                 PasEntityScope scope = routine.getContainingScope();
                 return (scope instanceof PascalStructType) && (scope.getField(getFieldName(namedElement.getName())) == null);
-            } else {
+            }
+            else {
                 return false;
             }
-        } else {
+        }
+        else {
             return false;
         }
     }
 
     @Override
-    public void invoke(@NotNull Project project, Editor editor, @NotNull PsiElement element) throws IncorrectOperationException {
+    public void invoke(@Nonnull Project project, Editor editor, @Nonnull PsiElement element) throws IncorrectOperationException {
         if ((element instanceof PasNamedIdent) && (element.getParent() instanceof PasFormalParameter)) {
             namedElement = (PascalNamedElement) element;
         }
@@ -76,7 +71,12 @@ class CreateFieldForParamAction extends BaseElementAtCaretIntentionAction {
             PasEntityScope classScope = routine.getContainingScope();
             if (classScope instanceof PascalStructType) {
                 String fieldName = getFieldName(namedElement.getName());
-                PascalActionDeclare.ActionCreateField cfa = new PascalActionDeclare.ActionCreateField(getText(), RoutineUtil.getParameterType(namedElement), namedElement, classScope) {
+                PascalActionDeclare.ActionCreateField cfa = new PascalActionDeclare.ActionCreateField(
+                    getText(),
+                    RoutineUtil.getParameterType(namedElement),
+                    namedElement,
+                    classScope
+                ) {
                     public void afterExecution(Editor editor, PsiFile file, TemplateState state) {
                         addParamAssignment(classScope, routine, namedElement, fieldName);
                     }
@@ -92,7 +92,7 @@ class CreateFieldForParamAction extends BaseElementAtCaretIntentionAction {
 
     static PascalRoutine getRoutine(PascalNamedElement element) {
         if (PsiUtil.isFormalParameterName(element) && (element.getParent().getParent() instanceof PasFormalParameterSection)
-                && (element.getParent().getParent().getParent() instanceof PascalRoutine)) {
+            && (element.getParent().getParent().getParent() instanceof PascalRoutine)) {
             return (PascalRoutine) element.getParent().getParent().getParent();
         }
         return null;
@@ -117,7 +117,8 @@ class CreateFieldForParamAction extends BaseElementAtCaretIntentionAction {
                         break;
                     }
                     after = false;
-                } else {
+                }
+                else {
                     PasField paramField = classScope.getField(getFieldName(parameterName));
                     PsiElement newAnchor = paramField != null ? getAssignment(paramField.getElement()) : null;
                     if (newAnchor != null) {
@@ -139,7 +140,7 @@ class CreateFieldForParamAction extends BaseElementAtCaretIntentionAction {
                 PsiElement anchorFinal = anchor;
                 boolean afterFinal = after;
                 ApplicationManager.getApplication().runWriteAction(
-                        () -> IdentQuickFixes.addElements(parent, anchorFinal, afterFinal, fieldName, ":=", namedElement.getName(), ";")
+                    () -> IdentQuickFixes.addElements(parent, anchorFinal, afterFinal, fieldName, ":=", namedElement.getName(), ";")
                 );
             }
         }

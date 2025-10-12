@@ -1,6 +1,5 @@
 package com.siberika.idea.pascal.ide.actions;
 
-import com.siberika.idea.pascal.PascalBundle;
 import com.siberika.idea.pascal.lang.psi.PasUsesClause;
 import com.siberika.idea.pascal.lang.psi.PascalRoutine;
 import com.siberika.idea.pascal.util.EditorUtil;
@@ -8,6 +7,7 @@ import com.siberika.idea.pascal.util.PsiUtil;
 import consulo.codeEditor.Editor;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.util.PsiTreeUtil;
+import consulo.object.pascal.localize.ObjectPascalLocalize;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.collection.SmartList;
 
@@ -15,8 +15,8 @@ import java.util.Collection;
 import java.util.Collections;
 
 /**
- * Author: George Bakhtadze
- * Date: 28/05/2015
+ * @author George Bakhtadze
+ * @since 2015-05-28
  */
 public class IntfImplNavAction extends PascalAction {
 
@@ -40,8 +40,7 @@ public class IntfImplNavAction extends PascalAction {
             SectionToggle.getStructTarget(targets, el);
         }
         if (!targets.isEmpty()) {
-            EditorUtil.navigateTo(editor, PascalBundle.message("navigate.title.toggle.section"), targets);
+            EditorUtil.navigateTo(editor, ObjectPascalLocalize.navigateTitleToggleSection(), targets);
         }
     }
-
 }

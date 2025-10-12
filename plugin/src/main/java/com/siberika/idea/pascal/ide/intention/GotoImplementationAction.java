@@ -1,6 +1,5 @@
 package com.siberika.idea.pascal.ide.intention;
 
-import com.siberika.idea.pascal.PascalBundle;
 import com.siberika.idea.pascal.lang.psi.*;
 import com.siberika.idea.pascal.lang.search.DescendingEntities;
 import com.siberika.idea.pascal.util.EditorUtil;
@@ -13,28 +12,30 @@ import consulo.language.psi.PsiWhiteSpace;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
+import consulo.object.pascal.localize.ObjectPascalLocalize;
 import consulo.project.Project;
-import org.jetbrains.annotations.NotNull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 
 class GotoImplementationAction extends NavIntentionActionBase {
-
-    @NotNull
+    @Nonnull
     @Override
-    public String getText() {
-        return PascalBundle.message("action.fix.struct.goto.descending");
+    public LocalizeValue getText() {
+        return ObjectPascalLocalize.actionFixStructGotoDescending();
     }
 
     @Override
-    public boolean isAvailable(@NotNull Project project, Editor editor, @NotNull PsiElement element) {
+    public boolean isAvailable(@Nonnull Project project, Editor editor, @Nonnull PsiElement element) {
         return getScopeElement(element) != null;
     }
 
     @Override
-    public void invoke(@NotNull Project project, Editor editor, @NotNull PsiElement element) throws IncorrectOperationException {
+    public void invoke(@Nonnull Project project, Editor editor, @Nonnull PsiElement element) throws IncorrectOperationException {
         PasEntityScope scope = getScopeElement(element);
-        Collection<PsiElement> targets = DescendingEntities.getQuery(scope, GlobalSearchScope.allScope(PsiUtilCore.getProjectInReadAction(element))).findAll();
+        Collection<PsiElement> targets =
+            DescendingEntities.getQuery(scope, GlobalSearchScope.allScope(PsiUtilCore.getProjectInReadAction(element))).findAll();
         EditorUtil.navigateTo(editor, getText(), targets);
     }
 
@@ -43,6 +44,7 @@ class GotoImplementationAction extends NavIntentionActionBase {
         if ((element instanceof PascalRoutine) || (element instanceof PascalStructType)) {
             return (PasEntityScope) element;
         }
-        return ((element instanceof PascalNamedElement) && (element.getParent() instanceof PasGenericTypeIdent)) ? PsiUtil.getStructByElement(element) : null;
+        return ((element instanceof PascalNamedElement) && (element.getParent() instanceof PasGenericTypeIdent))
+            ? PsiUtil.getStructByElement(element) : null;
     }
 }

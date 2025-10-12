@@ -1,6 +1,5 @@
 package com.siberika.idea.pascal.lang.search;
 
-import com.siberika.idea.pascal.PascalBundle;
 import com.siberika.idea.pascal.PascalLanguage;
 import com.siberika.idea.pascal.PascalRTException;
 import com.siberika.idea.pascal.lang.psi.*;
@@ -23,10 +22,10 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.SmartPsiElementPointer;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.logging.Logger;
+import consulo.object.pascal.localize.ObjectPascalLocalize;
 import consulo.project.Project;
 import consulo.project.util.query.QueryExecutorBase;
 import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -34,8 +33,8 @@ import java.util.Collections;
 import java.util.function.Predicate;
 
 /**
- * Author: George Bakhtadze
- * Date: 02/07/2015
+ * @author George Bakhtadze
+ * @since 2015-07-02
  */
 @ExtensionImpl
 public class GotoSuper implements GotoSuperActionHander {
@@ -50,11 +49,11 @@ public class GotoSuper implements GotoSuperActionHander {
     }
 
     @Override
-    public void invoke(@NotNull Project project, @NotNull Editor editor, @NotNull PsiFile file) {
+    public void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
         PsiElement el = file.findElementAt(editor.getCaretModel().getOffset());
         Collection<PasEntityScope> targets = Arrays.asList(search(el).toArray(new PasEntityScope[0]));
         if (!targets.isEmpty()) {
-            EditorUtil.navigateTo(editor, PascalBundle.message("navigate.title.goto.super"), targets);
+            EditorUtil.navigateTo(editor, ObjectPascalLocalize.navigateTitleGotoSuper(), targets);
         }
     }
 
@@ -118,8 +117,10 @@ public class GotoSuper implements GotoSuperActionHander {
      * @param routine  routine which name to search
      * @return true if processing is finished normally and false if it's interrupted due to consumer returned false
      */
-    static boolean extractMethodsByName(Collection<PasEntityScope> scopes, PascalRoutine routine,
-                                        boolean handleParents, int recursionCount, Predicate<? super PasEntityScope> consumer) {
+    static boolean extractMethodsByName(
+        Collection<PasEntityScope> scopes, PascalRoutine routine,
+        boolean handleParents, int recursionCount, Predicate<? super PasEntityScope> consumer
+    ) {
         if (recursionCount > MAX_RECURSION_COUNT) {
             throw new IllegalStateException("Recursion limit reached");
         }
@@ -131,7 +132,13 @@ public class GotoSuper implements GotoSuperActionHander {
         return true;
     }
 
-    static boolean extractMethodsByName(PasEntityScope scope, PascalRoutine routine, boolean handleParents, int recursionCount, Predicate<? super PasEntityScope> consumer) {
+    static boolean extractMethodsByName(
+        PasEntityScope scope,
+        PascalRoutine routine,
+        boolean handleParents,
+        int recursionCount,
+        Predicate<? super PasEntityScope> consumer
+    ) {
         if (scope != null) {
             if (scope instanceof PascalStructType) {
                 PasField field = scope.getField(StrUtil.getMethodName(PsiUtil.getFieldName(routine)));
@@ -144,7 +151,13 @@ public class GotoSuper implements GotoSuperActionHander {
                     }
                 }
                 if (handleParents) {
-                    if (!extractMethodsByName(PsiUtil.extractSmartPointers(scope.getParentScope()), routine, true, recursionCount + 1, consumer)) {
+                    if (!extractMethodsByName(
+                        PsiUtil.extractSmartPointers(scope.getParentScope()),
+                        routine,
+                        true,
+                        recursionCount + 1,
+                        consumer
+                    )) {
                         return false;
                     }
                 }
@@ -188,12 +201,11 @@ public class GotoSuper implements GotoSuperActionHander {
         }
 
         @Override
-        public void processQuery(@NotNull OptionsRoutine options, @NotNull Predicate<? super PasEntityScope> consumer) {
+        public void processQuery(@Nonnull OptionsRoutine options, @Nonnull Predicate<? super PasEntityScope> consumer) {
             PasEntityScope scope = options.element.getContainingScope();
             if (scope instanceof PascalStructType) {
                 extractMethodsByName(PsiUtil.extractSmartPointers(scope.getParentScope()), options.element, true, 0, consumer);
             }
-
         }
     }
 
@@ -204,11 +216,15 @@ public class GotoSuper implements GotoSuperActionHander {
         }
 
         @Override
-        public void processQuery(@NotNull OptionsStruct options, @NotNull Predicate<? super PasEntityScope> consumer) {
+        public void processQuery(@Nonnull OptionsStruct options, @Nonnull Predicate<? super PasEntityScope> consumer) {
             retrieveParentStructs(consumer, options.element, 0);
         }
 
-        private static boolean retrieveParentStructs(Predicate<? super PasEntityScope> consumer, PasEntityScope struct, final int recursionCount) {
+        private static boolean retrieveParentStructs(
+            Predicate<? super PasEntityScope> consumer,
+            PasEntityScope struct,
+            final int recursionCount
+        ) {
             if (recursionCount > PasReferenceUtil.MAX_RECURSION_COUNT) {
                 LOG.error("Too much recursion during retrieving parents: " + struct.getUniqueName());
                 return false;
@@ -231,23 +247,23 @@ public class GotoSuper implements GotoSuperActionHander {
     }
 
     private static class OptionsStruct {
-        @NotNull
+        @Nonnull
         private final PascalStructType element;
 
-        private OptionsStruct(@NotNull PascalStructType element) {
+        private OptionsStruct(@Nonnull PascalStructType element) {
             this.element = element;
         }
     }
 
     static class OptionsRoutine {
-        @NotNull
+        @Nonnull
         private final PascalRoutine element;
 
-        private OptionsRoutine(@NotNull PascalRoutine element) {
+        private OptionsRoutine(@Nonnull PascalRoutine element) {
             this.element = element;
         }
 
-        @NotNull
+        @Nonnull
         public PascalRoutine getElement() {
             return element;
         }

@@ -1,40 +1,33 @@
 package com.siberika.idea.pascal.ide.intention;
 
-import com.siberika.idea.pascal.PascalBundle;
 import com.siberika.idea.pascal.lang.psi.*;
 import com.siberika.idea.pascal.util.PsiUtil;
 import consulo.codeEditor.Editor;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
+import consulo.object.pascal.localize.ObjectPascalLocalize;
 import consulo.project.Project;
 import consulo.util.lang.Pair;
-import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 class SynchronizeSignature extends RoutineIntention {
-
-    @NotNull
+    @Nonnull
     @Override
-    public String getText() {
-        return PascalBundle.message("action.fix.signature.synchronize");
-    }
-
-    @Nls(capitalization = Nls.Capitalization.Sentence)
-    @NotNull
-    public String getFamilyName() {
-        return PascalBundle.message("action.fix.signature.synchronize.family");
+    public LocalizeValue getText() {
+        return ObjectPascalLocalize.actionFixSignatureSynchronize();
     }
 
     @Override
-    public boolean isAvailable(@NotNull Project project, Editor editor, @NotNull PsiElement element) {
+    public boolean isAvailable(@Nonnull Project project, Editor editor, @Nonnull PsiElement element) {
         PascalRoutine routine = getRoutineHeader(editor, element);
         PascalRoutine target = getTargetRoutine(editor, element);
         return (routine != null) && (target != null) && !getSignature(routine).equals(getSignature(target));
     }
 
     @Override
-    public void invoke(@NotNull Project project, Editor editor, @NotNull PsiElement element) throws IncorrectOperationException {
+    public void invoke(@Nonnull Project project, Editor editor, @Nonnull PsiElement element) throws IncorrectOperationException {
         PascalRoutine routine = getRoutineHeader(editor, element);
         PascalRoutine target = getTargetRoutine(editor, element);
         if ((null == routine) || (null == target)) {
@@ -47,7 +40,8 @@ class SynchronizeSignature extends RoutineIntention {
     private void syncRoutineType(Project project, PascalRoutine routine, PascalRoutine target) {
         if (routine.isProcedure() && target.isFunction()) {
             changeToProcedure(project, target);
-        } else if (routine.isFunction()) {
+        }
+        else if (routine.isFunction()) {
             if (target.isProcedure()) {
                 switchKeyword(project, target, PasTypes.PROCEDURE, "function");
             }
@@ -81,10 +75,12 @@ class SynchronizeSignature extends RoutineIntention {
             if (targetParams != null) {
                 targetParams.delete();
             }
-        } else {
+        }
+        else {
             if (targetParams != null) {
                 targetParams.replace(params);
-            } else {
+            }
+            else {
                 PsiElement anchor = getFormalParametersStart(target);
                 if (anchor != null) {
                     target.addAfter(params, anchor);
@@ -111,7 +107,10 @@ class SynchronizeSignature extends RoutineIntention {
         String result = params != null ? params.getText() : "";
         Pair<PsiElement, PsiElement> returnType = findReturnType(routine);
         if ((returnType != null) && (routine != null)) {
-            return result + routine.getText().substring(returnType.first.getStartOffsetInParent(), returnType.second.getStartOffsetInParent() + returnType.second.getTextLength());
+            return result + routine.getText().substring(
+                returnType.first.getStartOffsetInParent(),
+                returnType.second.getStartOffsetInParent() + returnType.second.getTextLength()
+            );
         }
         return result;
     }

@@ -11,13 +11,12 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.inspection.ProblemHighlightType;
 import consulo.language.editor.inspection.ProblemsHolder;
 import consulo.language.psi.PsiElement;
+import consulo.localize.LocalizeValue;
+import consulo.object.pascal.localize.ObjectPascalLocalize;
 import jakarta.annotation.Nonnull;
-
-import static com.siberika.idea.pascal.PascalBundle.message;
 
 @ExtensionImpl
 public class DestructorInheritedInspection extends PascalLocalInspectionBase {
-
     @Override
     public void checkRoutine(PascalRoutine routine, ProblemsHolder holder, boolean isOnTheFly) {
         if (routine instanceof PasRoutineImplDecl) {
@@ -27,9 +26,14 @@ public class DestructorInheritedInspection extends PascalLocalInspectionBase {
                     PsiElement inherited = PsiUtil.findChildByElementType(code, PasTypes.INHERITED);
                     if (null == inherited) {
                         PsiElement end = code.getLastChild();
-                        holder.registerProblem(holder.getManager().createProblemDescriptor(end, message("inspection.warn.destructor.no.inherited"), true,
-                                ProblemHighlightType.GENERIC_ERROR_OR_WARNING, isOnTheFly,
-                                new IdentQuickFixes.AddInheritedAction()));
+                        holder.registerProblem(holder.getManager().createProblemDescriptor(
+                            end,
+                            ObjectPascalLocalize.inspectionWarnDestructorNoInherited().get(),
+                            true,
+                            ProblemHighlightType.GENERIC_ERROR_OR_WARNING,
+                            isOnTheFly,
+                            new IdentQuickFixes.AddInheritedAction()
+                        ));
                     }
                 }
             }
@@ -38,7 +42,7 @@ public class DestructorInheritedInspection extends PascalLocalInspectionBase {
 
     @Nonnull
     @Override
-    public String getDisplayName() {
-        return "No inherited destructor call detection";
+    public LocalizeValue getDisplayName() {
+        return LocalizeValue.localizeTODO("No inherited destructor call detection");
     }
 }

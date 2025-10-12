@@ -1,6 +1,5 @@
 package com.siberika.idea.pascal.ide.intention;
 
-import com.siberika.idea.pascal.PascalBundle;
 import com.siberika.idea.pascal.lang.psi.PasCompoundStatement;
 import com.siberika.idea.pascal.lang.psi.PasStatement;
 import com.siberika.idea.pascal.lang.psi.PasStmtEmpty;
@@ -10,44 +9,40 @@ import consulo.language.editor.intention.BaseElementAtCaretIntentionAction;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
+import consulo.object.pascal.localize.ObjectPascalLocalize;
 import consulo.project.Project;
-import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
+import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
 class RemoveCompoundStatement extends BaseElementAtCaretIntentionAction {
-
-    @NotNull
+    @Nonnull
     @Override
-    public String getText() {
-        return PascalBundle.message("action.fix.statement.remove.compound");
-    }
-
-    @Nls(capitalization = Nls.Capitalization.Sentence)
-    @NotNull
-    public String getFamilyName() {
-        return "Statement/" + getClass().getSimpleName();
+    public LocalizeValue getText() {
+        return ObjectPascalLocalize.actionFixStatementRemoveCompound();
     }
 
     @Override
-    public boolean isAvailable(@NotNull Project project, Editor editor, @NotNull PsiElement element) {
+    public boolean isAvailable(@Nonnull Project project, Editor editor, @Nonnull PsiElement element) {
         PsiElement parent = StmtUtil.getStatement(element);
         if (StmtUtil.isStructuredOperatorStatement(parent)) {
             PasStatement stmt = PsiTreeUtil.getChildOfType(parent, PasStatement.class);
             if (stmt != null) {
                 PasCompoundStatement compoundStatement = stmt.getCompoundStatement();
                 return (compoundStatement != null) && isSingleOrEmptyCompoundStatement(compoundStatement);
-            } else {
+            }
+            else {
                 return false;
             }
-        } else {
+        }
+        else {
             return false;
         }
     }
 
     @Override
-    public void invoke(@NotNull Project project, Editor editor, @NotNull PsiElement element) throws IncorrectOperationException {
+    public void invoke(@Nonnull Project project, Editor editor, @Nonnull PsiElement element) throws IncorrectOperationException {
         PsiElement parent = StmtUtil.getStatement(element);
         PasStatement stmt = StmtUtil.isStructuredOperatorStatement(parent) ? PsiTreeUtil.getChildOfType(parent, PasStatement.class) : null;
         PasCompoundStatement compoundStatement = stmt != null ? stmt.getCompoundStatement() : null;
@@ -56,7 +51,8 @@ class RemoveCompoundStatement extends BaseElementAtCaretIntentionAction {
             statement = !compoundStatement.getStatementList().isEmpty() ? compoundStatement.getStatementList().get(0) : null;
             if (statement != null) {
                 compoundStatement.replace(statement);
-            } else {
+            }
+            else {
                 compoundStatement.delete();
             }
         }
@@ -66,5 +62,4 @@ class RemoveCompoundStatement extends BaseElementAtCaretIntentionAction {
         List<PasStatement> list = statement.getStatementList();
         return (list.size() < 2) || ((list.size() == 2) && (list.get(1).getFirstChild() instanceof PasStmtEmpty));
     }
-
 }

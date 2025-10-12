@@ -1,36 +1,29 @@
 package com.siberika.idea.pascal.ide.intention;
 
-import com.siberika.idea.pascal.PascalBundle;
 import com.siberika.idea.pascal.lang.psi.PascalRoutine;
 import consulo.codeEditor.Editor;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
+import consulo.object.pascal.localize.ObjectPascalLocalize;
 import consulo.project.Project;
-import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
+import jakarta.annotation.Nonnull;
 
 class TurnToProcedure extends RoutineIntention {
-
-    @NotNull
+    @Nonnull
     @Override
-    public String getText() {
-        return PascalBundle.message("action.fix.routine.to.procedure");
-    }
-
-    @Nls(capitalization = Nls.Capitalization.Sentence)
-    @NotNull
-    public String getFamilyName() {
-        return PascalBundle.message("action.fix.routine.to.procedure.family");
+    public LocalizeValue getText() {
+        return ObjectPascalLocalize.actionFixRoutineToProcedure();
     }
 
     @Override
-    public boolean isAvailable(@NotNull Project project, Editor editor, @NotNull PsiElement element) {
+    public boolean isAvailable(@Nonnull Project project, Editor editor, @Nonnull PsiElement element) {
         PascalRoutine routine = getRoutineHeader(editor, element);
         return (routine != null) && routine.isFunction();
     }
 
     @Override
-    public void invoke(@NotNull Project project, Editor editor, @NotNull PsiElement element) throws IncorrectOperationException {
+    public void invoke(@Nonnull Project project, Editor editor, @Nonnull PsiElement element) throws IncorrectOperationException {
         PascalRoutine routine = getRoutineHeader(editor, element);
         if ((null != routine) && routine.isFunction()) {
             PascalRoutine target = getTargetRoutine(editor, element);
@@ -40,5 +33,4 @@ class TurnToProcedure extends RoutineIntention {
             }
         }
     }
-
 }
