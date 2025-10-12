@@ -20,12 +20,13 @@ import consulo.language.psi.NavigatablePsiElement;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.util.lang.StringUtil;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -33,36 +34,51 @@ import java.awt.event.MouseEvent;
 import java.util.Collection;
 
 /**
- * Author: George Bakhtadze
- * Date: 21/07/2015
+ * @author George Bakhtadze
+ * @since 2015-07-21
  */
 public class EditorUtil {
-
     public static final int NO_ITEMS_HINT_TIMEOUT_MS = 2000;
 
-    public static <T extends PsiElement> void navigateTo(Editor editor, String title, Collection<T> targets) {
-        PsiElementListNavigator.openTargets(editor, targets.toArray(new NavigatablePsiElement[targets.size()]),
-                title, null, new MyPsiElementCellRenderer());
+    public static <T extends PsiElement> void navigateTo(Editor editor, @Nonnull LocalizeValue title, Collection<T> targets) {
+        PsiElementListNavigator.openTargets(
+            editor,
+            targets.toArray(new NavigatablePsiElement[targets.size()]),
+            title.get(),
+            null,
+            new MyPsiElementCellRenderer()
+        );
     }
 
-    public static <T extends PsiElement> void navigateTo(MouseEvent event, String title, @Nullable String emptyTitle, Collection<T> targets) {
+    public static <T extends PsiElement> void navigateTo(
+        MouseEvent event,
+        @Nonnull LocalizeValue title,
+        @Nonnull LocalizeValue emptyTitle,
+        Collection<T> targets
+    ) {
         if (!targets.isEmpty()) {
-            PsiElementListNavigator.openTargets(event, targets.toArray(new NavigatablePsiElement[targets.size()]),
-                    title, null, new MyPsiElementCellRenderer());
-        } else if (!StringUtil.isEmpty(emptyTitle)) {
+            PsiElementListNavigator.openTargets(
+                event,
+                targets.toArray(new NavigatablePsiElement[targets.size()]),
+                title.get(),
+                null,
+                new MyPsiElementCellRenderer()
+            );
+        }
+        else if (emptyTitle != LocalizeValue.empty()) {
             showErrorHint(emptyTitle, new RelativePoint(event));
         }
     }
 
-    public static void showErrorHint(String title, RelativePoint relativePoint) {
-        final JLabel label = new JLabel(title);
+    public static void showErrorHint(@Nonnull LocalizeValue title, RelativePoint relativePoint) {
+        final JLabel label = new JLabel(title.get());
         label.setBorder(HintUtil.createHintBorder());
         label.setBackground(TargetAWT.to(HintUtil.getErrorColor()));
         label.setOpaque(true);
         HintManager.getInstance().showHint(label, relativePoint, 0, NO_ITEMS_HINT_TIMEOUT_MS);
     }
 
-    public static void showInformationHint(Editor editor, String message) {
+    public static void showInformationHint(Editor editor, @Nonnull LocalizeValue message) {
         ApplicationManager.getApplication().invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -84,7 +100,6 @@ public class EditorUtil {
     }
 
     public static class MyPsiElementCellRenderer extends DefaultPsiElementCellRenderer {
-
         @Nullable
         @Override
         protected DefaultListCellRenderer getRightCellRenderer(final Object value) {
@@ -93,7 +108,8 @@ public class EditorUtil {
                 public String getText() {
                     if (value instanceof PsiElement) {
                         return getRightText((PsiElement) value);
-                    } else {
+                    }
+                    else {
                         return super.getText();
                     }
                 }
@@ -115,7 +131,8 @@ public class EditorUtil {
                 }
                 sb.append(ResolveUtil.cleanupName(PsiUtil.getFieldName((PascalNamedElement) element)));
                 return sb.toString();
-            } else {
+            }
+            else {
                 return element.getText();
             }
         }
@@ -136,7 +153,8 @@ public class EditorUtil {
             if (!PsiUtil.isFromLibrary(element)) {
                 Document doc = PsiDocumentManager.getInstance(element.getProject()).getDocument(file);
                 line = (doc != null) ? String.valueOf(doc.getLineNumber(element.getTextOffset()) + 1) : "-";
-            } else {
+            }
+            else {
                 line = "-";
             }
             return String.format("%s (%s)", file.getName(), line);
@@ -147,5 +165,4 @@ public class EditorUtil {
     public static Editor getEditor(Project project) {
         return FileEditorManager.getInstance(project).getSelectedTextEditor();
     }
-
 }

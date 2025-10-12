@@ -12,17 +12,17 @@ import consulo.language.editor.inspection.ProblemHighlightType;
 import consulo.language.editor.inspection.ProblemsHolder;
 import consulo.language.editor.inspection.scheme.InspectionManager;
 import consulo.language.util.ModuleUtilCore;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
 import static com.siberika.idea.pascal.PascalBundle.message;
 
 @ExtensionImpl
 public class UnusedUnitsInspection extends PascalLocalInspectionBase {
-
     @Nonnull
     @Override
-    public String getDisplayName() {
-        return "Unused units detection";
+    public LocalizeValue getDisplayName() {
+        return LocalizeValue.localizeTODO("Unused units detection");
     }
 
     @Override

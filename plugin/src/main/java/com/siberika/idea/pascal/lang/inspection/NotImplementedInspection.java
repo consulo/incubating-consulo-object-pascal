@@ -1,6 +1,5 @@
 package com.siberika.idea.pascal.lang.inspection;
 
-import com.siberika.idea.pascal.PascalBundle;
 import com.siberika.idea.pascal.editor.PascalRoutineActions;
 import com.siberika.idea.pascal.ide.actions.quickfix.PascalBaseFix;
 import com.siberika.idea.pascal.lang.psi.*;
@@ -22,19 +21,17 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.SmartPsiElementPointer;
 import consulo.language.psi.util.PsiTreeUtil;
+import consulo.localize.LocalizeValue;
+import consulo.object.pascal.localize.ObjectPascalLocalize;
 import consulo.project.Project;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.SmartHashSet;
 import consulo.util.collection.SmartList;
 import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-
-import static com.siberika.idea.pascal.PascalBundle.message;
 
 @SuppressWarnings("Convert2Lambda")
 public class NotImplementedInspection extends PascalLocalInspectionBase {
@@ -53,15 +50,24 @@ public class NotImplementedInspection extends PascalLocalInspectionBase {
                     PasEntityScope scope = routine.getContainingScope();
                     String scopeName = scope != null ? ResolveUtil.cleanupName(scope.getName()) + "." : "";
                     name = scopeName + name;
-                    holder.registerProblem(holder.getManager().createProblemDescriptor(classParent, message("inspection.warn.methods.not.implemented", name),
-                            true, ProblemHighlightType.GENERIC_ERROR_OR_WARNING, isOnTheFly,
-                            new ImplementMethodFix(routine)));
+                    holder.registerProblem(holder.getManager().createProblemDescriptor(
+                        classParent,
+                        ObjectPascalLocalize.inspectionWarnMethodsNotImplemented(name).get(),
+                        true,
+                        ProblemHighlightType.GENERIC_ERROR_OR_WARNING,
+                        isOnTheFly,
+                        new ImplementMethodFix(routine)
+                    ));
                 }
             }
         }
     }
 
-    private void processClass(List<PasExportedRoutine> result, SmartHashSet<PascalStructType> processed, @NotNull PasClassTypeDecl classTypeDecl) {
+    private void processClass(
+        List<PasExportedRoutine> result,
+        SmartHashSet<PascalStructType> processed,
+        @Nonnull PasClassTypeDecl classTypeDecl
+    ) {
         processed.add(classTypeDecl);
         List<SmartPsiElementPointer<PasEntityScope>> parentScope = classTypeDecl.getParentScope();
         for (SmartPsiElementPointer<PasEntityScope> parentPtr : parentScope) {
@@ -86,10 +92,16 @@ public class NotImplementedInspection extends PascalLocalInspectionBase {
         }
     }
 
-    private void processInterface(List<PasExportedRoutine> result, SmartHashSet<PascalStructType> processed, @NotNull PasClassTypeDecl classDecl, PascalInterfaceDecl interfaceDecl) {
+    private void processInterface(
+        List<PasExportedRoutine> result,
+        SmartHashSet<PascalStructType> processed,
+        @Nonnull PasClassTypeDecl classDecl,
+        PascalInterfaceDecl interfaceDecl
+    ) {
         for (PasExportedRoutine method : interfaceDecl.getMethods()) {
             if (isMethodImplemented(classDecl, method)) {
-            } else {
+            }
+            else {
                 result.add(method);
             }
         }
@@ -117,8 +129,8 @@ public class NotImplementedInspection extends PascalLocalInspectionBase {
 
     @Nonnull
     @Override
-    public String getDisplayName() {
-        return "Not implemented methods detection";
+    public LocalizeValue getDisplayName() {
+        return LocalizeValue.localizeTODO("Not implemented methods detection");
     }
 
     private class ImplementMethodFix extends PascalBaseFix {
@@ -128,16 +140,15 @@ public class NotImplementedInspection extends PascalLocalInspectionBase {
             this.routinePtr = PsiUtil.createSmartPointer(routine);
         }
 
-        @Nls(capitalization = Nls.Capitalization.Sentence)
-        @NotNull
+        @Nonnull
         @Override
-        public String getName() {
+        public LocalizeValue getName() {
             PasExportedRoutine routine = routinePtr != null ? routinePtr.getElement() : null;
-            return message("action.implement.method", routine != null ? routine.getCanonicalName() : "?");
+            return ObjectPascalLocalize.actionImplementMethod(routine != null ? routine.getCanonicalName() : "?");
         }
 
         @Override
-        public void applyFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor) {
+        public void applyFix(@Nonnull Project project, @Nonnull ProblemDescriptor descriptor) {
             PasExportedRoutine routine = routinePtr != null ? routinePtr.getElement() : null;
             PasEntityScope scope = PsiTreeUtil.getParentOfType(descriptor.getPsiElement(), PasEntityScope.class);
             if ((null == routine) || (null == scope)) {
@@ -146,7 +157,7 @@ public class NotImplementedInspection extends PascalLocalInspectionBase {
             final int offs = RoutineUtil.calcMethodPos(scope, null);
             Editor editor = EditorUtil.getEditor(project);
             if (offs < 0) {
-                EditorUtil.showErrorHint(PascalBundle.message("action.error.find.position"), EditorUtil.getHintPos(editor));
+                EditorUtil.showErrorHint(ObjectPascalLocalize.actionErrorFindPosition(), EditorUtil.getHintPos(editor));
                 return;
             }
             final Document document = DocUtil.getDocument(scope);
@@ -162,11 +173,11 @@ public class NotImplementedInspection extends PascalLocalInspectionBase {
                 PascalNamedElement addedRoutine = addedRoutineField != null ? addedRoutineField.getElement() : null;
                 if (PsiUtil.isElementUsable(addedRoutine)) {
                     PsiFile file = scope.getContainingFile();
-                    PascalRoutineActions.ActionImplement act = new PascalRoutineActions.ActionImplement(message("action.implement"), addedRoutine);
+                    PascalRoutineActions.ActionImplement act =
+                        new PascalRoutineActions.ActionImplement(ObjectPascalLocalize.actionImplement(), addedRoutine);
                     act.invoke(project, editor, file);
                 }
             }
         }
     }
-
 }

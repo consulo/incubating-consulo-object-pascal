@@ -1,6 +1,5 @@
 package com.siberika.idea.pascal.editor.refactoring;
 
-import com.siberika.idea.pascal.PascalBundle;
 import com.siberika.idea.pascal.editor.PascalActionDeclare;
 import com.siberika.idea.pascal.ide.actions.quickfix.IdentQuickFixes;
 import com.siberika.idea.pascal.lang.parser.NamespaceRec;
@@ -23,22 +22,24 @@ import consulo.language.editor.template.TextResult;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.util.PsiTreeUtil;
+import consulo.localize.LocalizeValue;
+import consulo.object.pascal.localize.ObjectPascalLocalize;
 import consulo.object.pascal.psi.PasBaseReferenceExpr;
 import consulo.project.Project;
 import consulo.util.collection.SmartList;
-import org.jetbrains.annotations.NotNull;
+import jakarta.annotation.Nonnull;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class PascalIntroduceVariableHandler implements RefactoringActionHandler {
     @Override
-    public void invoke(@NotNull Project project, Editor editor, PsiFile file, DataContext dataContext) {
+    public void invoke(@Nonnull Project project, Editor editor, PsiFile file, DataContext dataContext) {
         doIntroduceVar(project, editor, file, file.findElementAt(editor.getCaretModel().getOffset()));
     }
 
     @Override
-    public void invoke(@NotNull Project project, @NotNull PsiElement[] elements, DataContext dataContext) {
+    public void invoke(@Nonnull Project project, @Nonnull PsiElement[] elements, DataContext dataContext) {
         // not supported
     }
 
@@ -48,20 +49,24 @@ public class PascalIntroduceVariableHandler implements RefactoringActionHandler 
         PasEntityScope scope = PsiUtil.getNearestAffectingScope(nearestStatement);
         if (!expressionList.isEmpty()) {
             if (editor != null) {
-                IntroduceTargetChooser.showChooser(editor, expressionList, expression -> {
+                IntroduceTargetChooser.showChooser(
+                    editor,
+                    expressionList,
+                    expression -> {
                         String type = PascalExpression.inferType(expression);
-                        PascalActionDeclare.ActionCreateVar cva = new PascalActionDeclare.ActionCreateVar("", expression, null, scope, type) {
-                            public void afterExecution(Editor editor1, PsiFile file1, TemplateState state) {
-                                TextResult varName = state.getVariableValue(TPL_VAR_NAME);
-                                if (varName != null) {
-                                    replaceExprAndAddAssignment(nearestStatement, varName.getText(), expression);
+                        PascalActionDeclare.ActionCreateVar cva =
+                            new PascalActionDeclare.ActionCreateVar(LocalizeValue.empty(), expression, null, scope, type) {
+                                public void afterExecution(Editor editor1, PsiFile file1, TemplateState state) {
+                                    TextResult varName = state.getVariableValue(TPL_VAR_NAME);
+                                    if (varName != null) {
+                                        replaceExprAndAddAssignment(nearestStatement, varName.getText(), expression);
+                                    }
                                 }
-                            }
-                        };
+                            };
                         cva.invoke(project, editor, file);
                     },
                     new PsiElementTrimRenderer(100),
-                    PascalBundle.message("popup.expressions.title")
+                    ObjectPascalLocalize.popupExpressionsTitle().get()
                 );
             }
         }
@@ -71,7 +76,8 @@ public class PascalIntroduceVariableHandler implements RefactoringActionHandler 
         final String text = expression.getText();
         PsiElement varElement = PasElementFactory.createElementFromText(expression.getProject(), name);
         PsiElement stmt = PasElementFactory.createElementFromText(expression.getProject(),
-            "begin " + name + " := " + text + ";end.", PasCompoundStatement.class);
+            "begin " + name + " := " + text + ";end.", PasCompoundStatement.class
+        );
         PsiElement stmtFinal = PsiTreeUtil.getChildOfType(stmt, PasStatement.class);
         if (stmtFinal != null) {
             ApplicationManager.getApplication().runWriteAction(
@@ -132,7 +138,12 @@ public class PascalIntroduceVariableHandler implements RefactoringActionHandler 
                 Resolve.resolveExpr(NamespaceRec.fromElement(((PasBaseReferenceExpr) callExpr).getFullyQualifiedIdent()),
                     new ResolveContext(PasField.TYPES_ROUTINE, true), new ResolveProcessor() {
                         @Override
-                        public boolean process(PasEntityScope originalScope, PasEntityScope scope, PasField field, PasField.FieldType type) {
+                        public boolean process(
+                            PasEntityScope originalScope,
+                            PasEntityScope scope,
+                            PasField field,
+                            PasField.FieldType type
+                        ) {
                             PascalNamedElement el = field.getElement();
                             if (el instanceof PascalRoutine) {
                                 result.set(!"".equals(((PascalRoutine) el).getFunctionTypeStr()));

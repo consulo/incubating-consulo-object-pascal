@@ -1,44 +1,40 @@
 package com.siberika.idea.pascal.editor.refactoring;
 
-import com.siberika.idea.pascal.PascalBundle;
 import consulo.codeEditor.Editor;
 import consulo.language.editor.intention.BaseIntentionAction;
 import consulo.language.editor.refactoring.RefactoringFactory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import org.jetbrains.annotations.NotNull;
+import jakarta.annotation.Nonnull;
 
 /**
- * Author: George Bakhtadze
- * Date: 27/04/2018
+ * @author George Bakhtadze
+ * @since 2018-04-27
  */
 public class PascalRenameAction extends BaseIntentionAction {
     private final PsiElement element;
     private final String newName;
-    private final String name;
+    @Nonnull
+    private final LocalizeValue myName;
 
-    public PascalRenameAction(PsiElement element, String newName, String name) {
+    public PascalRenameAction(PsiElement element, String newName, @Nonnull LocalizeValue name) {
         super();
         this.element = element;
         this.newName = newName;
-        this.name = name;
+        this.myName = name;
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public String getText() {
-        return name;
-    }
-
-    @NotNull
-    public String getFamilyName() {
-        return PascalBundle.message("action.familyName");
+    public LocalizeValue getText() {
+        return myName;
     }
 
     @Override
-    public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file) {
+    public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
         return true;
     }
 
@@ -48,8 +44,7 @@ public class PascalRenameAction extends BaseIntentionAction {
     }
 
     @Override
-    public void invoke(@NotNull final Project project, final Editor editor, final PsiFile file) throws IncorrectOperationException {
+    public void invoke(@Nonnull final Project project, final Editor editor, final PsiFile file) throws IncorrectOperationException {
         RefactoringFactory.getInstance(project).createRename(element, newName, false, false).run();
     }
-
 }

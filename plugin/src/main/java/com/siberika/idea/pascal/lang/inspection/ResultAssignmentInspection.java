@@ -8,6 +8,7 @@ import consulo.language.editor.inspection.ProblemHighlightType;
 import consulo.language.editor.inspection.ProblemsHolder;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.util.PsiTreeUtil;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
@@ -22,7 +23,8 @@ public class ResultAssignmentInspection extends PascalLocalInspectionBase {
             if (routine.isFunction()) {
                 PasCompoundStatement code = RoutineUtil.retrieveRoutineCodeBlock(routine);
                 if (code != null) {
-                    Collection<PascalPsiElement> elements = PsiTreeUtil.findChildrenOfAnyType(code, PasFullyQualifiedIdent.class, PasExitStatement.class);
+                    Collection<PascalPsiElement> elements =
+                        PsiTreeUtil.findChildrenOfAnyType(code, PasFullyQualifiedIdent.class, PasExitStatement.class);
                     for (PascalPsiElement element : elements) {
                         if (element instanceof PasFullyQualifiedIdent) {
                             List<PasSubIdent> subidents = ((PasFullyQualifiedIdent) element).getSubIdentList();
@@ -31,9 +33,13 @@ public class ResultAssignmentInspection extends PascalLocalInspectionBase {
                                     return;
                                 }
                             }
-                        } else if (PsiTreeUtil.getChildOfType(element, PasExpression.class) != null) {   // exit statement with result expression
+                        }
+                        else if (PsiTreeUtil.getChildOfType(element, PasExpression.class) != null) {
+                            // exit statement with result expression
                             return;
-                        } else {                                                                         // exit statement without result expression
+                        }
+                        else {
+                            // exit statement without result expression
                             addWarning(holder, isOnTheFly, element);
                             return;
                         }
@@ -46,14 +52,19 @@ public class ResultAssignmentInspection extends PascalLocalInspectionBase {
     }
 
     private void addWarning(ProblemsHolder holder, boolean isOnTheFly, PsiElement element) {
-        holder.registerProblem(holder.getManager().createProblemDescriptor(element, message("inspection.warn.function.no.result.assignment"), true,
-                ProblemHighlightType.GENERIC_ERROR_OR_WARNING, isOnTheFly,
-                new IdentQuickFixes.AddResultAssignmentAction()));
+        holder.registerProblem(holder.getManager().createProblemDescriptor(
+            element,
+            message("inspection.warn.function.no.result.assignment"),
+            true,
+            ProblemHighlightType.GENERIC_ERROR_OR_WARNING,
+            isOnTheFly,
+            new IdentQuickFixes.AddResultAssignmentAction()
+        ));
     }
 
     @Nonnull
     @Override
-    public String getDisplayName() {
-        return "No result assignment detection";
+    public LocalizeValue getDisplayName() {
+        return LocalizeValue.localizeTODO("No result assignment detection");
     }
 }

@@ -1,6 +1,5 @@
 package com.siberika.idea.pascal.editor.completion;
 
-import com.siberika.idea.pascal.PascalBundle;
 import com.siberika.idea.pascal.PascalIcons;
 import com.siberika.idea.pascal.ide.actions.UsesActions;
 import com.siberika.idea.pascal.lang.context.CodePlace;
@@ -34,6 +33,7 @@ import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.stub.StubIndex;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.ModuleUtilCore;
+import consulo.object.pascal.localize.ObjectPascalLocalize;
 import consulo.object.pascal.psi.PasBaseReferenceExpr;
 import consulo.project.Project;
 import consulo.ui.ex.action.ActionManager;
@@ -49,8 +49,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 /**
- * Author: George Bakhtadze
- * Date: 09/05/2018
+ * @author George Bakhtadze
+ * @since 2018-05-09
  */
 class CompletionUtil {
     private static final Map<String, String> INSERT_MAP = getInsertMap();
@@ -351,11 +351,16 @@ class CompletionUtil {
             @Override
             public void handleInsert(InsertionContext context, LookupElement item) {
                 boolean toInterface = ContextUtil.belongsToInterface(parameters.getPosition());
-                UsesActions.AddUnitAction actAddUnit = new UsesActions.AddUnitAction(PascalBundle.message("action.add.uses", unitName),
-                    unitName, toInterface);
+                UsesActions.AddUnitAction actAddUnit =
+                    new UsesActions.AddUnitAction(ObjectPascalLocalize.actionAddUses(unitName), unitName, toInterface);
                 actAddUnit.invoke(parameters.getOriginalFile().getProject(), parameters.getEditor(), parameters.getOriginalFile());
-                EditorUtil.showInformationHint(parameters.getEditor(), PascalBundle.message("action.unit.search.added", unitName,
-                    PascalBundle.message(toInterface ? "unit.section.interface" : "unit.section.implementation")));
+                EditorUtil.showInformationHint(
+                    parameters.getEditor(),
+                    ObjectPascalLocalize.actionUnitSearchAdded(
+                        unitName,
+                        toInterface ? ObjectPascalLocalize.unitSectionInterface() : ObjectPascalLocalize.unitSectionImplementation()
+                    )
+                );
                 handleRoutineNameInsertion(context.getEditor(), content);
             }
         });

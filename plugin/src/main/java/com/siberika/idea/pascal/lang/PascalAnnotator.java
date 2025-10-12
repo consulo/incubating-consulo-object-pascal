@@ -1,6 +1,5 @@
 package com.siberika.idea.pascal.lang;
 
-import com.siberika.idea.pascal.PascalBundle;
 import com.siberika.idea.pascal.editor.PascalActionDeclare;
 import com.siberika.idea.pascal.editor.PascalRoutineActions;
 import com.siberika.idea.pascal.editor.refactoring.PascalRenameAction;
@@ -20,35 +19,36 @@ import com.siberika.idea.pascal.lang.references.resolve.Resolve;
 import com.siberika.idea.pascal.util.PsiContext;
 import com.siberika.idea.pascal.util.PsiUtil;
 import com.siberika.idea.pascal.util.StrUtil;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.editor.annotation.Annotation;
 import consulo.language.editor.annotation.AnnotationHolder;
 import consulo.language.editor.annotation.Annotator;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.ModuleUtilCore;
+import consulo.object.pascal.localize.ObjectPascalLocalize;
 import consulo.util.collection.SmartList;
 import consulo.util.io.FileUtil;
-import org.jetbrains.annotations.NotNull;
+import jakarta.annotation.Nonnull;
 
 import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import static com.siberika.idea.pascal.PascalBundle.message;
-
 /**
- * Author: George Bakhtadze
- * Date: 12/14/12
+ * @author George Bakhtadze
+ * @since 2012-12-14
  */
 public class PascalAnnotator implements Annotator {
-
-    public void annotate(@NotNull PsiElement element, @NotNull AnnotationHolder holder) {
+    @RequiredReadAction
+    public void annotate(@Nonnull PsiElement element, @Nonnull AnnotationHolder holder) {
         if ((element instanceof PascalNamedElement) && (PsiUtil.isRoutineName((PascalNamedElement) element))) {
             PsiElement parent = element.getParent();
             if (parent.getClass() == PasExportedRoutineImpl.class) {
                 annotateRoutineInInterface((PasExportedRoutineImpl) parent, holder);
-            } else if (parent.getClass() == PasRoutineImplDeclImpl.class) {
+            }
+            else if (parent.getClass() == PasRoutineImplDeclImpl.class) {
                 annotateRoutineInImplementation((PasRoutineImplDeclImpl) parent, holder);
             }
         }
@@ -66,11 +66,21 @@ public class PascalAnnotator implements Annotator {
             boolean noTargets = Resolve.resolveExpr(fqn, resolveContext, (originalScope, scope, field, type) -> false);
 
             if (noTargets && !isVariantField(scopes)) {
-                Annotation ann = holder.createErrorAnnotation(element, message("ann.error.undeclared.identifier"));
+                Annotation ann = holder.createErrorAnnotation(element, ObjectPascalLocalize.annErrorUndeclaredIdentifier().get());
                 PsiContext context = PsiUtil.getContext(namedElement);
-                Set<AddFixType> fixes = EnumSet.of(AddFixType.VAR, AddFixType.TYPE, AddFixType.CONST, AddFixType.ROUTINE, AddFixType.UNIT_FIND); // [*] => var type const routine
+                Set<AddFixType> fixes = EnumSet.of(
+                    AddFixType.VAR,
+                    AddFixType.TYPE,
+                    AddFixType.CONST,
+                    AddFixType.ROUTINE,
+                    AddFixType.UNIT_FIND
+                ); // [*] => var type const routine
                 if (context == PsiContext.FQN_FIRST) {
-                    if (!ResolveUtil.findUnitsWithStub(namedElement.getProject(), ModuleUtilCore.findModuleForPsiElement(namedElement), namedElement.getName()).isEmpty()) {
+                    if (!ResolveUtil.findUnitsWithStub(
+                        namedElement.getProject(),
+                        ModuleUtilCore.findModuleForPsiElement(namedElement),
+                        namedElement.getName()
+                    ).isEmpty()) {
                         fixes.add(AddFixType.UNIT);
                     }
                 }
@@ -80,7 +90,7 @@ public class PascalAnnotator implements Annotator {
                 boolean firstPart = true;
                 if (fqn.getParentIdent() instanceof PasFullyQualifiedIdent) {
                     firstPart = (PsiContext.FQN_FIRST == context) || (PsiContext.FQN_SINGLE == context)
-                            || (((PasFullyQualifiedIdent) fqn.getParentIdent()).getSubIdentList().size() == 1);
+                        || (((PasFullyQualifiedIdent) fqn.getParentIdent()).getSubIdentList().size() == 1);
                 }
                 if (firstPart && (scope instanceof PascalStructType) && (scopesIterators.hasNext())) {
                     PasEntityScope nearest = PsiUtil.getNearestAffectingScope(element);
@@ -94,20 +104,29 @@ public class PascalAnnotator implements Annotator {
                 if (scope instanceof PasEnumType) {                                                          // TEnum.* => -* +enum
                     fixes = EnumSet.of(AddFixType.ENUM);
                     fixes.remove(AddFixType.UNIT_FIND);
-                } else if (scope instanceof PascalRoutine) {                                                 // [inRoutine] => +parameter
+                }
+                else if (scope instanceof PascalRoutine) {                                                 // [inRoutine] => +parameter
                     fixes.add(AddFixType.PARAMETER);
                 }
                 if (context == PsiContext.TYPE_ID) {                                                         // [TypeIdent] => -* +type
                     fixes = EnumSet.of(AddFixType.TYPE, AddFixType.UNIT_FIND);
-                } else if (PsiTreeUtil.getParentOfType(namedElement, PasConstExpression.class) != null) {    // [part of const expr] => -* +const +enum
+                }
+                else if (PsiTreeUtil.getParentOfType(
+                    namedElement,
+                    PasConstExpression.class
+                ) != null) {    // [part of const expr] => -* +const +enum
                     fixes = EnumSet.of(AddFixType.CONST, AddFixType.UNIT_FIND);
-                } else if (context == PsiContext.EXPORT) {
+                }
+                else if (context == PsiContext.EXPORT) {
                     fixes = EnumSet.of(AddFixType.ROUTINE);
-                } else if (context == PsiContext.CALL) {
+                }
+                else if (context == PsiContext.CALL) {
                     fixes = EnumSet.of(AddFixType.ROUTINE, AddFixType.VAR, AddFixType.UNIT_FIND);
-                } else if (context == PsiContext.PROPERTY_SPEC) {
+                }
+                else if (context == PsiContext.PROPERTY_SPEC) {
                     fixes = EnumSet.of(AddFixType.VAR, AddFixType.ROUTINE);
-                } else if (context == PsiContext.FOR) {
+                }
+                else if (context == PsiContext.FOR) {
                     fixes = EnumSet.of(AddFixType.VAR, AddFixType.UNIT_FIND);
                 }
                 if (context == PsiContext.USES) {
@@ -120,19 +139,50 @@ public class PascalAnnotator implements Annotator {
                         case VAR: {
                             boolean priority = context != PsiContext.CALL;
                             if (!(scope instanceof PascalStructType)) {
-                                ann.registerFix(PascalActionDeclare.newActionCreateVar(message("action.create.var"), namedElement, null, priority, context != PsiContext.FOR ? null : "Integer"));
+                                ann.registerFix(PascalActionDeclare.newActionCreateVar(
+                                    ObjectPascalLocalize.actionCreateVar(),
+                                    namedElement,
+                                    null,
+                                    priority,
+                                    context != PsiContext.FOR ? null : "Integer"
+                                ));
                             }
                             PsiElement adjustedScope = adjustScope(scope);
                             if (adjustedScope instanceof PascalStructType) {
                                 if (StrUtil.PATTERN_FIELD.matcher(name).matches()) {
-                                    ann.registerFix(PascalActionDeclare.newActionCreateVar(message("action.create.field"), namedElement, adjustedScope, priority, null));
+                                    ann.registerFix(PascalActionDeclare.newActionCreateVar(
+                                        ObjectPascalLocalize.actionCreateField(),
+                                        namedElement,
+                                        adjustedScope,
+                                        priority,
+                                        null
+                                    ));
                                     if (context != PsiContext.PROPERTY_SPEC) {
-                                        ann.registerFix(PascalActionDeclare.newActionCreateProperty(message("action.create.property"), namedElement, null, adjustedScope, false));
+                                        ann.registerFix(PascalActionDeclare.newActionCreateProperty(
+                                            ObjectPascalLocalize.actionCreateProperty(),
+                                            namedElement,
+                                            null,
+                                            adjustedScope,
+                                            false
+                                        ));
                                     }
-                                } else {
-                                    ann.registerFix(PascalActionDeclare.newActionCreateVar(message("action.create.field"), namedElement, adjustedScope, false, null));
+                                }
+                                else {
+                                    ann.registerFix(PascalActionDeclare.newActionCreateVar(
+                                        ObjectPascalLocalize.actionCreateField(),
+                                        namedElement,
+                                        adjustedScope,
+                                        false,
+                                        null
+                                    ));
                                     if (context != PsiContext.PROPERTY_SPEC) {
-                                        ann.registerFix(PascalActionDeclare.newActionCreateProperty(message("action.create.property"), namedElement, null, adjustedScope, priority));
+                                        ann.registerFix(PascalActionDeclare.newActionCreateProperty(
+                                            ObjectPascalLocalize.actionCreateProperty(),
+                                            namedElement,
+                                            null,
+                                            adjustedScope,
+                                            priority
+                                        ));
                                     }
                                 }
                             }
@@ -152,7 +202,8 @@ public class PascalAnnotator implements Annotator {
                             if ((scope instanceof PascalStructType)) {
                                 ann.registerFix(PascalActionDeclare.newActionCreateConst(namedElement, null, priority));
                                 priority = false;             // lower priority for nested
-                            } else {
+                            }
+                            else {
                                 ann.registerFix(PascalActionDeclare.newActionCreateConst(namedElement, scope, priority));
                             }
                             ann.registerFix(PascalActionDeclare.newActionCreateConst(namedElement, adjustScope(scope), priority));
@@ -162,23 +213,59 @@ public class PascalAnnotator implements Annotator {
                             boolean priority = context == PsiContext.CALL;
                             if (scope instanceof PascalStructType) {
                                 if (context == PsiContext.PROPERTY_SPEC) {
-                                    PasClassPropertySpecifier spec = PsiTreeUtil.getParentOfType(namedElement, PasClassPropertySpecifier.class);
-                                    ann.registerFix(PascalActionDeclare.newActionCreateRoutine(message("action.create." + (ContextUtil.isPropertyGetter(spec) ? "getter" : "setter")),
-                                            namedElement, scope, null, priority, spec));
-                                } else {
-                                    ann.registerFix(PascalActionDeclare.newActionCreateRoutine(message("action.create.method"), namedElement, scope, null, priority, null));
+                                    PasClassPropertySpecifier spec =
+                                        PsiTreeUtil.getParentOfType(namedElement, PasClassPropertySpecifier.class);
+                                    ann.registerFix(PascalActionDeclare.newActionCreateRoutine(
+                                        ContextUtil.isPropertyGetter(spec)
+                                            ? ObjectPascalLocalize.actionCreateGetter()
+                                            : ObjectPascalLocalize.actionCreateSetter(),
+                                        namedElement,
+                                        scope,
+                                        null,
+                                        priority,
+                                        spec
+                                    ));
                                 }
-                            } else {
-                                ann.registerFix(PascalActionDeclare.newActionCreateRoutine(message("action.create.routine"), namedElement, scope, null, priority, null));
+                                else {
+                                    ann.registerFix(PascalActionDeclare.newActionCreateRoutine(
+                                        ObjectPascalLocalize.actionCreateMethod(),
+                                        namedElement,
+                                        scope,
+                                        null,
+                                        priority,
+                                        null
+                                    ));
+                                }
+                            }
+                            else {
+                                ann.registerFix(PascalActionDeclare.newActionCreateRoutine(
+                                    ObjectPascalLocalize.actionCreateRoutine(),
+                                    namedElement,
+                                    scope,
+                                    null,
+                                    priority,
+                                    null
+                                ));
                                 PsiElement adjustedScope = adjustScope(scope);
                                 if (adjustedScope instanceof PascalStructType) {
-                                    ann.registerFix(PascalActionDeclare.newActionCreateRoutine(message("action.create.method"), namedElement, adjustedScope, scope, priority, null));
+                                    ann.registerFix(PascalActionDeclare.newActionCreateRoutine(
+                                        ObjectPascalLocalize.actionCreateMethod(),
+                                        namedElement,
+                                        adjustedScope,
+                                        scope,
+                                        priority,
+                                        null
+                                    ));
                                 }
                             }
                             break;
                         }
                         case ENUM: {
-                            ann.registerFix(new PascalActionDeclare.ActionCreateEnum(message("action.create.enumConst"), namedElement, scope));
+                            ann.registerFix(new PascalActionDeclare.ActionCreateEnum(
+                                ObjectPascalLocalize.actionCreateEnumconst(),
+                                namedElement,
+                                scope
+                            ));
                             break;
                         }
                         case PARAMETER: {
@@ -186,11 +273,18 @@ public class PascalAnnotator implements Annotator {
                             break;
                         }
                         case UNIT: {
-                            ann.registerFix(new UsesActions.AddUnitAction(message("action.add.uses", namedElement.getName()), namedElement.getName(), ContextUtil.belongsToInterface(namedElement)));
+                            ann.registerFix(new UsesActions.AddUnitAction(
+                                ObjectPascalLocalize.actionAddUses(namedElement.getName()),
+                                namedElement.getName(),
+                                ContextUtil.belongsToInterface(namedElement)
+                            ));
                             break;
                         }
                         case NEW_UNIT: {
-                            ann.registerFix(new UsesActions.NewUnitAction(message("action.create.unit"), namedElement.getName()));
+                            ann.registerFix(new UsesActions.NewUnitAction(
+                                ObjectPascalLocalize.actionCreateUnit(),
+                                namedElement.getName()
+                            ));
                             break;
                         }
                         case UNIT_FIND: {
@@ -207,22 +301,27 @@ public class PascalAnnotator implements Annotator {
         PasNamespaceIdent nameIdent = null;
         if (element instanceof PasUnitModuleHead) {
             nameIdent = ((PasUnitModuleHead) element).getNamespaceIdent();
-        } else if (element instanceof PasLibraryModuleHead) {
+        }
+        else if (element instanceof PasLibraryModuleHead) {
             nameIdent = ((PasLibraryModuleHead) element).getNamespaceIdent();
-        } else if (element instanceof PasProgramModuleHead) {
+        }
+        else if (element instanceof PasProgramModuleHead) {
             nameIdent = ((PasProgramModuleHead) element).getNamespaceIdent();
-        } else if (element instanceof PasPackageModuleHead) {
+        }
+        else if (element instanceof PasPackageModuleHead) {
             nameIdent = ((PasPackageModuleHead) element).getNamespaceIdent();
         }
         if (nameIdent != null) {
             String fn = element.getContainingFile().getName();
             String fileName = FileUtil.getNameWithoutExtension(fn);
             if (!nameIdent.getName().equalsIgnoreCase(fileName)) {
-                Annotation ann = holder.createErrorAnnotation(element, PascalBundle.message("ann.error.unit.name.notmatch"));
-                ann.registerFix(new PascalRenameAction(element, fileName, PascalBundle.message("action.module.rename")));
-                ann.registerFix(new PascalRenameAction(element.getContainingFile(),
-                        nameIdent.getName() + "." + FileUtil.getExtension(fn),
-                        PascalBundle.message("action.file.rename")));
+                Annotation ann = holder.createErrorAnnotation(element, ObjectPascalLocalize.annErrorUnitNameNotmatch().get());
+                ann.registerFix(new PascalRenameAction(element, fileName, ObjectPascalLocalize.actionModuleRename()));
+                ann.registerFix(new PascalRenameAction(
+                    element.getContainingFile(),
+                    nameIdent.getName() + "." + FileUtil.getExtension(fn),
+                    ObjectPascalLocalize.actionFileRename()
+                ));
             }
         }
     }
@@ -251,10 +350,13 @@ public class PascalAnnotator implements Annotator {
      * implement all methods fix
      */
     private void annotateRoutineInInterface(PasExportedRoutineImpl routine, AnnotationHolder holder) {
-        if (!PsiUtil.isFromBuiltinsUnit(routine) && PsiUtil.needImplementation(routine) && (null == SectionToggle.retrieveImplementation(routine, true))) {
-            Annotation ann = holder.createErrorAnnotation(routine, message("ann.error.missing.implementation"));
-            ann.registerFix(new PascalRoutineActions.ActionImplement(message("action.implement"), routine));
-            ann.registerFix(new PascalRoutineActions.ActionImplementAll(message("action.implement.all"), routine));
+        if (!PsiUtil.isFromBuiltinsUnit(routine) && PsiUtil.needImplementation(routine) && (null == SectionToggle.retrieveImplementation(
+            routine,
+            true
+        ))) {
+            Annotation ann = holder.createErrorAnnotation(routine, ObjectPascalLocalize.annErrorMissingImplementation().get());
+            ann.registerFix(new PascalRoutineActions.ActionImplement(ObjectPascalLocalize.actionImplement(), routine));
+            ann.registerFix(new PascalRoutineActions.ActionImplementAll(ObjectPascalLocalize.actionImplementAll(), routine));
         }
     }
 
@@ -267,14 +369,24 @@ public class PascalAnnotator implements Annotator {
         if (null == SectionToggle.retrieveDeclaration(routine, true)) {
             if (routine.getContainingScope() instanceof PasModule) {
                 if (((PasModule) routine.getContainingScope()).getUnitInterface() != null) {
-                    Annotation ann = holder.createInfoAnnotation(routine.getNameIdentifier() != null ? routine.getNameIdentifier() : routine, message("ann.error.missing.routine.declaration"));
-                    ann.registerFix(new PascalRoutineActions.ActionDeclare(message("action.declare.routine"), routine));
-                    ann.registerFix(new PascalRoutineActions.ActionDeclareAll(message("action.declare.routine.all"), routine));
+                    Annotation ann = holder.createInfoAnnotation(
+                        routine.getNameIdentifier() != null ? routine.getNameIdentifier() : routine,
+                        ObjectPascalLocalize.annErrorMissingRoutineDeclaration().get()
+                    );
+                    ann.registerFix(new PascalRoutineActions.ActionDeclare(ObjectPascalLocalize.actionDeclareRoutine(), routine));
+                    ann.registerFix(new PascalRoutineActions.ActionDeclareAll(
+                        ObjectPascalLocalize.actionDeclareRoutineAll(),
+                        routine
+                    ));
                 }
-            } else {
-                Annotation ann = holder.createErrorAnnotation(routine.getNameIdentifier() != null ? routine.getNameIdentifier() : routine, message("ann.error.missing.method.declaration"));
-                ann.registerFix(new PascalRoutineActions.ActionDeclare(message("action.declare.method"), routine));
-                ann.registerFix(new PascalRoutineActions.ActionDeclareAll(message("action.declare.method.all"), routine));
+            }
+            else {
+                Annotation ann = holder.createErrorAnnotation(
+                    routine.getNameIdentifier() != null ? routine.getNameIdentifier() : routine,
+                    ObjectPascalLocalize.annErrorMissingMethodDeclaration().get()
+                );
+                ann.registerFix(new PascalRoutineActions.ActionDeclare(ObjectPascalLocalize.actionDeclareMethod(), routine));
+                ann.registerFix(new PascalRoutineActions.ActionDeclareAll(ObjectPascalLocalize.actionDeclareMethodAll(), routine));
             }
         }
     }

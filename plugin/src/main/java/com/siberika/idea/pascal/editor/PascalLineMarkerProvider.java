@@ -32,8 +32,8 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Author: George Bakhtadze
- * Date: 05/09/2013
+ * @author George Bakhtadze
+ * @since 2013-09-05
  */
 @ExtensionImpl
 public class PascalLineMarkerProvider implements LineMarkerProvider {
@@ -53,15 +53,21 @@ public class PascalLineMarkerProvider implements LineMarkerProvider {
         PsiElement target = null;
         if (element instanceof PasExportedRoutineImpl) {
             target = SectionToggle.getRoutineTarget((PasExportedRoutineImpl) element);
-        } else if (element instanceof PasRoutineImplDeclImpl) {
+        }
+        else if (element instanceof PasRoutineImplDeclImpl) {
             target = SectionToggle.getRoutineTarget((PasRoutineImplDeclImpl) element);
             impl = false;
-        } else if (element instanceof PasUsesClause) {
+        }
+        else if (element instanceof PasUsesClause) {
             target = SectionToggle.getUsesTarget((PasUsesClause) element);
             impl = PsiTreeUtil.getParentOfType(element, PasUnitInterface.class) != null;
         }
         if (PsiUtil.isElementUsable(target)) {
-            result.add(createLineMarkerInfo(element, impl ? AllIcons.Gutter.ImplementedMethod : AllIcons.Gutter.ImplementingMethod, PascalMarker.SECTION_TOGGLE));
+            result.add(createLineMarkerInfo(
+                element,
+                impl ? AllIcons.Gutter.ImplementedMethod : AllIcons.Gutter.ImplementingMethod,
+                PascalMarker.SECTION_TOGGLE
+            ));
         }
         // Goto super
         if (element instanceof PascalNamedElement) {
@@ -80,9 +86,10 @@ public class PascalLineMarkerProvider implements LineMarkerProvider {
     static LineMarkerInfo<PsiElement> createLineMarkerInfo(@NotNull PsiElement element, Image icon, @NotNull PascalMarker marker) {
         PsiElement el = getLeaf(element);
         return new LineMarkerInfo<>(el, el.getTextRange(),
-                icon, Pass.LINE_MARKERS,
-                marker.getTooltip(), marker.getHandler(),
-                GutterIconRenderer.Alignment.RIGHT);
+            icon, Pass.LINE_MARKERS,
+            elem -> marker.getTooltip().apply(elem).get(), marker.getHandler(),
+            GutterIconRenderer.Alignment.RIGHT
+        );
     }
 
     static PsiElement getLeaf(PsiElement element) {
@@ -99,7 +106,8 @@ public class PascalLineMarkerProvider implements LineMarkerProvider {
             if (myDaemonSettings.SHOW_METHOD_SEPARATORS) {
                 return LineMarkerInfo.createMethodSeparatorLineMarker(getLeaf(element), myColorsManager);
             }
-        } else if ((element instanceof PasClassTypeDecl) || (element instanceof PasRecordDecl)) {
+        }
+        else if ((element instanceof PasClassTypeDecl) || (element instanceof PasRecordDecl)) {
             if (Helper.hasHelpers((PascalStructType) element)) {
                 return collectHelpers((PascalStructType) element);
             }
@@ -118,8 +126,15 @@ public class PascalLineMarkerProvider implements LineMarkerProvider {
 
     private LineMarkerInfo collectHelpers(PascalStructType structType) {
         PsiElement leaf = getLeaf(structType);
-        return new LineMarkerInfo<PsiElement>(leaf, leaf.getTextRange(),
-                PascalIcons.HELPER, Pass.LINE_MARKERS, PascalMarker.HELPERS.getTooltip(), PascalMarker.HELPERS.getHandler(), GutterIconRenderer.Alignment.RIGHT) {
+        return new LineMarkerInfo<PsiElement>(
+            leaf,
+            leaf.getTextRange(),
+            PascalIcons.HELPER,
+            Pass.LINE_MARKERS,
+            elem -> PascalMarker.HELPERS.getTooltip().apply(elem).get(),
+            PascalMarker.HELPERS.getHandler(),
+            GutterIconRenderer.Alignment.RIGHT
+        ) {
         };
     }
 

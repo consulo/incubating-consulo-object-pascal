@@ -8,9 +8,9 @@ import consulo.language.editor.inspection.LocalInspectionToolSession;
 import consulo.language.editor.inspection.ProblemsHolder;
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.language.psi.PsiElementVisitor;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NotNull;
 
 public abstract class PascalLocalInspectionBase extends LocalInspectionTool {
     @Nullable
@@ -27,8 +27,8 @@ public abstract class PascalLocalInspectionBase extends LocalInspectionTool {
 
     @Nonnull
     @Override
-    public String getGroupDisplayName() {
-        return "";
+    public LocalizeValue getGroupDisplayName() {
+        return LocalizeValue.empty();
     }
 
     @Override
@@ -48,33 +48,37 @@ public abstract class PascalLocalInspectionBase extends LocalInspectionTool {
     protected void checkClass(PasClassTypeDecl classTypeDecl, ProblemsHolder holder, boolean isOnTheFly) {
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly, @NotNull LocalInspectionToolSession session, Object state) {
+    public PsiElementVisitor buildVisitor(
+        @Nonnull ProblemsHolder holder,
+        boolean isOnTheFly,
+        @Nonnull LocalInspectionToolSession session,
+        Object state
+    ) {
         return new PasVisitor() {
-
             @Override
-            public void visitUsesClause(@NotNull PasUsesClause usesClause) {
+            public void visitUsesClause(@Nonnull PasUsesClause usesClause) {
                 checkUses(usesClause, holder, isOnTheFly);
             }
 
             @Override
-            public void visitNamedIdent(@NotNull PasNamedIdent namedIdent) {
+            public void visitNamedIdent(@Nonnull PasNamedIdent namedIdent) {
                 checkNamedIdent(namedIdent, holder, isOnTheFly);
             }
 
             @Override
-            public void visitNamedIdentDecl(@NotNull PasNamedIdentDecl namedIdent) {
+            public void visitNamedIdentDecl(@Nonnull PasNamedIdentDecl namedIdent) {
                 checkNamedIdent(namedIdent, holder, isOnTheFly);
             }
 
             @Override
-            public void visitcalRoutine(@NotNull PascalRoutine routine) {
+            public void visitcalRoutine(@Nonnull PascalRoutine routine) {
                 checkRoutine(routine, holder, isOnTheFly);
             }
 
             @Override
-            public void visitClassTypeDecl(@NotNull PasClassTypeDecl classTypeDecl) {
+            public void visitClassTypeDecl(@Nonnull PasClassTypeDecl classTypeDecl) {
                 checkClass(classTypeDecl, holder, isOnTheFly);
             }
         };

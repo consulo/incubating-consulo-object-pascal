@@ -15,28 +15,24 @@ import consulo.language.ast.TokenType;
 import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.util.PsiTreeUtil;
+import consulo.localize.LocalizeValue;
+import consulo.object.pascal.localize.ObjectPascalLocalize;
 import consulo.project.Project;
 import consulo.util.collection.SmartList;
-import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
+import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
-import static com.siberika.idea.pascal.PascalBundle.message;
-
 public class IdentQuickFixes {
-
     public static class ExcludeIdentAction extends PascalBaseFix {
-
-        @Nls
-        @NotNull
+        @Nonnull
         @Override
-        public String getName() {
-            return message("action.ident.exclude");
+        public LocalizeValue getName() {
+            return ObjectPascalLocalize.actionIdentExclude();
         }
 
         @Override
-        public void applyFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor) {
+        public void applyFix(@Nonnull Project project, @Nonnull ProblemDescriptor descriptor) {
             PsiElement usedUnitName = descriptor.getPsiElement();
             if (null == usedUnitName) {
                 return;
@@ -46,15 +42,14 @@ public class IdentQuickFixes {
     }
 
     public static class RemoveIdentAction extends PascalBaseFix {
-
-        @Nls
-        @NotNull
-        public String getName() {
-            return message("action.ident.remove");
+        @Nonnull
+        @Override
+        public LocalizeValue getName() {
+            return ObjectPascalLocalize.actionIdentRemove();
         }
 
         @Override
-        public void applyFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor) {
+        public void applyFix(@Nonnull Project project, @Nonnull ProblemDescriptor descriptor) {
             PsiElement identName = descriptor.getPsiElement();
             List<PsiElement> toRemove = new SmartList<>();
             PsiElement parent = identName.getParent();
@@ -68,30 +63,35 @@ public class IdentQuickFixes {
                         if (((PasVarSection) section).getVarDeclarationList().size() <= 1) {
                             toRemove.add(section);
                         }
-                    } else if (section instanceof PasFormalParameterSection) {
+                    }
+                    else if (section instanceof PasFormalParameterSection) {
                         List<PasFormalParameter> params = ((PasFormalParameterSection) section).getFormalParameterList();
                         if (!params.isEmpty() && (params.get(0) == parent)) {       // First
                             addSeparatorsToRemove(toRemove, parent, true);
-                        } else if (params.size() > 1) {
+                        }
+                        else if (params.size() > 1) {
                             toRemove.remove(parent);                       // parameter should be removed after preceding separators
                             addSeparatorsToRemove(toRemove, parent, false);
                             toRemove.add(parent);
                         }
                     }
                 }
-            } else if ((parent instanceof PasConstDeclaration) || (parent instanceof PasTypeDeclaration)) {
+            }
+            else if ((parent instanceof PasConstDeclaration) || (parent instanceof PasTypeDeclaration)) {
                 toRemove.add(parent);
                 PsiElement section = parent.getParent();
                 if (section instanceof PasConstSection) {
                     if (((PasConstSection) section).getConstDeclarationList().size() <= 1) {
                         toRemove.add(section);
                     }
-                } else if (section instanceof PasTypeSection) {
+                }
+                else if (section instanceof PasTypeSection) {
                     if (((PasTypeSection) section).getTypeDeclarationList().size() <= 1) {
                         toRemove.add(section);
                     }
                 }
-            } else if (parent instanceof PascalRoutine) {
+            }
+            else if (parent instanceof PascalRoutine) {
                 toRemove.add(parent);
                 PsiElement decl = SectionToggle.getImplementationOrDeclaration((PascalRoutine) parent);
                 if (decl != null) {
@@ -125,22 +125,22 @@ public class IdentQuickFixes {
             if (PsiUtil.isComma(element)) {
                 toRemove.add(element);
                 return true;
-            } else {
+            }
+            else {
                 return false;
             }
         }
     }
 
     public static class AddInheritedAction extends PascalBaseFix {
-
-        @Nls
-        @NotNull
-        public String getName() {
-            return message("action.inherited.add");
+        @Nonnull
+        @Override
+        public LocalizeValue getName() {
+            return ObjectPascalLocalize.actionInheritedAdd();
         }
 
         @Override
-        public void applyFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor) {
+        public void applyFix(@Nonnull Project project, @Nonnull ProblemDescriptor descriptor) {
             PsiElement end = descriptor.getPsiElement();
             PsiElement code = end != null ? end.getParent() : null;
             if (code != null) {
@@ -150,15 +150,14 @@ public class IdentQuickFixes {
     }
 
     public static class AddResultAssignmentAction extends PascalBaseFix {
-
-        @Nls
-        @NotNull
-        public String getName() {
-            return message("action.result.assignment.add");
+        @Nonnull
+        @Override
+        public LocalizeValue getName() {
+            return ObjectPascalLocalize.actionResultAssignmentAdd();
         }
 
         @Override
-        public void applyFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor) {
+        public void applyFix(@Nonnull Project project, @Nonnull ProblemDescriptor descriptor) {
             PsiElement element = descriptor.getPsiElement();
             if ((null == element) || (element.getParent() == null)) {
                 return;
@@ -180,7 +179,8 @@ public class IdentQuickFixes {
             if (element instanceof PasExitStatement) {
                 element = StmtUtil.findAssignmentLocation(element.getParent());
                 addElements(element.getParent(), element, false, "Result", ":=", typeDefault, ";");
-            } else {
+            }
+            else {
                 PsiElement begin = parent.getFirstChild();
                 if (begin != null) {
                     addElements(parent, begin, true, "Result", ":=", typeDefault, ";");
@@ -195,7 +195,8 @@ public class IdentQuickFixes {
         Project project = parent.getProject();
         if (after) {
             newElement = parent.addAfter(PasElementFactory.createElementFromText(project, first), anchor);
-        } else {
+        }
+        else {
             newElement = parent.addBefore(PasElementFactory.createElementFromText(project, first), anchor);
         }
         for (String elementText : other) {
@@ -208,5 +209,4 @@ public class IdentQuickFixes {
             DocUtil.reformatRange(module, parent.getTextRange().getStartOffset(), parent.getTextRange().getEndOffset());
         }
     }
-
 }

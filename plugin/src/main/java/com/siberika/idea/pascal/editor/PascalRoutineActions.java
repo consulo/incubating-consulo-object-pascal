@@ -13,20 +13,21 @@ import consulo.language.editor.intention.LowPriorityAction;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.util.PsiTreeUtil;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.List;
 
 /**
- * Author: George Bakhtadze
- * Date: 06/10/2013
+ * @author George Bakhtadze
+ * @since 2013-10-06
  */
 public class PascalRoutineActions {
-
     public static class ActionDeclare extends PascalActionDeclare {
-        public ActionDeclare(String name, PascalNamedElement element) {
+        public ActionDeclare(@Nonnull LocalizeValue name, PascalNamedElement element) {
             super(name, element, element.getName(), null, null);
         }
 
@@ -51,7 +52,7 @@ public class PascalRoutineActions {
     }
 
     public static class ActionDeclareAll extends ActionDeclare implements LowPriorityAction {
-        public ActionDeclareAll(String name, PascalNamedElement element) {
+        public ActionDeclareAll(@Nonnull LocalizeValue name, PascalNamedElement element) {
             super(name, element);
             PascalRoutine routine = (PascalRoutine) element;
             PasEntityScope scope = routine.getContainingScope();
@@ -68,8 +69,7 @@ public class PascalRoutineActions {
     }
 
     public static class ActionImplement extends PascalActionDeclare {
-
-        public ActionImplement(String name, PascalNamedElement element) {
+        public ActionImplement(@Nonnull LocalizeValue name, PascalNamedElement element) {
             super(name, element, element.getName(), null, null);
         }
 
@@ -88,7 +88,8 @@ public class PascalRoutineActions {
             data.text = "\n\n" + data.text.replaceFirst(" " + name, " " + prefix + name) + "\nbegin\n" + DocUtil.PLACEHOLDER_CARET + "\nend;\n\n";
             data.offset = SectionToggle.findImplPos(routine);
             data.parent = routine;
-            if (data.offset < 0) {                                                                            // Suitable implementation position not found - no implementations in the class
+            if (data.offset < 0) {
+                // Suitable implementation position not found - no implementations in the class
                 PasEntityScope classType = routine.getContainingScope();
                 if (classType instanceof PascalStructType) {
                     data.text = "\n\n{ " + classType.getName() + " }" + data.text;
@@ -113,7 +114,7 @@ public class PascalRoutineActions {
     public static class ActionImplementAll extends ActionImplement implements LowPriorityAction {
         private boolean initDone = false;
 
-        public ActionImplementAll(String name, PascalNamedElement element) {
+        public ActionImplementAll(@Nonnull LocalizeValue name, PascalNamedElement element) {
             super(name, element);
         }
 
@@ -146,7 +147,5 @@ public class PascalRoutineActions {
             }
             initDone = true;
         }
-
     }
-
 }
