@@ -74,7 +74,7 @@ public class PascalParameterNameHints implements InlayParameterHintsProvider {
     @Nonnull
     @Override
     public LocalizeValue getPreviewFileText() {
-        return LocalizeValue.of();
+        return LocalizeValue.empty();
     }
 
     private List<InlayInfo> getParameters(PasCallExpr callExpr) {

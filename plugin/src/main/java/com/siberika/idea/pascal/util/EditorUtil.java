@@ -65,7 +65,7 @@ public class EditorUtil {
                 new MyPsiElementCellRenderer()
             );
         }
-        else if (emptyTitle != LocalizeValue.empty()) {
+        else if (emptyTitle.isNotEmpty()) {
             showErrorHint(emptyTitle, new RelativePoint(event));
         }
     }
