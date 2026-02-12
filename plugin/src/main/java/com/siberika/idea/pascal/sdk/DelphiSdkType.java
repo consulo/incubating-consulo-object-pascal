@@ -2,7 +2,6 @@ package com.siberika.idea.pascal.sdk;
 
 import com.google.common.collect.ImmutableMap;
 import com.siberika.idea.pascal.PascalException;
-import com.siberika.idea.pascal.PascalIcons;
 import com.siberika.idea.pascal.jps.compiler.DelphiBackendCompiler;
 import com.siberika.idea.pascal.jps.sdk.PascalCompilerFamily;
 import com.siberika.idea.pascal.jps.sdk.PascalSdkData;
@@ -14,12 +13,12 @@ import consulo.content.OrderRootType;
 import consulo.content.base.BinariesOrderRootType;
 import consulo.content.base.SourcesOrderRootType;
 import consulo.content.bundle.*;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
-import consulo.ui.image.Image;
+import consulo.object.pascal.icon.ObjectPascalIconGroup;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -57,7 +56,7 @@ public class DelphiSdkType extends BasePascalSdkType {
     }
 
     public DelphiSdkType() {
-        super("DelphiSdkType", PascalCompilerFamily.DELPHI);
+        super("DelphiSdkType", LocalizeValue.localizeTODO("Delphi SDK"), ObjectPascalIconGroup.pascal_16x16(), PascalCompilerFamily.DELPHI);
         loadResources("delphi");
     }
 
@@ -88,12 +87,6 @@ public class DelphiSdkType extends BasePascalSdkType {
             }
         }
         return null;
-    }
-
-    @NotNull
-    @Override
-    public Image getIcon() {
-        return PascalIcons.GENERAL;
     }
 
     @Override
@@ -180,13 +173,6 @@ public class DelphiSdkType extends BasePascalSdkType {
     private static String getTargetString(String sdkHome) {
         LOG.info("Getting target for SDK path: " + sdkHome);
         return "Win32";
-    }
-
-    @NotNull
-    @NonNls
-    @Override
-    public String getPresentableName() {
-        return "Delphi SDK";
     }
 
     @Override

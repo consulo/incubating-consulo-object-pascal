@@ -7,8 +7,11 @@ import com.siberika.idea.pascal.jps.sdk.PascalSdkData;
 import com.siberika.idea.pascal.jps.util.SysUtils;
 import com.siberika.idea.pascal.util.StrUtil;
 import consulo.content.bundle.*;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
+import jakarta.annotation.Nonnull;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -41,8 +44,11 @@ public abstract class BasePascalSdkType extends SdkType {
     private Map<String, Map<String, Directive>> directives;
     private Map<String, Map<String, Define>> defines;
 
-    protected BasePascalSdkType(@NonNls String name, @NonNls PascalCompilerFamily compilerFamily) {
-        super(name);
+    protected BasePascalSdkType(@NonNls String id,
+                                @Nonnull LocalizeValue displayName,
+                                @Nonnull Image icon,
+                                @NonNls PascalCompilerFamily compilerFamily) {
+        super(id, displayName, icon);
         this.compilerFamily = compilerFamily.name();
     }
 

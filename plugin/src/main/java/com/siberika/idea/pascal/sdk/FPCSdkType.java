@@ -13,7 +13,9 @@ import consulo.content.OrderRootType;
 import consulo.content.base.BinariesOrderRootType;
 import consulo.content.base.SourcesOrderRootType;
 import consulo.content.bundle.*;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.object.pascal.icon.ObjectPascalIconGroup;
 import consulo.platform.Platform;
 import consulo.platform.PlatformOperatingSystem;
 import consulo.ui.image.Image;
@@ -39,7 +41,7 @@ import java.util.*;
 @ExtensionImpl
 public class FPCSdkType extends BasePascalSdkType {
 
-    private static final Logger LOG = Logger.getInstance(FPCSdkType.class.getName());
+    private static final Logger LOG = Logger.getInstance(FPCSdkType.class);
     private static final String[] LIBRARY_DIRS = {"rtl", "rtl-objpas", "rtl-console", "pthreads", "regexpr", "x11", "windows"};
 
     @NotNull
@@ -48,7 +50,7 @@ public class FPCSdkType extends BasePascalSdkType {
     }
 
     public FPCSdkType() {
-        super("FPCSdkType", PascalCompilerFamily.FPC);
+        super("FPCSdkType", LocalizeValue.localizeTODO("Free Pascal SDK"), ObjectPascalIconGroup.pascal_16x16(), PascalCompilerFamily.FPC);
         loadResources("fpc");
     }
 
@@ -69,12 +71,6 @@ public class FPCSdkType extends BasePascalSdkType {
         }
 
         return result;
-    }
-
-    @NotNull
-    @Override
-    public Image getIcon() {
-        return PascalIcons.GENERAL;
     }
 
     @Override
@@ -113,13 +109,6 @@ public class FPCSdkType extends BasePascalSdkType {
             LOG.info("Error: " + e.getMessage(), e);
         }
         return null;
-    }
-
-    @NotNull
-    @NonNls
-    @Override
-    public String getPresentableName() {
-        return "Free Pascal SDK";
     }
 
     @Override
