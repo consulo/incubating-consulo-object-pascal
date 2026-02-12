@@ -1,7 +1,6 @@
 package com.siberika.idea.pascal.sdk;
 
 import com.siberika.idea.pascal.PascalException;
-import com.siberika.idea.pascal.PascalIcons;
 import com.siberika.idea.pascal.jps.sdk.PascalCompilerFamily;
 import com.siberika.idea.pascal.jps.sdk.PascalSdkData;
 import com.siberika.idea.pascal.jps.sdk.PascalSdkUtil;
@@ -18,7 +17,6 @@ import consulo.logging.Logger;
 import consulo.object.pascal.icon.ObjectPascalIconGroup;
 import consulo.platform.Platform;
 import consulo.platform.PlatformOperatingSystem;
-import consulo.ui.image.Image;
 import consulo.util.collection.SmartHashSet;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
@@ -26,7 +24,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
