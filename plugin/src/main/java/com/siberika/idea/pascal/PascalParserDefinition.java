@@ -5,6 +5,7 @@ import com.siberika.idea.pascal.lang.parser.PascalFileElementType;
 import com.siberika.idea.pascal.lang.parser.PascalParser;
 import com.siberika.idea.pascal.lang.parser.impl.PascalFileImpl;
 import com.siberika.idea.pascal.lang.psi.PasTypes;
+import com.siberika.idea.pascal.lang.psi.impl.PasTypesFactory;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.Language;
 import consulo.language.ast.ASTNode;
@@ -82,7 +83,7 @@ public class PascalParserDefinition implements ParserDefinition {
     @NotNull
     @Override
     public PsiElement createElement(ASTNode astNode) {
-        return PasTypes.Factory.createElement(astNode);
+        return PasTypesFactory.createElement(astNode);
     }
 
     @Override

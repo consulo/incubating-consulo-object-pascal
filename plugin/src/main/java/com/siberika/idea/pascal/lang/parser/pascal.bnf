@@ -8,7 +8,6 @@
   implements="com.siberika.idea.pascal.lang.psi.PascalPsiElement"
   extends="com.siberika.idea.pascal.lang.psi.impl.PascalPsiElementImpl"
 
-  version = "3"
   psiClassPrefix="Pas"
   psiImplClassSuffix="Impl"
   psiPackage="com.siberika.idea.pascal.lang.psi"
