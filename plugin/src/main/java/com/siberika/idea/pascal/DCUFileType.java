@@ -19,7 +19,7 @@ public class DCUFileType implements FileType {
 
     @NotNull
     @Override
-    public String getName() {
+    public String getId() {
         return "DELPHI_DCU";
     }
 
