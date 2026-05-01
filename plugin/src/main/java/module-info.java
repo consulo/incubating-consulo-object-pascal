@@ -57,6 +57,7 @@ module com.siberika.idea.pascal {
 
     // TODO remove in future
     requires java.desktop;
+    requires forms.rt;
 
     opens com.siberika.idea.pascal.lang.folding to consulo.util.xml.serializer;
     opens com.siberika.idea.pascal.ide.actions to consulo.component.impl;
