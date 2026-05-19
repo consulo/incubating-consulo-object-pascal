@@ -201,7 +201,7 @@ public class DelphiSdkType extends BasePascalSdkType {
         for (String dir : LIBRARY_DIRS_SOURCE) {
             VirtualFile vdir = getSource(sdk, dir);
             if (vdir != null) {
-                sdkModificator.addRoot(vdir, BinariesOrderRootType.getInstance());
+                sdkModificator.addRoot(vdir, BinariesOrderRootType.ID);
             }
         }
         sdkModificatorHolder[0] = sdkModificator;
@@ -223,8 +223,8 @@ public class DelphiSdkType extends BasePascalSdkType {
     }
 
     @Override
-    public boolean isRootTypeApplicable(@NotNull OrderRootType type) {
-        return type.equals(SourcesOrderRootType.getInstance()) || type.equals(BinariesOrderRootType.getInstance());
+    public boolean isRootTypeApplicable(String type) {
+        return BinariesOrderRootType.ID.equals(type) || SourcesOrderRootType.ID.equals(type);
     }
 
     @Nullable

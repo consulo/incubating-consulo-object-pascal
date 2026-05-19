@@ -69,8 +69,8 @@ public class PascalTranslatingCompiler implements TranslatingCompiler {
             List<File> inputFilesAsList = VirtualFileUtil.virtualToIoFiles(List.of(inputFiles));
 
             Set<File> sdkFiles = new LinkedHashSet<>();
-            sdkFiles.addAll(VirtualFileUtil.virtualToIoFiles(List.of(sdk.getRootProvider().getFiles(BinariesOrderRootType.getInstance()))));
-            sdkFiles.addAll(VirtualFileUtil.virtualToIoFiles(List.of(sdk.getRootProvider().getFiles(SourcesOrderRootType.getInstance()))));
+            sdkFiles.addAll(VirtualFileUtil.virtualToIoFiles(List.of(sdk.getRootProvider().getFiles(BinariesOrderRootType.ID))));
+            sdkFiles.addAll(VirtualFileUtil.virtualToIoFiles(List.of(sdk.getRootProvider().getFiles(SourcesOrderRootType.ID))));
 
             String[] command = compiler.createStartupCommand(sdk.getHomePath(), module.getName(), outputPath, new ArrayList<>(sdkFiles), List.of(), inputFilesAsList, null, true, true, null);
 

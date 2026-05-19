@@ -97,8 +97,8 @@ public class PascalExternalAnnotator extends ExternalAnnotator<PascalAnnotatorIn
 
     private VirtualFile[] collectSourcePaths(Sdk sdk, Module module) {
         List<VirtualFile[]> urlLists = new ArrayList<>();
-        urlLists.add(sdk.getRootProvider().getFiles(BinariesOrderRootType.getInstance()));
-        urlLists.add(sdk.getRootProvider().getFiles(SourcesOrderRootType.getInstance()));
+        urlLists.add(sdk.getRootProvider().getFiles(BinariesOrderRootType.ID));
+        urlLists.add(sdk.getRootProvider().getFiles(SourcesOrderRootType.ID));
         urlLists.add(ModuleRootManager.getInstance(module).getSourceRoots());
         for (Module dependency : ModuleRootManager.getInstance(module).getDependencies()) {
             urlLists.add(ModuleRootManager.getInstance(dependency).getSourceRoots());

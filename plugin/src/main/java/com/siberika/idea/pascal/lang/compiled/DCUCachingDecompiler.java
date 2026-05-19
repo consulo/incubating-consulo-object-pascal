@@ -116,7 +116,7 @@ public class DCUCachingDecompiler implements PascalCachingUnitDecompiler {
     }
 
     private static List<String> collectUnitPaths(Sdk sdk) {
-        VirtualFile[] sdkFiles = sdk.getRootProvider().getFiles(BinariesOrderRootType.getInstance());
+        VirtualFile[] sdkFiles = sdk.getRootProvider().getFiles(BinariesOrderRootType.ID);
         Set<File> paths = com.siberika.idea.pascal.jps.util.FileUtil.retrievePaths(sdkFiles);
         List<String> result = new ArrayList<>(paths.size());
         for (File path : paths) {

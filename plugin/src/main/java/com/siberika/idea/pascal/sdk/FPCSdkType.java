@@ -153,8 +153,8 @@ public class FPCSdkType extends BasePascalSdkType {
             
             VirtualFile builtinFile = VirtualFileManager.getInstance().findFileByUrl(url);
             if(builtinFile != null) {
-                sdkModificator.addRoot(builtinFile, BinariesOrderRootType.getInstance());
-                sdkModificator.addRoot(builtinFile, SourcesOrderRootType.getInstance());
+                sdkModificator.addRoot(builtinFile, BinariesOrderRootType.ID);
+                sdkModificator.addRoot(builtinFile, SourcesOrderRootType.ID);
             }
         }
 
@@ -163,7 +163,7 @@ public class FPCSdkType extends BasePascalSdkType {
             for (String dir : LIBRARY_DIRS) {
                 VirtualFile vdir = getLibrary(sdk, target, dir);
                 if (vdir != null) {
-                    sdkModificator.addRoot(vdir, BinariesOrderRootType.getInstance());
+                    sdkModificator.addRoot(vdir, BinariesOrderRootType.ID);
                 }
             }
         }
@@ -179,8 +179,8 @@ public class FPCSdkType extends BasePascalSdkType {
     }
 
     @Override
-    public boolean isRootTypeApplicable(@NotNull OrderRootType type) {
-        return type.equals(SourcesOrderRootType.getInstance()) || type.equals(BinariesOrderRootType.getInstance());
+    public boolean isRootTypeApplicable(String type) {
+        return BinariesOrderRootType.ID.equals(type) || SourcesOrderRootType.ID.equals(type);
     }
 
     @Nullable
