@@ -21,6 +21,7 @@ import com.siberika.idea.pascal.lang.psi.PascalStructType;
 import com.siberika.idea.pascal.lang.psi.impl.PasField;
 import com.siberika.idea.pascal.lang.references.ResolveContext;
 import com.siberika.idea.pascal.lang.references.resolve.Types;
+import consulo.language.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -79,7 +80,7 @@ public class TestUtil {
         for (VirtualFile virtualFile : virtualFiles) {
             PascalFile pascalFile = (PascalFile) PsiManager.getInstance(project).findFile(virtualFile);
             if (pascalFile != null) {
-                for (T element : PsiUtil.findChildrenOfAnyType(pascalFile, clazz)) {
+                for (T element : PsiTreeUtil.findChildrenOfAnyType(pascalFile, clazz)) {
                     processor.execute(element);
                 }
             }

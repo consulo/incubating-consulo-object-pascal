@@ -6,6 +6,7 @@ import com.siberika.idea.pascal.lang.references.resolve.Types;
 import com.siberika.idea.pascal.util.ModuleUtil;
 import com.siberika.idea.pascal.util.PsiUtil;
 import consulo.language.psi.PsiElement;
+import consulo.language.psi.util.PsiTreeUtil;
 import consulo.logging.Logger;
 import org.jetbrains.annotations.NotNull;
 
@@ -66,7 +67,7 @@ class PascalHelperScope extends PascalHelperNamed {
         if (null == section) {
             return;
         }
-        for (PascalNamedElement namedElement : PsiUtil.findChildrenOfAnyType(section, PasNamedIdent.class, PasNamedIdentDeclImpl.class, PasGenericTypeIdent.class, PasNamespaceIdent.class, PasClassQualifiedIdent.class)) {
+        for (PascalNamedElement namedElement : PsiTreeUtil.findChildrenOfAnyType(section, PasNamedIdent.class, PasNamedIdentDeclImpl.class, PasGenericTypeIdent.class, PasNamespaceIdent.class, PasClassQualifiedIdent.class)) {
             if (PsiUtil.isSameAffectingScope(PsiUtil.getNearestAffectingDeclarationsRoot(namedElement), section)) {
                 if (!PsiUtil.isFormalParameterName(namedElement) && !PsiUtil.isUsedUnitName(namedElement) && !PsiUtil.isTypeParameter(namedElement)) {
                     if (PsiUtil.isRoutineName(namedElement)) {

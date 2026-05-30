@@ -58,45 +58,6 @@ public class PsiUtil {
         return processor.getFoundElement();
     }
 
-    @NotNull
-    public static <T extends PsiElement> Collection<T> findChildrenOfAnyType(@Nullable final PsiElement element,
-                                                                             @NotNull final Class<? extends T>... classes) {
-        if (element == null) {
-            return List.of();
-        }
-
-        PsiElementProcessor.CollectElements<T> processor = new PsiElementProcessor.CollectElements<T>() {
-            @Override
-            public boolean execute(@NotNull T each) {
-                if (each == element) return true;
-                if (PsiTreeUtil.instanceOf(each, classes)) {
-                    return super.execute(each);
-                }
-                return true;
-            }
-        };
-        PsiTreeUtil.processElements(element, processor);
-        return processor.getCollection();
-    }
-
-    @NotNull
-    @SuppressWarnings("unchecked")
-    public static <T extends PsiElement> Collection<T> findImmChildrenOfAnyType(@Nullable final PsiElement element,
-                                                                                @NotNull final Class<? extends T>... classes) {
-        if (element == null) {
-            return List.of();
-        }
-
-        Collection<T> result = new SmartList<T>();
-        for (PsiElement each : element.getChildren()) {
-            if (PsiTreeUtil.instanceOf(each, classes)) {
-                result.add((T) each);
-            }
-        }
-
-        return result;
-    }
-
     @Nullable
     @SuppressWarnings("unchecked")
     public static <T extends PsiElement> T findImmChildOfAnyType(@Nullable final PsiElement element, @NotNull final Class<? extends T>... classes) {

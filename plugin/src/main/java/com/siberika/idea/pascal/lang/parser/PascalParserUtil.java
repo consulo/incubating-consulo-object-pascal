@@ -168,7 +168,7 @@ public class PascalParserUtil extends GeneratedParserUtilBase {
     private static <T extends PascalNamedElement> Collection<PascalNamedElement> retrieveEntitiesFromSection(PsiElement section, String key, int maxOffset, Class<? extends T>...classes) {
         final Set<PascalNamedElement> result = new LinkedHashSet<PascalNamedElement>();
         if (section != null) {
-            for (PascalNamedElement namedElement : PsiUtil.findChildrenOfAnyType(section, classes)) {
+            for (PascalNamedElement namedElement : PsiTreeUtil.findChildrenOfAnyType(section, classes)) {
                 if (((null == key) || key.equalsIgnoreCase(namedElement.getName()))) {
                     if ((namedElement.getTextRange().getStartOffset() < maxOffset) && isSameAffectingScope(PsiUtil.getNearestAffectingDeclarationsRoot(namedElement), section)) {
                         result.remove(namedElement);

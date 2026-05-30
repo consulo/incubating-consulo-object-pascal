@@ -397,7 +397,7 @@ public abstract class PascalModuleImpl extends PasStubScopeImpl<PasModuleStub> i
 
     private void collectIdents(final PsiElement section, final Map<PascalNamedElement, PasField> identsMap) {
         //noinspection unchecked
-        for (PascalNamedElement namedElement : PsiUtil.findChildrenOfAnyType(section, PasSubIdentImpl.class, PasRefNamedIdentImpl.class)) {
+        for (PascalNamedElement namedElement : PsiTreeUtil.findChildrenOfAnyType(section, PasSubIdentImpl.class, PasRefNamedIdentImpl.class)) {
             if (!PsiUtil.isLastPartOfMethodImplName(namedElement)) {
                 Resolve.resolveExpr(NamespaceRec.fromElement(namedElement), new ResolveContext(PasField.TYPES_ALL, true),
                         new ResolveProcessor() {

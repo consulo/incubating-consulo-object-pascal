@@ -99,7 +99,7 @@ public class PascalImportOptimizer implements ImportOptimizer {
 
         Module module = file.getModule();
         //noinspection unchecked
-        for (PascalQualifiedIdent usedUnitName : PsiUtil.findChildrenOfAnyType(
+        for (PascalQualifiedIdent usedUnitName : PsiTreeUtil.findChildrenOfAnyType(
             PsiUtil.getElementPasModule(file),
             PascalQualifiedIdent.class
         )) {
