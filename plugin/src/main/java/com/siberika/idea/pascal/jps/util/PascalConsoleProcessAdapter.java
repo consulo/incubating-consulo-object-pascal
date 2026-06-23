@@ -12,7 +12,7 @@ public abstract class PascalConsoleProcessAdapter extends ProcessAdapter {
 
     @Override
     public void onTextAvailable(@NotNull ProcessEvent event, @NotNull Key outputType) {
-        String str = event.getText();
+        String str = event.getText().get();
         sb.append(str);
         if (str.endsWith("\r\n") || str.endsWith("\n")) {
             doProcessLine();
@@ -31,5 +31,4 @@ public abstract class PascalConsoleProcessAdapter extends ProcessAdapter {
         onLine(sb.toString());
         sb = new StringBuffer();
     }
-
 }
