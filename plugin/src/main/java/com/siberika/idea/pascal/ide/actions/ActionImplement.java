@@ -23,6 +23,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.object.pascal.localize.ObjectPascalLocalize;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
 import consulo.undoRedo.CommandProcessor;
 
 import java.util.*;
@@ -32,7 +33,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author George Bakhtadze
  * @since 2015-11-26
  */
-public class ActionImplement extends PascalAction {
+public class ActionImplement extends PascalAction implements AnActionWithSyncUpdate {
     @Override
     public void doActionPerformed(AnActionEvent e) {
         PsiElement el = getElement(e);
@@ -149,5 +150,4 @@ public class ActionImplement extends PascalAction {
     public void update(AnActionEvent e) {
         e.getPresentation().setEnabledAndVisible(PascalLanguage.INSTANCE.equals(e.getData(LangDataKeys.LANGUAGE)));
     }
-
 }
