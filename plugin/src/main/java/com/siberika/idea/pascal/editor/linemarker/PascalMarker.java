@@ -45,6 +45,7 @@ public class PascalMarker {
                     e,
                     ObjectPascalLocalize.navigateTitleToggleSection(),
                     LocalizeValue.empty(),
+                    elt.getProject(),
                     Collections.singletonList(target)
                 );
             }
@@ -55,10 +56,10 @@ public class PascalMarker {
     public static PascalMarker GOTO_SUPER = new PascalMarker(
         new CollectionNavigationHandler<PasEntityScope>(
             true,
-            ObjectPascalLocalize.navigateTitleGotoSuper().get(),
-            ObjectPascalLocalize.navigateTitleGotoSuperSearch().get(),
-            ObjectPascalLocalize.navigateInfoGotoSuperNoitems().get(),
-            ObjectPascalLocalize.navigateGotoSuperImpossibleReindex().get()
+            ObjectPascalLocalize.navigateTitleGotoSuper(),
+            ObjectPascalLocalize.navigateTitleGotoSuperSearch(),
+            ObjectPascalLocalize.navigateInfoGotoSuperNoitems(),
+            ObjectPascalLocalize.navigateGotoSuperImpossibleReindex()
         ) {
 
             @Override
@@ -72,10 +73,10 @@ public class PascalMarker {
     public static PascalMarker DESCENDING_ENTITIES = new PascalMarker(
         new CollectionNavigationHandler<PsiElement>(
             true,
-            ObjectPascalLocalize.navigateTitleGotoSubclassed().get(),
-            ObjectPascalLocalize.navigateTitleGotoSubclassedSearch().get(),
-            ObjectPascalLocalize.navigateInfoSubclassedNoitems().get(),
-            ObjectPascalLocalize.navigateSubclassedImpossibleReindex().get()
+            ObjectPascalLocalize.navigateTitleGotoSubclassed(),
+            ObjectPascalLocalize.navigateTitleGotoSubclassedSearch(),
+            ObjectPascalLocalize.navigateInfoSubclassedNoitems(),
+            ObjectPascalLocalize.navigateSubclassedImpossibleReindex()
         ) {
 
             @Override
@@ -91,10 +92,10 @@ public class PascalMarker {
     public static PascalMarker USED_BY_UNIT = new PascalMarker(
         new CollectionNavigationHandler<PascalModule>(
             false,
-            ObjectPascalLocalize.navigateTitleUsedBy().get(),
-            ObjectPascalLocalize.navigateTitleUsedBySearch().get(),
-            ObjectPascalLocalize.navigateInfoUsedByNoitems().get(),
-            ObjectPascalLocalize.navigateUsedByImpossibleReindex().get()
+            ObjectPascalLocalize.navigateTitleUsedBy(),
+            ObjectPascalLocalize.navigateTitleUsedBySearch(),
+            ObjectPascalLocalize.navigateInfoUsedByNoitems(),
+            ObjectPascalLocalize.navigateUsedByImpossibleReindex()
         ) {
 
             @Override
@@ -111,10 +112,10 @@ public class PascalMarker {
     public static PascalMarker HELPERS = new PascalMarker(
         new CollectionNavigationHandler<PascalStructType>(
             false,
-            ObjectPascalLocalize.navigateTitleGotoHelper().get(),
-            ObjectPascalLocalize.navigateTitleGotoHelperSearch().get(),
-            ObjectPascalLocalize.navigateInfoHelperNoitems().get(),
-            ObjectPascalLocalize.navigateHelperImpossibleReindex().get()
+            ObjectPascalLocalize.navigateTitleGotoHelper(),
+            ObjectPascalLocalize.navigateTitleGotoHelperSearch(),
+            ObjectPascalLocalize.navigateInfoHelperNoitems(),
+            ObjectPascalLocalize.navigateHelperImpossibleReindex()
         ) {
 
             @Override

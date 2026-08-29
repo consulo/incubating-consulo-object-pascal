@@ -3,6 +3,8 @@ package com.siberika.idea.pascal.util;
 import com.siberika.idea.pascal.lang.psi.PasEntityScope;
 import com.siberika.idea.pascal.lang.psi.PascalNamedElement;
 import com.siberika.idea.pascal.lang.references.ResolveUtil;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorActionHandler;
@@ -12,25 +14,23 @@ import consulo.dataContext.DataManager;
 import consulo.document.Document;
 import consulo.fileEditor.FileEditorManager;
 import consulo.language.editor.hint.HintManager;
-import consulo.language.editor.ui.DefaultPsiElementCellRenderer;
-import consulo.language.editor.ui.PsiElementListNavigator;
-import consulo.language.editor.ui.PsiElementModuleRenderer;
 import consulo.language.editor.ui.awt.HintUtil;
-import consulo.language.psi.NavigatablePsiElement;
+import consulo.language.editor.ui.navigation.PsiTargetNavigationService;
+import consulo.language.editor.ui.navigation.PsiTargetPresentationFactory;
+import consulo.language.editor.ui.navigation.TargetPresentationProvider;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.event.ComponentEvent;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseEvent;
 import java.util.Collection;
 
 /**
@@ -41,33 +41,26 @@ public class EditorUtil {
     public static final int NO_ITEMS_HINT_TIMEOUT_MS = 2000;
 
     public static <T extends PsiElement> void navigateTo(Editor editor, @Nonnull LocalizeValue title, Collection<T> targets) {
-        PsiElementListNavigator.openTargets(
-            editor,
-            targets.toArray(new NavigatablePsiElement[targets.size()]),
-            title.get(),
-            null,
-            new MyPsiElementCellRenderer()
-        );
+        Application.get().getInstance(PsiTargetNavigationService.class)
+            .newNavigator(() -> targets)
+            .presentationProvider(PASCAL_PRESENTATION)
+            .title(title)
+            .navigate(editor, editor.getProject());
     }
 
     public static <T extends PsiElement> void navigateTo(
-        MouseEvent event,
+        ComponentEvent<?> event,
         @Nonnull LocalizeValue title,
         @Nonnull LocalizeValue emptyTitle,
+        Project project,
         Collection<T> targets
     ) {
-        if (!targets.isEmpty()) {
-            PsiElementListNavigator.openTargets(
-                event,
-                targets.toArray(new NavigatablePsiElement[targets.size()]),
-                title.get(),
-                null,
-                new MyPsiElementCellRenderer()
-            );
-        }
-        else if (emptyTitle.isNotEmpty()) {
-            showErrorHint(emptyTitle, new RelativePoint(event));
-        }
+        Application.get().getInstance(PsiTargetNavigationService.class)
+            .newNavigator(() -> targets)
+            .presentationProvider(PASCAL_PRESENTATION)
+            .title(title)
+            .emptyText(emptyTitle)
+            .navigate(event, project);
     }
 
     public static void showErrorHint(@Nonnull LocalizeValue title, RelativePoint relativePoint) {
@@ -99,50 +92,34 @@ public class EditorUtil {
         }
     }
 
-    public static class MyPsiElementCellRenderer extends DefaultPsiElementCellRenderer {
-        @Nullable
-        @Override
-        protected DefaultListCellRenderer getRightCellRenderer(final Object value) {
-            return new PsiElementModuleRenderer() {
-                @Override
-                public String getText() {
-                    if (value instanceof PsiElement) {
-                        return getRightText((PsiElement) value);
-                    }
-                    else {
-                        return super.getText();
-                    }
-                }
-            };
-        }
+    public static final TargetPresentationProvider<PsiElement> PASCAL_PRESENTATION = element ->
+        Application.get().getInstance(PsiTargetPresentationFactory.class)
+            .presentationBuilder(element)
+            .withPresentableText(LocalizeValue.of(getElementText(element)))
+            .withContainerText(LocalizeValue.empty())
+            .withLocationText(LocalizeValue.of(getRightText(element)))
+            .build();
 
-        @Override
-        public String getElementText(PsiElement element) {
-            if (!element.isValid()) {
-                return "<invalid>";
-            }
-            if (element instanceof PascalNamedElement) {
-                StringBuilder sb = new StringBuilder();
-                if (element instanceof PasEntityScope) {
-                    PasEntityScope owner = ((PasEntityScope) element).getContainingScope();
-                    if (owner != null) {
-                        sb.append(owner.getName()).append(".");
-                    }
+    @RequiredReadAction
+    private static String getElementText(PsiElement element) {
+        if (!element.isValid()) {
+            return "<invalid>";
+        }
+        if (element instanceof PascalNamedElement namedElement) {
+            StringBuilder sb = new StringBuilder();
+            if (element instanceof PasEntityScope scope) {
+                PasEntityScope owner = scope.getContainingScope();
+                if (owner != null) {
+                    sb.append(owner.getName()).append(".");
                 }
-                sb.append(ResolveUtil.cleanupName(PsiUtil.getFieldName((PascalNamedElement) element)));
-                return sb.toString();
             }
-            else {
-                return element.getText();
-            }
+            sb.append(ResolveUtil.cleanupName(PsiUtil.getFieldName(namedElement)));
+            return sb.toString();
         }
-
-        @Override
-        public String getContainerText(PsiElement element, String name) {
-            return "-";
-        }
+        return element.getText();
     }
 
+    @RequiredReadAction
     private static String getRightText(PsiElement element) {
         if (!element.isValid()) {
             return "<invalid>";

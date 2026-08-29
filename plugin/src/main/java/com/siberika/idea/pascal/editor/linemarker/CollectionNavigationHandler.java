@@ -2,32 +2,46 @@ package com.siberika.idea.pascal.editor.linemarker;
 
 import com.siberika.idea.pascal.PascalBundle;
 import com.siberika.idea.pascal.util.EditorUtil;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.application.Application;
+import consulo.application.ReadAction;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
-import consulo.application.util.function.Processor;
 import consulo.application.util.query.Query;
 import consulo.language.editor.gutter.GutterIconNavigationHandler;
-import consulo.language.editor.ui.PsiElementListNavigator;
-import consulo.language.editor.ui.navigation.BackgroundUpdaterTask;
+import consulo.language.editor.ui.navigation.ItemWithPresentation;
+import consulo.language.editor.ui.navigation.PsiTargetNavigationService;
+import consulo.language.editor.ui.navigation.TargetUpdaterTask;
 import consulo.language.psi.NavigatablePsiElement;
 import consulo.language.psi.PsiElement;
+import consulo.localize.LocalizeValue;
+import consulo.object.pascal.localize.ObjectPascalLocalize;
 import consulo.project.DumbService;
+import consulo.ui.event.ComponentEvent;
 import consulo.util.collection.SmartHashSet;
-import org.jetbrains.annotations.NotNull;
+import consulo.util.concurrent.coroutine.CoroutineStep;
+import consulo.util.concurrent.coroutine.step.CodeExecution;
+import jakarta.annotation.Nonnull;
 
-import javax.swing.*;
-import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 public abstract class CollectionNavigationHandler<T extends PsiElement> implements GutterIconNavigationHandler<PsiElement> {
-
-    private final String titleMsg;
-    private final String searchTitleMsg;
-    private final String noItemsMsg;
-    private final String impossibleReindexMsg;
+    private final LocalizeValue titleMsg;
+    private final LocalizeValue searchTitleMsg;
+    private final LocalizeValue noItemsMsg;
+    private final LocalizeValue impossibleReindexMsg;
     private final boolean navigateIfSingleResult;
 
-    CollectionNavigationHandler(boolean navigateIfSingleResult, String titleMsg, String searchTitleMsg, String noItemsMsg, String impossibleReindexMsg) {
+    CollectionNavigationHandler(
+        boolean navigateIfSingleResult,
+        LocalizeValue titleMsg,
+        LocalizeValue searchTitleMsg,
+        LocalizeValue noItemsMsg,
+        LocalizeValue impossibleReindexMsg
+    ) {
         this.titleMsg = titleMsg;
         this.searchTitleMsg = searchTitleMsg;
         this.noItemsMsg = noItemsMsg;
@@ -35,52 +49,58 @@ public abstract class CollectionNavigationHandler<T extends PsiElement> implemen
         this.navigateIfSingleResult = navigateIfSingleResult;
     }
 
+    @RequiredReadAction
     abstract Query<T> createQuery(PsiElement element);
 
     @Override
-    public void navigate(MouseEvent e, PsiElement elt) {
+    public void navigate(ComponentEvent<?> e, PsiElement elt) {
         if (DumbService.isDumb(elt.getProject())) {
             DumbService.getInstance(elt.getProject()).showDumbModeNotification(impossibleReindexMsg);
             return;
         }
-        NavigatablePsiElement[] targetsNav = new NavigatablePsiElement[1];
-        if (!ProgressManager.getInstance().runProcessWithProgressSynchronously(() -> {
-            createQuery(elt).forEach(new Processor<T>() {
-                        @Override
-                        public boolean process(T element) {
-                            targetsNav[0] = (NavigatablePsiElement) element;
-                            return false;
-                        }
-                    });
-        }, searchTitleMsg, true, elt.getProject(), (JComponent) e.getComponent())) {
-            return;
-        }
-        if (targetsNav[0] == null) {
-            return;
-        }
 
-        BackgroundUpdaterTask updater = new TargetsUpdater(elt, navigateIfSingleResult);
+        CoroutineStep<Void, Collection<PsiElement>> prefetch = CodeExecution.supply(() -> {
+            List<PsiElement> first = new ArrayList<>(1);
+            ReadAction.compute(() -> createQuery(elt)).forEach(element -> {
+                if (element instanceof NavigatablePsiElement navigatable) {
+                    first.add(navigatable);
+                }
+                return false;
+            });
+            return first;
+        });
 
-        PsiElementListNavigator.openTargets(e, targetsNav, searchTitleMsg,searchTitleMsg, new EditorUtil.MyPsiElementCellRenderer(), updater);
+        Application.get().getInstance(PsiTargetNavigationService.class)
+            .newNavigator(prefetch)
+            .presentationProvider(EditorUtil.PASCAL_PRESENTATION)
+            .title(titleMsg)
+            .findUsagesTitle(searchTitleMsg)
+            .emptyText(noItemsMsg)
+            .updater(new TargetsUpdater(elt, navigateIfSingleResult))
+            .navigate(e, elt.getProject());
     }
 
-    private class TargetsUpdater extends BackgroundUpdaterTask {
-        @NotNull
+    private class TargetsUpdater extends TargetUpdaterTask<PsiElement> {
         private final PsiElement element;
         private final boolean navigateIfSingleResult;
-
         private final Set<PsiElement> processed;
 
-        public TargetsUpdater(@NotNull PsiElement element, boolean navigateIfSingleResult) {
-            super(element.getProject(), searchTitleMsg, null);
+        public TargetsUpdater(@Nonnull PsiElement element, boolean navigateIfSingleResult) {
+            super(element.getProject(), searchTitleMsg, EditorUtil.PASCAL_PRESENTATION);
             this.element = element;
             this.navigateIfSingleResult = navigateIfSingleResult;
             this.processed = new SmartHashSet<>();
         }
 
+        @Nonnull
         @Override
-        public String getCaption(int size) {
-            return String.format("%s (%d %s)", titleMsg, size, PascalBundle.message("navigate.status.found"));
+        public LocalizeValue getCaption(int size) {
+            return LocalizeValue.of(String.format(
+                "%s (%d %s)",
+                titleMsg.get(),
+                size,
+                ObjectPascalLocalize.navigateStatusFound().get()
+            ));
         }
 
         @Override
@@ -89,28 +109,23 @@ public abstract class CollectionNavigationHandler<T extends PsiElement> implemen
             if (!navigateIfSingleResult) {
                 return;
             }
-            PsiElement oneElement = getTheOnlyOneElement();
-            if (oneElement instanceof NavigatablePsiElement) {
-                ((NavigatablePsiElement)oneElement).navigate(true);
+            ItemWithPresentation<PsiElement> only = getTheOnlyOneElement();
+            PsiElement oneElement = only == null ? null : only.dereference();
+            if (oneElement instanceof NavigatablePsiElement navigatable) {
+                navigatable.navigate(true);
                 myPopup.cancel();
             }
         }
 
         @Override
-        public void run(@NotNull ProgressIndicator indicator) {
+        public void run(@Nonnull ProgressIndicator indicator) {
             super.run(indicator);
-            createQuery(element).forEach(new Processor<PsiElement>() {
-                @Override
-                public boolean process(PsiElement element) {
-                    if (!processed.contains(element)) {
-                        processed.add(element);
-                        if (!updateComponent(element)) {
-                            indicator.cancel();
-                        }
-                    }
-                    ProgressManager.checkCanceled();
-                    return true;
+            ReadAction.compute(() -> createQuery(element)).forEach(found -> {
+                if (processed.add(found) && !updateElement(found)) {
+                    indicator.cancel();
                 }
+                ProgressManager.checkCanceled();
+                return true;
             });
         }
     }
