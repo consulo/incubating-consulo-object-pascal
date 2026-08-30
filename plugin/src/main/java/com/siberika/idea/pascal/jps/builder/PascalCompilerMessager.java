@@ -2,7 +2,10 @@ package com.siberika.idea.pascal.jps.builder;
 
 import com.siberika.idea.pascal.jps.compiler.CompilerMessager;
 import consulo.compiler.CompileContext;
-import consulo.logging.Logger;
+import consulo.localize.LocalizeValue;
+import consulo.util.io.FileUtil;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 
 import java.util.Arrays;
 import java.util.List;
@@ -13,14 +16,12 @@ import java.util.regex.Matcher;
  * Date: 20/05/2015
  */
 public class PascalCompilerMessager implements CompilerMessager {
-    private static final Logger LOG = Logger.getInstance(PascalCompilerMessager.class);
-
     private static final List<String> SUPPRESSED_MSG_ID = Arrays.asList("1018", "10026", "F2063");
 
-    private final CompileContext context;
+    private final CompileContext myContext;
 
     public PascalCompilerMessager(CompileContext context) {
-        this.context = context;
+        myContext = context;
     }
 
     static void createMessage(CompilerMessageCategory category, String line, Matcher matcher, CompilerMessager messager) {
@@ -63,21 +64,29 @@ public class PascalCompilerMessager implements CompilerMessager {
 
     @Override
     public void hint(String msgId, String msg, String path, long line, long column) {
-        context.addMessage(consulo.compiler.CompilerMessageCategory.INFORMATION, msg, path, (int)line, (int)column);
+        postMessage(consulo.compiler.CompilerMessageCategory.INFORMATION, msg, path, line, column);
     }
 
     @Override
     public void info(String msgId, String msg, String path, long line, long column) {
-        context.addMessage(consulo.compiler.CompilerMessageCategory.INFORMATION, msg, path, (int) line, (int) column);
+        postMessage(consulo.compiler.CompilerMessageCategory.INFORMATION, msg, path, line, column);
     }
 
     @Override
     public void warning(String msgId, String msg, String path, long line, long column) {
-        context.addMessage(consulo.compiler.CompilerMessageCategory.WARNING, msg, path, (int) line, (int) column);
+        postMessage(consulo.compiler.CompilerMessageCategory.WARNING, msg, path, line, column);
     }
 
     @Override
     public void error(String msgId, String msg, String path, long line, long column) {
-        context.addMessage(consulo.compiler.CompilerMessageCategory.ERROR, msg, path, (int) line, (int) column);
+        postMessage(consulo.compiler.CompilerMessageCategory.ERROR, msg, path, line, column);
+    }
+
+    private void postMessage(consulo.compiler.CompilerMessageCategory category, String msg, String path, long line, long column) {
+        String url = StringUtil.isEmpty(path) ? null : VirtualFileUtil.pathToUrl(FileUtil.toSystemIndependentName(path));
+        myContext.newMessage(category, LocalizeValue.of(StringUtil.notNullize(msg)))
+            .optionalUrl(url)
+            .position((int) line, (int) column)
+            .add();
     }
 }

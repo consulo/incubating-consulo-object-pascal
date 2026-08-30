@@ -10,11 +10,11 @@ import consulo.execution.runner.DefaultProgramRunner;
 import consulo.language.content.ProductionContentFolderTypeProvider;
 import consulo.module.Module;
 import consulo.util.lang.StringUtil;
-import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
+import java.nio.file.Path;
 
 /**
  * Author: George Bakhtadze
@@ -39,8 +39,8 @@ public class PascalRunner extends DefaultProgramRunner {
         }
         String path = PascalModuleType.getExeOutputPath(module);
         if (StringUtil.isEmpty(path)) {
-            ModuleCompilerPathsManager compilerModuleExtension = ModuleCompilerPathsManager.getInstance(module);
-            path = VirtualFileUtil.urlToPath(compilerModuleExtension.getCompilerOutputUrl(ProductionContentFolderTypeProvider.getInstance()));
+            Path outputPath = ModuleCompilerPathsManager.getInstance(module).getCompilerOutputPath(ProductionContentFolderTypeProvider.getInstance());
+            path = outputPath != null ? outputPath.toString() : null;
         }
         return FileUtil.getExecutable(new File(path != null ? path : ""), programFileName).getPath();
     }

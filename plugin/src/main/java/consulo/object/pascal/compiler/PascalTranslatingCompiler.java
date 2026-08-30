@@ -17,6 +17,8 @@ import consulo.content.base.SourcesOrderRootType;
 import consulo.content.bundle.Sdk;
 import consulo.language.content.ProductionContentFolderTypeProvider;
 import consulo.language.util.ModuleUtilCore;
+import consulo.localize.LocalizeValue;
+import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.object.pascal.module.extension.ObjectPascalModuleExtension;
 import consulo.process.ProcessHandler;
@@ -25,13 +27,15 @@ import consulo.process.event.ProcessAdapter;
 import consulo.process.local.ProcessHandlerFactory;
 import consulo.util.collection.Chunk;
 import consulo.util.io.FileUtil;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -42,42 +46,54 @@ import java.util.Set;
  */
 @ExtensionImpl
 public class PascalTranslatingCompiler implements TranslatingCompiler {
+    private static final Logger LOG = Logger.getInstance(PascalTranslatingCompiler.class);
+
     @Override
-    public boolean isCompilableFile(VirtualFile virtualFile, CompileContext compileContext) {
-        return virtualFile.getFileType() == PascalFileType.INSTANCE;
+    public boolean isCompilableFile(Path file, CompileContext context) {
+        return FileTypeRegistry.getInstance().getFileTypeByFileName(file.getFileName().toString()) == PascalFileType.INSTANCE;
     }
 
     @Override
-    public void compile(CompileContext compileContext, Chunk<Module> chunk, VirtualFile[] inputFiles, OutputSink outputSink) {
-        Module module = chunk.getNodes().iterator().next();
+    public void compile(CompileContext context, Chunk<Module> moduleChunk, Collection<Path> files, OutputSink sink) {
+        Module module = moduleChunk.getNodes().iterator().next();
 
         Sdk sdk = ModuleUtilCore.getSdk(module, ObjectPascalModuleExtension.class);
 
-        final PascalSdkData sdkData = BasePascalSdkType.getAdditionalData(sdk);
+        PascalSdkData sdkData = BasePascalSdkType.getAdditionalData(sdk);
 
         String family = sdkData.getString(PascalSdkData.Keys.COMPILER_FAMILY);
 
-        PascalCompilerMessager messager = new PascalCompilerMessager(compileContext);
+        PascalCompilerMessager messager = new PascalCompilerMessager(context);
 
         PascalBackendCompiler compiler = family != null ? PascalBackendCompiler.getCompiler(PascalCompilerFamily.of(family), messager) : null;
+        if (compiler == null) {
+            context.newError(LocalizeValue.localizeTODO("Pascal compiler is not configured for module '" + module.getName() + "'")).add();
+            return;
+        }
 
-        String outputUrl = ModuleCompilerPathsManager.getInstance(module).getCompilerOutputUrl(ProductionContentFolderTypeProvider.getInstance());
-        String outputPath = VirtualFileUtil.urlToPath(outputUrl);
+        Path outputPath = ModuleCompilerPathsManager.getInstance(module).getCompilerOutputPath(ProductionContentFolderTypeProvider.getInstance());
+        if (outputPath == null) {
+            context.newError(LocalizeValue.localizeTODO("Compiler output path is not configured for module '" + module.getName() + "'")).add();
+            return;
+        }
 
-        FileUtil.createDirectory(new File(outputPath));
+        FileUtil.createDirectory(outputPath.toFile());
         try {
-            List<File> inputFilesAsList = VirtualFileUtil.virtualToIoFiles(List.of(inputFiles));
+            List<File> inputFiles = new ArrayList<>(files.size());
+            for (Path file : files) {
+                inputFiles.add(file.toFile());
+            }
 
             Set<File> sdkFiles = new LinkedHashSet<>();
             sdkFiles.addAll(VirtualFileUtil.virtualToIoFiles(List.of(sdk.getRootProvider().getFiles(BinariesOrderRootType.ID))));
             sdkFiles.addAll(VirtualFileUtil.virtualToIoFiles(List.of(sdk.getRootProvider().getFiles(SourcesOrderRootType.ID))));
 
-            String[] command = compiler.createStartupCommand(sdk.getHomePath(), module.getName(), outputPath, new ArrayList<>(sdkFiles), List.of(), inputFilesAsList, null, true, true, null);
+            String[] command = compiler.createStartupCommand(sdk.getHomePath(), module.getName(), outputPath.toString(), new ArrayList<>(sdkFiles), List.of(), inputFiles, null, true, true, null);
 
             launchCompiler(compiler, messager, command);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            LOG.error(e);
         }
     }
 
