@@ -470,3 +470,5 @@ usage.type.except:
     text: Except statement
 usage.type.parent:
     text: Parent of a structured type
+run.configuration.module.label:
+    text: 'Module:'

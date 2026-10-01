@@ -4,43 +4,32 @@ import consulo.configurable.ConfigurationException;
 import consulo.execution.configuration.ui.SettingsEditor;
 import consulo.object.pascal.run.PascalProgramParametersPanel;
 import consulo.project.Project;
-import org.jetbrains.annotations.NotNull;
+import consulo.ui.Component;
+import consulo.ui.annotation.RequiredUIAccess;
 
-import javax.swing.*;
-
-/**
- * Author: George Bakhtadze
- * Date: 06/01/2013
- */
 public class PascalRunConfigurationEditor extends SettingsEditor<PascalRunConfiguration> {
-    private final Project myProject;
-    private PascalProgramParametersPanel myPanel;
+    private final PascalProgramParametersPanel myPanel;
 
     public PascalRunConfigurationEditor(Project project) {
-        myProject = project;
+        myPanel = new PascalProgramParametersPanel(project);
     }
 
     @Override
+    @RequiredUIAccess
     protected void resetEditorFrom(PascalRunConfiguration runConfiguration) {
         myPanel.reset(runConfiguration);
     }
 
     @Override
+    @RequiredUIAccess
     protected void applyEditorTo(PascalRunConfiguration runConfiguration) throws ConfigurationException {
-        myPanel.applyTo(runConfiguration);
+        myPanel.apply(runConfiguration);
     }
 
     @Override
-    @NotNull
-    protected JComponent createEditor() {
-        if (myPanel == null) {
-            myPanel = new PascalProgramParametersPanel(myProject);
-        }
-        return myPanel;
-    }
-
-    @Override
-    protected void disposeEditor() {
-        myPanel = null;
+    @RequiredUIAccess
+    protected Component createUIComponent() {
+        myPanel.build();
+        return myPanel.getComponent();
     }
 }
