@@ -1,5 +1,7 @@
 <consulo-plugin>
     <id>com.siberika.idea.pascal</id>
+    <depends>consulo.nativeDev</depends>
+    <depends>com.intellij.xml</depends>
     <name>Pascal</name>
     <version>SNAPSHOT</version>
     <vendor email="argb32@gmail.com" url="http://www.siberika.com/ipascal.htm">siberika.com</vendor>
