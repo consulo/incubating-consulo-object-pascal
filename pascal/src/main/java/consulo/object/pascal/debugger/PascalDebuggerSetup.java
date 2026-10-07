@@ -1,7 +1,7 @@
 package consulo.object.pascal.debugger;
 
 import consulo.container.plugin.PluginManager;
-import consulo.nativeDev.debugger.driver.NativeDebuggerKind;
+import consulo.nativeDev.debugger.NativeDebuggerProvider;
 import consulo.nativeDev.debugger.driver.NativeDebuggerSetup;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
@@ -22,8 +22,8 @@ public class PascalDebuggerSetup implements NativeDebuggerSetup {
     private static final String PRINTERS_MODULE = "fpc_printers";
 
     @Override
-    public List<String> getInitCommands(NativeDebuggerKind kind) {
-        if (kind != NativeDebuggerKind.GDB) {
+    public List<String> getInitCommands(NativeDebuggerProvider debugger) {
+        if (!NativeDebuggerProvider.GDB_FAMILY.equals(debugger.getFamilyId())) {
             return List.of();
         }
         Path printersDir = printersDir();
