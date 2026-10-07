@@ -1,0 +1,96 @@
+package com.siberika.idea.pascal.jps.sdk;
+
+import com.google.common.collect.ImmutableMap;
+import com.siberika.idea.pascal.jps.util.ParamMap;
+import consulo.content.bundle.SdkAdditionalData;
+
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * Author: George Bakhtadze
+ * Date: 18/01/2013
+ */
+public class PascalSdkData implements SdkAdditionalData {
+
+    public static final PascalSdkData EMPTY = new PascalSdkData();
+    public static final String[] SYNTAX_CHECK_MODES = {"NONE", "NO_ERRORS", "ALWAYS"};
+    public static final String SDK_DATA_TRUE = "1";
+
+    private static final Map<String, Object> DEFAULTS_MAP = new ImmutableMap.Builder<String, Object>()
+            .put(Keys.SYNTAX_CHECK_MODE.getKey(), SYNTAX_CHECK_MODES[2])
+            .build();
+
+    public enum Keys {
+        COMPILER_COMMAND("compilerCommand"),
+        COMPILER_FAMILY("compilerFamily"),
+        COMPILER_NAMESPACES("compilerNamespaces"),
+        COMPILER_OPTIONS("compilerOptions"),
+        COMPILER_OPTIONS_DEBUG("compilerOptionsDebug"),
+        DECOMPILER_CACHE("decompilerCache"),
+        DECOMPILER_COMMAND("decompilerCommand"),
+        SYNTAX_CHECK_MODE("syntaxCheckMode"),
+        DELPHI_IS_STARTER("delphiIsStarter")
+        ;
+        private final String key;
+
+        Keys(String key) {
+            this.key = key;
+        }
+
+        public String getKey() {
+            return key;
+        }
+    }
+
+    private final Map<String, Object> data;
+
+    public PascalSdkData() {
+        this.data = new HashMap<String, Object>();
+    }
+
+    public PascalSdkData(Map<String, Object> data) {
+        this.data = data;
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return new PascalSdkData(data);
+    }
+
+    public Object getValue(final String key) {
+        Object res = data.get(key);
+        if (res != null) {
+            return res;
+        } else {
+            return DEFAULTS_MAP.get(key);
+        }
+    }
+
+    public ParamMap toParamMap() {
+        ParamMap result = new ParamMap();
+        for (Keys key : Keys.values()) {
+            if (getValue(key.getKey()) instanceof String value) {
+                result.put(key.getKey(), value);
+            }
+        }
+        return result;
+    }
+
+    public boolean isSyntaxCheckEnabled(boolean hasErrors) {
+        return SYNTAX_CHECK_MODES[2].equals(getString(Keys.SYNTAX_CHECK_MODE)) || (!hasErrors && SYNTAX_CHECK_MODES[1].equals(getString(Keys.SYNTAX_CHECK_MODE)));
+    }
+
+    public void setValue(final String key, final Object value) {
+        data.put(key, value);
+    }
+
+    public boolean getBoolean(final Keys key) {
+        return SDK_DATA_TRUE.equals(getValue(key.getKey()));
+    }
+
+    public String getString(final Keys key) {
+        return (String) getValue(key.getKey());
+    }
+
+}
