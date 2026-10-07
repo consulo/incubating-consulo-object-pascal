@@ -18,4 +18,10 @@ public interface PasModuleStub extends PasNamedStub<PascalModule> {
 
     @NotNull
     List<String> getUsedUnitsPrivate();
+
+    @NotNull
+    List<String> getIncludesPublic();
+
+    @NotNull
+    List<String> getIncludesPrivate();
 }

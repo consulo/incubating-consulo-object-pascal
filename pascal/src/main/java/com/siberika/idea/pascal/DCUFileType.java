@@ -1,6 +1,7 @@
 package com.siberika.idea.pascal;
 
 import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
@@ -37,7 +38,7 @@ public class DCUFileType implements FileType {
 
     @Override
     public Image getIcon() {
-        return PascalIcons.COMPILED;
+        return PlatformIconGroup.filetypesBinary();
     }
 
     @Override

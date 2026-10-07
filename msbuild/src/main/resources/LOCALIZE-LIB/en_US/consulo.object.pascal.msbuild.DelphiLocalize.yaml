@@ -1,0 +1,16 @@
+extension.name:
+    text: Delphi (MSBuild)
+extension.project.file.label:
+    text: 'Project file:'
+extension.configuration.label:
+    text: 'Configuration:'
+extension.executable.label:
+    text: 'Executable:'
+new.project.name:
+    text: Delphi Project (MSBuild)
+new.project.msbuild.label:
+    text: 'MSBuild:'
+new.project.fpc.label:
+    text: 'Free Pascal:'
+new.project.fpc.fallback:
+    text: Build with Free Pascal when RAD Studio is not installed

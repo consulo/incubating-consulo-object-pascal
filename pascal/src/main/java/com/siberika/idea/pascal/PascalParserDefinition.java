@@ -19,6 +19,7 @@ import consulo.language.parser.PsiParser;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.version.LanguageVersion;
+import consulo.object.pascal.moduleAware.PascalDefineOptions;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
@@ -38,6 +39,10 @@ public class PascalParserDefinition implements ParserDefinition {
 
     public Lexer createLexer(@Nonnull Project project, @Nullable VirtualFile file) {
         return new PascalLexer.ParsingPascalLexer(project, file);
+    }
+
+    public Lexer createLexer(@Nonnull Project project, @Nullable VirtualFile file, @Nonnull PascalDefineOptions defineOptions) {
+        return new PascalLexer.ParsingPascalLexer(project, file, defineOptions);
     }
 
     @Nonnull

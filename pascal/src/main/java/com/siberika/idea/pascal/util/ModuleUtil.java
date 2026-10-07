@@ -3,7 +3,6 @@ package com.siberika.idea.pascal.util;
 import com.google.common.io.Files;
 import com.siberika.idea.pascal.jps.sdk.PascalSdkData;
 import com.siberika.idea.pascal.jps.util.FileUtil;
-import com.siberika.idea.pascal.lang.psi.PasTypes;
 import com.siberika.idea.pascal.lang.psi.PascalModule;
 import com.siberika.idea.pascal.module.PascalModuleType;
 import consulo.application.ApplicationManager;
@@ -12,7 +11,6 @@ import consulo.application.util.function.CommonProcessors;
 import consulo.application.util.function.Computable;
 import consulo.content.bundle.Sdk;
 import consulo.content.bundle.SdkAdditionalData;
-import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
@@ -162,31 +160,34 @@ public class ModuleUtil {
     @NotNull
     public static List<PascalModule> getIncludedModules(@NotNull PascalModule module) {
         return LanguageCachedValueUtil.getCachedValue(module, () -> CachedValueProvider.Result.create(
-            collectIncludedModules(module), PsiModificationTracker.getInstance(module.getProject())));
+            collectIncludedModules(module, false), PsiModificationTracker.getInstance(module.getProject())));
     }
 
-    private static List<PascalModule> collectIncludedModules(PascalModule module) {
+    @NotNull
+    public static List<PascalModule> getAllIncludedModules(@NotNull PascalModule module) {
+        return LanguageCachedValueUtil.getCachedValue(module, () -> CachedValueProvider.Result.create(
+            collectIncludedModules(module, true), PsiModificationTracker.getInstance(module.getProject())));
+    }
+
+    private static List<PascalModule> collectIncludedModules(PascalModule module, boolean withInterface) {
         List<PascalModule> result = new ArrayList<>();
         Set<VirtualFile> visited = new HashSet<>();
         VirtualFile file = module.getContainingFile().getVirtualFile();
         if (file != null) {
             visited.add(file);
         }
-        collectIncludedModules(module, visited, result);
+        collectIncludedModules(module, withInterface, visited, result);
         return result;
     }
 
-    private static void collectIncludedModules(PascalModule module, Set<VirtualFile> visited, List<PascalModule> result) {
-        PsiFile containingFile = module.getContainingFile();
-        VirtualFile referencing = containingFile.getVirtualFile();
-        PsiElement section = PsiUtil.getModuleImplementationSection(module);
-        int implementationStart = section != module ? section.getTextRange().getStartOffset() : 0;
-        for (PsiComment comment : PsiTreeUtil.findChildrenOfType(containingFile, PsiComment.class)) {
-            if (comment.getNode().getElementType() != PasTypes.INCLUDE || comment.getTextRange().getStartOffset() < implementationStart) {
-                continue;
-            }
-            String name = StrUtil.getIncludeName(comment.getText());
-            VirtualFile included = name != null ? getIncludedFile(module.getProject(), referencing, name) : null;
+    private static void collectIncludedModules(PascalModule module, boolean withInterface, Set<VirtualFile> visited, List<PascalModule> result) {
+        List<String> names = new ArrayList<>(module.getIncludesPrivate());
+        if (withInterface) {
+            names.addAll(0, module.getIncludesPublic());
+        }
+        VirtualFile referencing = module.getContainingFile().getVirtualFile();
+        for (String name : names) {
+            VirtualFile included = getIncludedFile(module.getProject(), referencing, name);
             if (included == null || !visited.add(included)) {
                 continue;
             }
@@ -194,7 +195,7 @@ public class ModuleUtil {
             PascalModule includedModule = includedFile != null ? PsiTreeUtil.findChildOfType(includedFile, PascalModule.class) : null;
             if (includedModule != null) {
                 result.add(includedModule);
-                collectIncludedModules(includedModule, visited, result);
+                collectIncludedModules(includedModule, withInterface, visited, result);
             }
         }
     }

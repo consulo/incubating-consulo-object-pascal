@@ -3,6 +3,7 @@ package com.siberika.idea.pascal.module;
 import consulo.language.util.ModuleUtilCore;
 import consulo.module.Module;
 import consulo.object.pascal.module.extension.ObjectPascalModuleExtension;
+import consulo.object.pascal.module.extension.PascalBuildModuleExtension;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
@@ -20,7 +21,7 @@ public class PascalModuleType {
 
     @Nullable
     public static VirtualFile getMainFile(Module module) {
-        ObjectPascalModuleExtension extension = ModuleUtilCore.getExtension(module, ObjectPascalModuleExtension.class);
+        PascalBuildModuleExtension<?> extension = ModuleUtilCore.getExtension(module, PascalBuildModuleExtension.class);
         if (extension != null) {
             String mainFile = extension.getMainFilePath();
             if (!StringUtil.isEmpty(mainFile)) {
@@ -40,7 +41,7 @@ public class PascalModuleType {
 
     @Nullable
     public static String getExeOutputPath(Module module) {
-        ObjectPascalModuleExtension extension = ModuleUtilCore.getExtension(module, ObjectPascalModuleExtension.class);
+        PascalBuildModuleExtension<?> extension = ModuleUtilCore.getExtension(module, PascalBuildModuleExtension.class);
         if (extension != null) {
             return extension.getOutputPath();
         }

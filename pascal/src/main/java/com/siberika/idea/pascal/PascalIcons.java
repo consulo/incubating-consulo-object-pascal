@@ -8,27 +8,25 @@ import consulo.ui.image.Image;
 @Deprecated
 @DeprecationInfo("Use ObjectPascalIconGroup")
 public interface PascalIcons {
-    Image GENERAL = ObjectPascalIconGroup.pascal_16x16();
-    Image MODULE = GENERAL;
+    Image GENERAL = ObjectPascalIconGroup.pascal();
     Image UNIT = ObjectPascalIconGroup.unit();
     Image PROGRAM = ObjectPascalIconGroup.program();
-    Image INCLUDE = Image.empty(Image.DEFAULT_ICON_SIZE); // TODO [VISTALL] missed in original repo
-    Image COMPILED = ObjectPascalIconGroup.compiled();
+    Image INCLUDE = ObjectPascalIconGroup.include();
 
     Image FILE_PROGRAM = ObjectPascalIconGroup.program();
     Image FILE_LIBRARY = ObjectPascalIconGroup.library();
-    Image FILE_INCLUDE = Image.empty(Image.DEFAULT_ICON_SIZE); // TODO [VISTALL] missed in original repo
+    Image FILE_INCLUDE = ObjectPascalIconGroup.include();
 
-    Image TYPE = ObjectPascalIconGroup.ntype();
-    Image VARIABLE = ObjectPascalIconGroup.nvar();
-    Image CONSTANT = ObjectPascalIconGroup.nconst();
-    Image PROPERTY = ObjectPascalIconGroup.nproperty();
-    Image ROUTINE = ObjectPascalIconGroup.nroutine();
-    Image INTERFACE = ObjectPascalIconGroup.ninterface();
-    Image CLASS = ObjectPascalIconGroup.nclass();
-    Image OBJECT = ObjectPascalIconGroup.nobject();
-    Image RECORD = ObjectPascalIconGroup.nrecord();
-    Image HELPER = ObjectPascalIconGroup.nhelper();
+    Image TYPE = PlatformIconGroup.nodesType();
+    Image VARIABLE = PlatformIconGroup.nodesVariable();
+    Image CONSTANT = PlatformIconGroup.nodesConstant();
+    Image PROPERTY = PlatformIconGroup.nodesProperty();
+    Image ROUTINE = PlatformIconGroup.nodesFunction();
+    Image INTERFACE = PlatformIconGroup.nodesInterface();
+    Image CLASS = PlatformIconGroup.nodesClass();
+    Image OBJECT = PlatformIconGroup.nodesAnonymousclass();
+    Image RECORD = PlatformIconGroup.nodesRecord();
+    Image HELPER = ObjectPascalIconGroup.helper();
 
     final class Idea {
         public static final Image RUN = PlatformIconGroup.actionsExecute();

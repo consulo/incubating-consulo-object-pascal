@@ -5,6 +5,7 @@ import com.siberika.idea.pascal.lang.psi.*;
 import com.siberika.idea.pascal.lang.psi.impl.PasField;
 import com.siberika.idea.pascal.lang.psi.impl.PascalExpression;
 import com.siberika.idea.pascal.lang.references.ResolveContext;
+import com.siberika.idea.pascal.lang.references.ResolveUtil;
 import com.siberika.idea.pascal.lang.search.routine.FieldMatcher;
 import com.siberika.idea.pascal.lang.search.routine.ParamCountFieldMatcher;
 import com.siberika.idea.pascal.util.ModuleUtil;
@@ -139,7 +140,7 @@ class ExpressionProcessor implements PsiElementProcessor<PasBaseReferenceExpr> {
                     final PasArgumentList args = callExpr.getArgumentList();
                     if (this.fqn.isTarget()) {
                         if (context.ignoreNames()) {
-                            for (PasField field : scope.getAllFields()) {
+                            for (PasField field : ResolveUtil.getResolutionFields(scope)) {
                                 if (!ExpressionProcessor.this.processor.process(scope, scope, field, field.fieldType)) {
                                     break;    // No need to return false in ignoreNames mode
                                 }
@@ -157,7 +158,7 @@ class ExpressionProcessor implements PsiElementProcessor<PasBaseReferenceExpr> {
                                     }
                                 }
                             };
-                            if (!matcher.process(scope.getAllFields())) {
+                            if (!matcher.process(ResolveUtil.getResolutionFields(scope))) {
                                 this.fqn.next();
                                 return false;
                             }

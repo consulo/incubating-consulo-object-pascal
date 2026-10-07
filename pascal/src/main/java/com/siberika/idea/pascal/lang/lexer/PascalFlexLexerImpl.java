@@ -4,24 +4,29 @@ import com.siberika.idea.pascal.lang.psi.PasTypes;
 import com.siberika.idea.pascal.sdk.BasePascalSdkType;
 import com.siberika.idea.pascal.sdk.Define;
 import com.siberika.idea.pascal.util.StrUtil;
-import consulo.content.bundle.Sdk;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenType;
 import consulo.language.lexer.FlexAdapter;
 import consulo.logging.Logger;
+import consulo.object.pascal.moduleAware.PascalDefineEnv;
+import consulo.object.pascal.moduleAware.PascalDefineOptions;
 import consulo.process.io.BaseInputStreamReader;
 import consulo.project.Project;
 import consulo.util.collection.SmartList;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.Reader;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.BiFunction;
 import java.util.regex.Matcher;
 
 /**
@@ -31,6 +36,9 @@ import java.util.regex.Matcher;
 public class PascalFlexLexerImpl extends _PascalLexer {
 
     private static final Logger LOG = Logger.getInstance(PascalFlexLexerImpl.class);
+    private static final IElementType NOT_A_KEYWORD = TokenType.BAD_CHARACTER;
+    private static final Map<String, IElementType> KEYWORD_VALUES = new ConcurrentHashMap<>();
+    private static final int MAX_INCLUDE_DEPTH = 16;
     // Files of size less than this will be re-lexed on edit to correctly highlight potentially affected conditional blocks of code
     private static final int DEFINE_CORRECT_HIGHLIGHT_THRESHOLD = 120000;
 
@@ -49,9 +57,20 @@ public class PascalFlexLexerImpl extends _PascalLexer {
     private Set<String> actualDefines;
     // TODO: replace with defines
     private Map<String, Define> allDefines;
+    private Map<String, String> macroValues;
+    private Map<Integer, String> defineValues = new HashMap<>();
+    private Map<String, IElementType> keywordMacros = new HashMap<>();
+    private PascalDefineOptions defineOptions;
+    private List<Pair<VirtualFile, PascalDefineOptions>> includeStates;
+    private BiFunction<VirtualFile, String, VirtualFile> includeResolver;
+    private int includeDepth;
 
     private VirtualFile virtualFile;
     private Project project;
+
+    public void setDefineOptions(PascalDefineOptions defineOptions) {
+        this.defineOptions = defineOptions;
+    }
 
     public void setVirtualFile(VirtualFile virtualFile) {
         this.virtualFile = virtualFile;
@@ -85,6 +104,7 @@ public class PascalFlexLexerImpl extends _PascalLexer {
         }
         actualDefines = null;
         allDefines = null;
+        macroValues = null;
         actualDefines = getActualDefines();
         defines = adjustDefines(actualDefines, defines, start);
     }
@@ -95,10 +115,19 @@ public class PascalFlexLexerImpl extends _PascalLexer {
             if (Math.abs(ofs) >= offset) {
                 return events.subList(0, i);
             }
+            String name = events.get(i).getSecond();
             if (ofs >= 0) {
-                defines.add(events.get(i).getSecond());
+                defines.add(name);
+                String value = defineValues.get(ofs);
+                if (value != null) {
+                    putMacroValue(name, value);
+                }
+                else {
+                    removeMacroValue(name);
+                }
             } else {
-                defines.remove(events.get(i).getSecond());
+                defines.remove(name);
+                removeMacroValue(name);
             }
         }
         return events;
@@ -121,6 +150,13 @@ public class PascalFlexLexerImpl extends _PascalLexer {
         return actualDefines;
     }
 
+    private Map<String, String> getMacroValues() {
+        if (null == macroValues) {
+            initDefines(getProject(), getVirtualFile());
+        }
+        return macroValues;
+    }
+
     public Map<String, Define> getAllDefines() {
         if ((null == allDefines) || (allDefines.isEmpty())) {
             initDefines(getProject(), getVirtualFile());
@@ -139,13 +175,29 @@ public class PascalFlexLexerImpl extends _PascalLexer {
     @Override
     public void define(int pos, CharSequence sequence) {
         String name = extractDefineName(sequence);
+        String value = null;
+        if (StringUtil.isEmpty(name)) {
+            Matcher m = PATTERN_DEFINE_VALUE.matcher(sequence);
+            if (m.matches()) {
+                name = m.group(1);
+                value = m.group(2);
+            }
+        }
         if (StringUtil.isNotEmpty(name)) {
             String key = name.toUpperCase();
             getActualDefines().add(key);
             defines.add(Pair.create(pos, key));
+            if (StringUtil.isNotEmpty(value)) {
+                defineValues.put(pos, value);
+                putMacroValue(key, value);
+            }
+            else {
+                defineValues.remove(pos);
+                removeMacroValue(key);
+            }
             Map<String, Define> defs = allDefines;
             if (!BasePascalSdkType.DEFINE_IDE_PARSER.equals(key) || !defs.containsKey(key)) {
-                defs.put(key, new Define(name, virtualFile, pos));
+                defs.put(key, new Define(name, virtualFile, pos, value));
             }
             //if (incremental)System.out.println("Define: " + name);
         }
@@ -157,6 +209,7 @@ public class PascalFlexLexerImpl extends _PascalLexer {
         if (StringUtil.isNotEmpty(name)) {
             String key = name.toUpperCase();
             getActualDefines().remove(key);
+            removeMacroValue(key);
             defines.add(Pair.create(-pos, key));
             allDefines.put(key, new Define(name, virtualFile, pos));
             //if (incremental)System.out.println("Undefine: " + name);
@@ -166,13 +219,18 @@ public class PascalFlexLexerImpl extends _PascalLexer {
     synchronized private void initDefines(Project project, VirtualFile virtualFile) {
         actualDefines = new HashSet<>();
         allDefines = new HashMap<>();
-        if ((project != null)) {
-            final Sdk sdk = com.siberika.idea.pascal.util.ModuleUtil.getSdk(project, virtualFile);
-            if ((sdk != null) && (sdk.getVersionString() != null)) {
-                allDefines.putAll(BasePascalSdkType.getDefaultDefines(sdk, sdk.getVersionString()));
-            }
-            for (Map.Entry<String, Define> entry : allDefines.entrySet()) {
-                actualDefines.add(entry.getKey());
+        macroValues = new HashMap<>();
+        keywordMacros = new HashMap<>();
+        PascalDefineOptions options = defineOptions;
+        if (options == null) {
+            options = (project != null) && (virtualFile != null) ? PascalDefineEnv.optionsFor(project, virtualFile) : PascalDefineOptions.EMPTY;
+        }
+        for (Map.Entry<String, String> entry : options.defines().entrySet()) {
+            String value = entry.getValue().isEmpty() ? null : entry.getValue();
+            actualDefines.add(entry.getKey());
+            allDefines.put(entry.getKey(), new Define(entry.getKey(), null, -1, value));
+            if (value != null) {
+                putMacroValue(entry.getKey(), value);
             }
         }
     }
@@ -205,7 +263,7 @@ public class PascalFlexLexerImpl extends _PascalLexer {
         curLevel++;
         String condition = extractCondition(sequence);
         if (!isInactive()) {
-            if (StringUtil.isNotEmpty(condition) && (!ConditionParser.checkCondition(condition, getActualDefines()))) {
+            if (StringUtil.isNotEmpty(condition) && (!ConditionParser.checkCondition(condition, getActualDefines(), getMacroValues()))) {
                 inactiveLevel = curLevel;
                 pushCondition(false);
                 yybegin(INACTIVE_BRANCH);
@@ -243,7 +301,7 @@ public class PascalFlexLexerImpl extends _PascalLexer {
             }
         } else {
             String condition = extractCondition(sequence);
-            if (isInactive() && StringUtil.isNotEmpty(condition) && ConditionParser.checkCondition(condition, getActualDefines())) {
+            if (isInactive() && StringUtil.isNotEmpty(condition) && ConditionParser.checkCondition(condition, getActualDefines(), getMacroValues())) {
                 if (curLevel == inactiveLevel) {
                     yybegin(YYINITIAL);
                     pushCondition(true);
@@ -311,12 +369,21 @@ public class PascalFlexLexerImpl extends _PascalLexer {
         String name = extractIncludeName(sequence);
         Project project = getProject();
         VirtualFile virtualFile = getVirtualFile();
+        if (includeResolver != null) {
+            if (!StringUtil.isEmpty(name)) {
+                collectInclude(name);
+            }
+            return INCLUDE;
+        }
         if ((!StringUtil.isEmpty(name)) && (project != null)) {
             try {
                 VirtualFile file = com.siberika.idea.pascal.util.ModuleUtil.getIncludedFile(project, virtualFile, name);
                 PascalFlexLexerImpl lexer = !Objects.equals(virtualFile, file) ? processFile(project, file) : null;
                 if (lexer != null) {
                     getActualDefines().addAll(lexer.getActualDefines());
+                    for (Map.Entry<String, String> macro : lexer.getMacroValues().entrySet()) {
+                        putMacroValue(macro.getKey(), macro.getValue());
+                    }
                     allDefines.putAll(lexer.getAllDefines());
                     for (Pair<Integer, String> define : lexer.defines) {
                         defines.add(Pair.create(define.first > 0 ? pos : -pos, define.second));
@@ -402,7 +469,116 @@ public class PascalFlexLexerImpl extends _PascalLexer {
 
     @Override
     public IElementType getElement(IElementType elementType) {
+        if (elementType == NAME && !keywordMacros.isEmpty()) {
+            IElementType replacement = keywordMacros.get(yytext().toString().toUpperCase());
+            if (replacement != null) {
+                return replacement;
+            }
+        }
         return elementType;
+    }
+
+    private void putMacroValue(String key, String value) {
+        macroValues.put(key, value);
+        IElementType keyword = KEYWORD_VALUES.computeIfAbsent(value, PascalFlexLexerImpl::lexKeyword);
+        if (keyword != NOT_A_KEYWORD) {
+            keywordMacros.put(key, keyword);
+        }
+        else {
+            keywordMacros.remove(key);
+        }
+    }
+
+    private void removeMacroValue(String key) {
+        getMacroValues().remove(key);
+        keywordMacros.remove(key);
+    }
+
+    private static IElementType lexKeyword(String value) {
+        PascalFlexLexerImpl lexer = new PascalFlexLexerImpl(null, null, null, false);
+        lexer.setDefineOptions(PascalDefineOptions.EMPTY);
+        lexer.reset(value, 0, value.length(), YYINITIAL);
+        try {
+            IElementType result = null;
+            IElementType type;
+            while ((type = lexer.advance()) != null) {
+                if (type == TokenType.WHITE_SPACE) {
+                    continue;
+                }
+                if (result != null) {
+                    return NOT_A_KEYWORD;
+                }
+                result = type;
+            }
+            return result != null && PascalLexer.KEYWORDS.contains(result) ? result : NOT_A_KEYWORD;
+        }
+        catch (IOException e) {
+            return NOT_A_KEYWORD;
+        }
+    }
+
+    private PascalDefineOptions snapshotDefines() {
+        Map<String, String> state = new HashMap<>();
+        Map<String, String> values = getMacroValues();
+        for (String define : getActualDefines()) {
+            String value = values.get(define);
+            state.put(define, value != null ? value : "");
+        }
+        return new PascalDefineOptions(state);
+    }
+
+    public static List<Pair<VirtualFile, PascalDefineOptions>> collectIncludeStates(VirtualFile host, CharSequence text, PascalDefineOptions initial,
+                                                                                    BiFunction<VirtualFile, String, VirtualFile> includeResolver) {
+        List<Pair<VirtualFile, PascalDefineOptions>> states = new ArrayList<>();
+        createCollectingLexer(host, text, initial, includeResolver, states, 0).lexToEnd();
+        return states;
+    }
+
+    private static PascalFlexLexerImpl createCollectingLexer(VirtualFile file, CharSequence text, PascalDefineOptions initial,
+                                                             BiFunction<VirtualFile, String, VirtualFile> includeResolver,
+                                                             List<Pair<VirtualFile, PascalDefineOptions>> states, int depth) {
+        PascalFlexLexerImpl lexer = new PascalFlexLexerImpl(null, null, file, false);
+        lexer.setDefineOptions(initial);
+        lexer.includeResolver = includeResolver;
+        lexer.includeStates = states;
+        lexer.includeDepth = depth;
+        lexer.reset(text, 0, text.length(), YYINITIAL);
+        return lexer;
+    }
+
+    private void lexToEnd() {
+        try {
+            while (advance() != null) {
+            }
+        }
+        catch (IOException e) {
+            LOG.info("Error collecting include states of " + getVFName(getVirtualFile()), e);
+        }
+    }
+
+    private void collectInclude(String name) {
+        VirtualFile file = includeResolver.apply(getVirtualFile(), name);
+        if (file == null || includeDepth >= MAX_INCLUDE_DEPTH) {
+            return;
+        }
+        PascalDefineOptions state = snapshotDefines();
+        includeStates.add(Pair.create(file, state));
+        CharSequence text;
+        try {
+            text = VirtualFileUtil.loadText(file);
+        }
+        catch (IOException e) {
+            return;
+        }
+        PascalFlexLexerImpl nested = createCollectingLexer(file, text, state, includeResolver, includeStates, includeDepth + 1);
+        nested.lexToEnd();
+        getActualDefines().clear();
+        getActualDefines().addAll(nested.getActualDefines());
+        getMacroValues().clear();
+        keywordMacros.clear();
+        for (Map.Entry<String, String> macro : nested.getMacroValues().entrySet()) {
+            putMacroValue(macro.getKey(), macro.getValue());
+        }
     }
 
     private boolean isInactive() {

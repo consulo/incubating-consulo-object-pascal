@@ -39,7 +39,6 @@ import java.util.*;
 public class FPCSdkType extends BasePascalSdkType {
 
     private static final Logger LOG = Logger.getInstance(FPCSdkType.class);
-    private static final String[] LIBRARY_DIRS = {"rtl", "rtl-objpas", "rtl-console", "pthreads", "regexpr", "x11", "windows"};
 
     @NotNull
     public static FPCSdkType getInstance() {
@@ -47,8 +46,14 @@ public class FPCSdkType extends BasePascalSdkType {
     }
 
     public FPCSdkType() {
-        super("FPCSdkType", LocalizeValue.localizeTODO("Free Pascal SDK"), ObjectPascalIconGroup.pascal_16x16(), PascalCompilerFamily.FPC);
+        super("FPCSdkType", LocalizeValue.localizeTODO("Free Pascal SDK"), ObjectPascalIconGroup.freepascal(), PascalCompilerFamily.FPC);
         loadResources("fpc");
+    }
+
+    @NotNull
+    @Override
+    protected Map<String, Define> readCompilerDefines(@NotNull Sdk sdk) {
+        return FPCCompilerDefines.read(sdk);
     }
 
     @Nonnull
@@ -160,22 +165,28 @@ public class FPCSdkType extends BasePascalSdkType {
 
         if (target != null) {
             target = target.replace(' ', '-');
-            for (String dir : LIBRARY_DIRS) {
-                VirtualFile vdir = getLibrary(sdk, target, dir);
-                if (vdir != null) {
-                    sdkModificator.addRoot(vdir, BinariesOrderRootType.ID);
+            File unitsDir = getUnitsDir(sdk, target);
+            File[] libraries = unitsDir != null ? unitsDir.listFiles(File::isDirectory) : null;
+            if (libraries != null) {
+                Arrays.sort(libraries);
+                for (File library : libraries) {
+                    VirtualFile vdir = LocalFileSystem.getInstance().findFileByIoFile(library);
+                    if (vdir != null) {
+                        sdkModificator.addRoot(vdir, BinariesOrderRootType.ID);
+                    }
                 }
             }
         }
         sdkModificator.commitChanges();
     }
 
-    private static VirtualFile getLibrary(Sdk sdk, String target, String name) {
-        File rtlDir = new File(sdk.getHomePath() + File.separatorChar + "units" + File.separatorChar + target + File.separatorChar + name);
-        if (!rtlDir.exists()) {
-            rtlDir = new File(sdk.getHomePath() + File.separatorChar + sdk.getVersionString() + File.separatorChar + "units" + File.separatorChar + target + File.separatorChar + name);
+    @Nullable
+    private static File getUnitsDir(Sdk sdk, String target) {
+        File unitsDir = new File(sdk.getHomePath() + File.separatorChar + "units" + File.separatorChar + target);
+        if (!unitsDir.isDirectory()) {
+            unitsDir = new File(sdk.getHomePath() + File.separatorChar + sdk.getVersionString() + File.separatorChar + "units" + File.separatorChar + target);
         }
-        return LocalFileSystem.getInstance().findFileByIoFile(rtlDir);
+        return unitsDir.isDirectory() ? unitsDir : null;
     }
 
     @Override

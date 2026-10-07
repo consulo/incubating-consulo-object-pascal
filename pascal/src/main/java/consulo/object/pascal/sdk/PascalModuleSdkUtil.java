@@ -1,5 +1,6 @@
 package consulo.object.pascal.sdk;
 
+import com.siberika.idea.pascal.sdk.BasePascalSdkType;
 import consulo.content.bundle.Sdk;
 import consulo.content.bundle.SdkTable;
 import consulo.content.bundle.SdkTypeId;
@@ -12,7 +13,6 @@ import jakarta.annotation.Nullable;
 import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
-import java.util.List;
 
 /**
  * @author VISTALL
@@ -25,19 +25,24 @@ public final class PascalModuleSdkUtil {
     @Nullable
     public static Sdk findDefaultSdk(SdkTypeId... types) {
         SdkTable sdkTable = SdkTable.getInstance();
+        Sdk withHome = null;
         Sdk fallback = null;
         for (SdkTypeId type : types) {
-            List<Sdk> sdks = sdkTable.getSdksOfType(type);
-            for (Sdk sdk : sdks) {
+            for (Sdk sdk : sdkTable.getSdksOfType(type)) {
                 if (hasHome(sdk)) {
-                    return sdk;
+                    if (BasePascalSdkType.isConfigured(sdk)) {
+                        return sdk;
+                    }
+                    if (withHome == null) {
+                        withHome = sdk;
+                    }
+                }
+                if (fallback == null) {
+                    fallback = sdk;
                 }
             }
-            if (fallback == null && !sdks.isEmpty()) {
-                fallback = sdks.get(0);
-            }
         }
-        return fallback;
+        return withHome != null ? withHome : fallback;
     }
 
     public static void ensureSdkEntry(ModifiableRootModel rootModel, ModuleExtensionWithSdk<?> extension) {

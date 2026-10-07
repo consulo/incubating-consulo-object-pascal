@@ -91,13 +91,43 @@ public class SectionToggle {
                 return implementation;
             }
             for (PascalModule included : ModuleUtil.getIncludedModules(module)) {
-                implementation = retrieveImplementation(included, container, strict);
+                implementation = retrieveIncludedImplementation(included, container, strict);
                 if (implementation != null) {
                     return implementation;
                 }
             }
         }
         return null;
+    }
+
+    @Nullable
+    private static PsiElement retrieveIncludedImplementation(PascalModule module, Container container, boolean strict) {
+        PsiElement implementation = retrieveImplementation(module, container, strict);
+        if (implementation != null || container.element.isOverloaded()) {
+            return implementation;
+        }
+        final String name = container.prefix + container.element.getName();
+        for (PasField field : ((PasModuleImpl) module).getPrivateFields()) {
+            if (field.fieldType == PasField.FieldType.ROUTINE && name.equalsIgnoreCase(field.name)
+                && field.getElement() instanceof PascalRoutine routine && sameParameterTypes(container.element, routine)) {
+                return routine;
+            }
+        }
+        return null;
+    }
+
+    private static boolean sameParameterTypes(PascalRoutine declaration, PascalRoutine implementation) {
+        List<String> declared = declaration.getFormalParameterTypes();
+        List<String> implemented = implementation.getFormalParameterTypes();
+        if (declared.size() != implemented.size()) {
+            return false;
+        }
+        for (int i = 0; i < declared.size(); i++) {
+            if (!StringUtil.equalsIgnoreWhitespaces(declared.get(i).toUpperCase(Locale.ROOT), implemented.get(i).toUpperCase(Locale.ROOT))) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Nullable

@@ -1,0 +1,15 @@
+library ${IDENT};
+
+uses
+  SysUtils;
+
+function Add(A, B: Integer): Integer; {$IFDEF MSWINDOWS}stdcall;{$ELSE}cdecl;{$ENDIF}
+begin
+  Result := A + B;
+end;
+
+exports
+  Add;
+
+begin
+end.

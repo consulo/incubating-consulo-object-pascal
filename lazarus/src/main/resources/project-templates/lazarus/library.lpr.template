@@ -1,0 +1,14 @@
+library ${IDENT};
+
+{$mode objfpc}{$H+}
+
+function Add(A, B: Integer): Integer; cdecl;
+begin
+  Result := A + B;
+end;
+
+exports
+  Add;
+
+begin
+end.

@@ -4,6 +4,7 @@ import com.siberika.idea.pascal.PascalLanguage;
 import com.siberika.idea.pascal.lang.psi.*;
 import com.siberika.idea.pascal.lang.references.ResolveUtil;
 import com.siberika.idea.pascal.lang.stub.PascalStructIndex;
+import com.siberika.idea.pascal.lang.stub.PascalStructParentIndex;
 import com.siberika.idea.pascal.lang.stub.PascalSymbolIndex;
 import com.siberika.idea.pascal.lang.stub.StubUtil;
 import consulo.language.psi.PsiElement;
@@ -70,6 +71,11 @@ public abstract class PasStructDeclStubElementType<StubT extends PasStructStub, 
     public void indexStub(@NotNull StubT stub, @NotNull IndexSink sink) {
         sink.occurrence(PascalStructIndex.KEY, stub.getUniqueName());
         sink.occurrence(PascalSymbolIndex.KEY, stub.getName());
+        @SuppressWarnings("unchecked")
+        List<String> parentNames = stub.getParentNames();
+        for (String parentName : parentNames) {
+            sink.occurrence(PascalStructParentIndex.KEY, PascalStructParentIndex.parentKey(parentName));
+        }
     }
 
     static String calcStubName(PascalStructType psi, List<String> aliases) {

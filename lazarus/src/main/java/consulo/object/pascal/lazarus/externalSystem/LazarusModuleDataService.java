@@ -16,6 +16,7 @@ import consulo.module.content.ModuleRootManager;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.object.pascal.lazarus.module.LazarusMutableModuleExtension;
 import consulo.object.pascal.lazarus.module.orderEntry.LazarusPackageEntries;
+import consulo.object.pascal.module.extension.PascalMutableModuleExtension;
 import consulo.object.pascal.sdk.PascalModuleSdkUtil;
 import consulo.project.Project;
 
@@ -57,7 +58,8 @@ public class LazarusModuleDataService implements ProjectDataService<LazarusModul
     private static void apply(Module module, LazarusModuleData data, boolean hasPackages) {
         ModifiableRootModel rootModel = ModuleRootManager.getInstance(module).getModifiableModel();
         LazarusMutableModuleExtension extension = rootModel.getExtensionWithoutCheck(LazarusMutableModuleExtension.class);
-        if (extension == null) {
+        PascalMutableModuleExtension pascalExtension = rootModel.getExtensionWithoutCheck(PascalMutableModuleExtension.class);
+        if (extension == null || pascalExtension == null) {
             rootModel.dispose();
             return;
         }
@@ -67,20 +69,21 @@ public class LazarusModuleDataService implements ProjectDataService<LazarusModul
         extension.setBuildMode(data.getBuildMode());
         extension.setTargetFilePath(data.getTargetFile());
 
+        pascalExtension.setEnabled(true);
         String sdkOwner = data.getSdkOwnerModuleName();
         if (sdkOwner != null) {
-            extension.getInheritableSdk().set(sdkOwner, null);
+            pascalExtension.getInheritableSdk().set(sdkOwner, null);
         }
         else if (data.getSdkName() != null) {
-            extension.getInheritableSdk().set(null, data.getSdkName());
+            pascalExtension.getInheritableSdk().set(null, data.getSdkName());
         }
-        else if (extension.getInheritableSdk().isNull()) {
+        else if (pascalExtension.getInheritableSdk().isNull()) {
             Sdk sdk = PascalModuleSdkUtil.findDefaultSdk(FPCSdkType.getInstance());
             if (sdk != null) {
-                extension.getInheritableSdk().set(null, sdk);
+                pascalExtension.getInheritableSdk().set(null, sdk);
             }
         }
-        PascalModuleSdkUtil.ensureSdkEntry(rootModel, extension);
+        PascalModuleSdkUtil.ensureSdkEntry(rootModel, pascalExtension);
         if (!hasPackages) {
             LazarusPackageEntries.removeAll(rootModel);
         }

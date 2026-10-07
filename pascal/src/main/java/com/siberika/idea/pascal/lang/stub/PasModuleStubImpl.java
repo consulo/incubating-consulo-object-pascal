@@ -16,13 +16,18 @@ public class PasModuleStubImpl extends PasNamedStubBase<PascalModule> implements
     private PascalModule.ModuleType moduleType;
     private List<String> usedUnitsPublic;
     private List<String> usedUnitsPrivate;
+    private List<String> includesPublic;
+    private List<String> includesPrivate;
 
     public PasModuleStubImpl(StubElement parent, String name, PascalModule.ModuleType moduleType,
-                             List<String> usedUnitsPublic, List<String> usedUnitsPrivate) {
+                             List<String> usedUnitsPublic, List<String> usedUnitsPrivate,
+                             List<String> includesPublic, List<String> includesPrivate) {
         super(parent, PasModuleStubElementType.INSTANCE, name, name);
         this.moduleType = moduleType;
         this.usedUnitsPublic = usedUnitsPublic;
         this.usedUnitsPrivate = usedUnitsPrivate;
+        this.includesPublic = includesPublic;
+        this.includesPrivate = includesPrivate;
     }
 
     @Override
@@ -51,5 +56,17 @@ public class PasModuleStubImpl extends PasNamedStubBase<PascalModule> implements
     @Override
     public List<String> getUsedUnitsPrivate() {
         return usedUnitsPrivate;
+    }
+
+    @NotNull
+    @Override
+    public List<String> getIncludesPublic() {
+        return includesPublic;
+    }
+
+    @NotNull
+    @Override
+    public List<String> getIncludesPrivate() {
+        return includesPrivate;
     }
 }

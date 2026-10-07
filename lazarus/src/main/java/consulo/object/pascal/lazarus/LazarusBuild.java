@@ -6,11 +6,12 @@ import com.siberika.idea.pascal.sdk.BasePascalSdkType;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.content.bundle.Sdk;
 import consulo.language.content.LanguageContentFolderScopes;
+import consulo.language.util.ModuleUtilCore;
 import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
 import consulo.object.pascal.lazarus.localize.LazarusLocalize;
 import consulo.object.pascal.lazarus.module.LazarusModuleExtension;
-import consulo.object.pascal.module.extension.PascalModuleBuild;
+import consulo.object.pascal.module.extension.ObjectPascalModuleExtension;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.virtualFileSystem.VirtualFile;
 
@@ -24,39 +25,48 @@ import java.util.Set;
  */
 public final class LazarusBuild {
     private static final String FALLBACK_UNIT_OUTPUT = "lib/consulo";
+    private static final String BUILD_ALL_FLAG = "-B";
 
     private LazarusBuild() {
     }
 
     @RequiredReadAction
-    public static PascalModuleBuild create(LazarusModuleExtension extension) {
+    public static LazarusBuildCommand create(LazarusModuleExtension extension, boolean rebuild) {
         Module module = extension.getModule();
         String projectFile = extension.getProjectFilePath();
         if (extension.isPackage() || projectFile == null) {
-            return PascalModuleBuild.SKIP;
+            return LazarusBuildCommand.SKIP;
         }
 
+        Path projectPath = Path.of(projectFile);
         LazarusBuildTool buildTool = LazarusBuildTool.find();
         if (buildTool != null) {
-            return PascalModuleBuild.of(buildTool.createBuildCommandLine(Path.of(projectFile), extension.getBuildMode()));
+            GeneralCommandLine commandLine = buildTool.createBuildCommandLine(projectPath, extension.getBuildMode());
+            if (rebuild) {
+                commandLine.getParametersList().prependAll(BUILD_ALL_FLAG);
+            }
+            return LazarusBuildCommand.of(commandLine, projectPath.getParent());
         }
-        return fpcBuild(module, extension, Path.of(projectFile));
+        return fpcBuild(module, extension, projectPath, rebuild);
     }
 
     @RequiredReadAction
-    private static PascalModuleBuild fpcBuild(Module module, LazarusModuleExtension extension, Path projectFile) {
-        Sdk sdk = extension.getSdk();
+    private static LazarusBuildCommand fpcBuild(Module module, LazarusModuleExtension extension, Path projectFile, boolean rebuild) {
+        Sdk sdk = ModuleUtilCore.getSdk(module, ObjectPascalModuleExtension.class);
         String mainFile = extension.getMainFilePath();
         String targetFile = extension.getTargetFilePath();
         String sdkHome = sdk != null ? sdk.getHomePath() : null;
         if (sdk == null || sdkHome == null || mainFile == null) {
-            return PascalModuleBuild.error(LazarusLocalize.buildLazbuildMissing(module.getName()));
+            return LazarusBuildCommand.error(LazarusLocalize.buildLazbuildMissing(module.getName()));
         }
 
         Path projectDirectory = projectFile.getParent();
         GeneralCommandLine commandLine = new GeneralCommandLine(PascalSdkUtil.getFPCExecutable(sdkHome).getPath());
         commandLine.withWorkDirectory(projectDirectory.toString());
         commandLine.addParameter("-viewhnbq");
+        if (rebuild) {
+            commandLine.addParameter(BUILD_ALL_FLAG);
+        }
         String debugOptions = BasePascalSdkType.getAdditionalData(sdk).getString(PascalSdkData.Keys.COMPILER_OPTIONS_DEBUG);
         if (debugOptions != null && !debugOptions.isBlank()) {
             for (String option : debugOptions.trim().split("\\s+")) {
@@ -79,7 +89,7 @@ public final class LazarusBuild {
             commandLine.addParameter("-o" + target);
         }
         commandLine.addParameter(mainFile);
-        return PascalModuleBuild.of(commandLine);
+        return LazarusBuildCommand.of(commandLine, projectDirectory);
     }
 
     @RequiredReadAction

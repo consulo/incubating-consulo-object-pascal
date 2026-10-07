@@ -460,6 +460,10 @@ public class ResolveUtil {
         return (element instanceof PascalStubElement) && (((PascalStubElement) element).retrieveStub() != null);
     }
 
+    public static Collection<PasField> getResolutionFields(PasEntityScope scope) {
+        return scope instanceof PascalModuleImpl module ? module.getAllFieldsWithIncludes() : scope.getAllFields();
+    }
+
     public static String cleanupName(String name) {
         return name != null ? name.replaceAll(STRUCT_SUFFIX, "") : null;
     }

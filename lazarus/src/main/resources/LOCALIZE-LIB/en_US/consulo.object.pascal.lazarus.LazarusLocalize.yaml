@@ -34,3 +34,11 @@ task.failed:
     text: lazbuild exited with code {0}
 view.packages.node:
     text: Required Packages
+compiler.name:
+    text: Lazarus (lazbuild)
+compiler.progress:
+    text: 'Running {0}'
+compiler.exit.code:
+    text: '{0} exited with code {1}'
+new.project.name:
+    text: Lazarus Project

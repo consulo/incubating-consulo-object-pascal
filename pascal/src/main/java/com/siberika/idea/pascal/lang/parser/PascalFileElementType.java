@@ -13,6 +13,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.stub.IStubFileElementType;
 import consulo.language.psi.stub.PsiFileStub;
 import consulo.language.version.LanguageVersion;
+import consulo.object.pascal.moduleAware.PascalDefineEnv;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NotNull;
@@ -32,7 +33,7 @@ public class PascalFileElementType extends IStubFileElementType<PsiFileStub<Pasc
     }
 
     public static int getStubIndexVersion() {
-        return 114;
+        return 116;
     }
 
     @Override
@@ -50,7 +51,7 @@ public class PascalFileElementType extends IStubFileElementType<PsiFileStub<Pasc
         final PsiBuilder builder = PsiBuilderFactory.getInstance().createBuilder(
             project,
             chameleon,
-            parserDefinition.createLexer(project, file),
+            parserDefinition.createLexer(project, file, PascalDefineEnv.optionsFor(psi)),
             languageForParser,
             languageVersion,
             chameleon.getChars()

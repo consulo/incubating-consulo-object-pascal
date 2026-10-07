@@ -10,10 +10,13 @@ import com.siberika.idea.pascal.lang.references.ResolveUtil;
 import com.siberika.idea.pascal.lang.references.resolve.Resolve;
 import com.siberika.idea.pascal.lang.references.resolve.ResolveProcessor;
 import com.siberika.idea.pascal.lang.stub.PasModuleStub;
+import com.siberika.idea.pascal.util.ModuleUtil;
 import com.siberika.idea.pascal.util.PsiUtil;
+import com.siberika.idea.pascal.util.StrUtil;
 import com.siberika.idea.pascal.util.SyncUtil;
 import consulo.component.ProcessCanceledException;
 import consulo.language.ast.ASTNode;
+import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.SmartPointerManager;
 import consulo.language.psi.SmartPsiElementPointer;
@@ -146,6 +149,20 @@ public abstract class PascalModuleImpl extends PasStubScopeImpl<PasModuleStub> i
     @Override
     @Nullable
     public final PasField getField(final String name) {
+        PasField result = getOwnField(name);
+        if ((null == result) && (name != null)) {
+            for (PascalModule included : ModuleUtil.getAllIncludedModules(this)) {
+                result = ((PascalModuleImpl) included).getOwnField(name);
+                if (result != null) {
+                    break;
+                }
+            }
+        }
+        return result;
+    }
+
+    @Nullable
+    private PasField getOwnField(final String name) {
         if ((name != null) && (retrieveStub() != null)) {
             return getFieldStub(name);
         } else {
@@ -177,6 +194,23 @@ public abstract class PascalModuleImpl extends PasStubScopeImpl<PasModuleStub> i
             result.addAll(getPrivateFields());
             return result;
         }
+    }
+
+    @NotNull
+    public Collection<PasField> getAllFieldsWithIncludes() {
+        List<PascalModule> includedModules = ModuleUtil.getAllIncludedModules(this);
+        if (includedModules.isEmpty()) {
+            return getAllFields();
+        }
+        Collection<PasField> result = new LinkedHashSet<>(getAllFields());
+        for (PascalModule included : includedModules) {
+            for (PasField field : included.getAllFields()) {
+                if (field.fieldType != PasField.FieldType.UNIT) {
+                    result.add(field);
+                }
+            }
+        }
+        return result;
     }
 
     PasField getFieldStub(String name) {
@@ -341,6 +375,44 @@ public abstract class PascalModuleImpl extends PasStubScopeImpl<PasModuleStub> i
             }
         }
         return usedUnitsPublic;
+    }
+
+    @NotNull
+    @Override
+    public List<String> getIncludesPublic() {
+        PasModuleStub stub = retrieveStub();
+        if (stub != null) {
+            return stub.getIncludesPublic();
+        }
+        return collectIncludes(false);
+    }
+
+    @NotNull
+    @Override
+    public List<String> getIncludesPrivate() {
+        PasModuleStub stub = retrieveStub();
+        if (stub != null) {
+            return stub.getIncludesPrivate();
+        }
+        return collectIncludes(true);
+    }
+
+    private List<String> collectIncludes(boolean implementation) {
+        PsiElement section = PsiUtil.getModuleImplementationSection(this);
+        int implementationStart = section != this ? section.getTextRange().getStartOffset() : 0;
+        List<String> result = new SmartList<>();
+        for (PsiComment comment : PsiTreeUtil.findChildrenOfType(getContainingFile(), PsiComment.class)) {
+            if (comment.getNode().getElementType() != PasTypes.INCLUDE) {
+                continue;
+            }
+            if ((comment.getTextRange().getStartOffset() >= implementationStart) == implementation) {
+                String name = StrUtil.getIncludeName(comment.getText());
+                if (name != null) {
+                    result.add(name);
+                }
+            }
+        }
+        return result;
     }
 
     @NotNull

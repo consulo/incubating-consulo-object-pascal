@@ -6,6 +6,7 @@ import consulo.language.lexer.DelegateLexer;
 import consulo.language.lexer.FlexAdapter;
 import consulo.language.lexer.FlexLexer;
 import consulo.language.lexer.Lexer;
+import consulo.object.pascal.moduleAware.PascalDefineOptions;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NotNull;
@@ -102,6 +103,11 @@ public abstract class PascalLexer extends DelegateLexer implements PasTypes {
     public static class ParsingPascalLexer extends PascalLexer {
         public ParsingPascalLexer(Project project, VirtualFile virtualFile) {
             super(new FlexAdapter(new PascalFlexLexerImpl(null, project, virtualFile, false)));
+        }
+
+        public ParsingPascalLexer(Project project, VirtualFile virtualFile, PascalDefineOptions defineOptions) {
+            this(project, virtualFile);
+            pascalFlexLexer.setDefineOptions(defineOptions);
         }
     }
 

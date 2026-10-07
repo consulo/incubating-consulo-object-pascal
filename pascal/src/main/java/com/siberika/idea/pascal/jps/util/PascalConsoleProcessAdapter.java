@@ -12,10 +12,11 @@ public abstract class PascalConsoleProcessAdapter extends ProcessAdapter {
 
     @Override
     public void onTextAvailable(@NotNull ProcessEvent event, @NotNull Key outputType) {
-        String str = event.getText();
-        sb.append(str);
-        if (str.endsWith("\r\n") || str.endsWith("\n")) {
-            doProcessLine();
+        sb.append(event.getText());
+        int end;
+        while ((end = sb.indexOf("\n")) >= 0) {
+            doProcessLine(sb.substring(0, end));
+            sb.delete(0, end + 1);
         }
     }
 
@@ -23,13 +24,13 @@ public abstract class PascalConsoleProcessAdapter extends ProcessAdapter {
     public void processTerminated(@NotNull ProcessEvent event) {
         super.processTerminated(event);
         if (sb.length() > 0) {
-            doProcessLine();
+            doProcessLine(sb.toString());
+            sb = new StringBuffer();
         }
     }
 
-    private void doProcessLine() {
-        onLine(sb.toString());
-        sb = new StringBuffer();
+    private void doProcessLine(String line) {
+        onLine(line.endsWith("\r") ? line.substring(0, line.length() - 1) : line);
     }
 
 }

@@ -33,6 +33,7 @@ module consulo.object.pascal {
     requires consulo.logging.api;
     requires consulo.module.api;
     requires consulo.module.content.api;
+    requires consulo.module.creation.api;
     requires consulo.module.ui.api;
     requires consulo.nativeDev.debugger.api;
     requires consulo.nativeDev.profiler.api;
@@ -62,10 +63,14 @@ module consulo.object.pascal {
     requires forms.rt;
 
     exports com.siberika.idea.pascal;
+    exports com.siberika.idea.pascal.jps.builder;
+    exports com.siberika.idea.pascal.jps.compiler;
     exports com.siberika.idea.pascal.jps.sdk;
+    exports com.siberika.idea.pascal.jps.util;
     exports com.siberika.idea.pascal.sdk;
     exports consulo.object.pascal.icon;
     exports consulo.object.pascal.module.extension;
+    exports consulo.object.pascal.newProject;
     exports consulo.object.pascal.sdk;
 
     opens com.siberika.idea.pascal.lang.folding to consulo.util.xml.serializer;

@@ -31,7 +31,7 @@ public class LazarusModuleImportProvider extends AbstractExternalModuleImportPro
 
     @Override
     public Image getIcon() {
-        return ObjectPascalIconGroup.pascal_16x16();
+        return ObjectPascalIconGroup.lazarus();
     }
 
     @Override

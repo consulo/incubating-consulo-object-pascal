@@ -121,7 +121,7 @@ abstract class FQNResolver {
 
     boolean processDefault(PasEntityScope scope, String fieldName) {
         if (context.ignoreNames() && fqn.isTarget()) {
-            for (PasField field : scope.getAllFields()) {
+            for (PasField field : ResolveUtil.getResolutionFields(scope)) {
                 if ((isFieldSuitable(field) && !processField(scope, field))) {
                     break;                        // No need to return false for ignoreNames mode
                 }

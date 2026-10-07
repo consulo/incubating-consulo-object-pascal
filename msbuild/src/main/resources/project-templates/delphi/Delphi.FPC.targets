@@ -1,0 +1,59 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <FpcPath Condition="'$(FpcPath)'==''">fpc</FpcPath>
+        <DelphiFpcProjectName>$([System.IO.Path]::GetFileNameWithoutExtension('$(MainSource)'))</DelphiFpcProjectName>
+        <_DelphiFpcDcuDir>$(DCC_DcuOutput.Replace('\', '/'))</_DelphiFpcDcuDir>
+        <_DelphiFpcExeDir>$(DCC_ExeOutput.Replace('\', '/'))</_DelphiFpcExeDir>
+        <DelphiFpcDcuOutput>$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)', '$(_DelphiFpcDcuDir)'))</DelphiFpcDcuOutput>
+        <DelphiFpcExeOutput>$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)', '$(_DelphiFpcExeDir)'))</DelphiFpcExeOutput>
+        <DelphiFpcExeExtension Condition="$([MSBuild]::IsOSPlatform('Windows'))">.exe</DelphiFpcExeExtension>
+        <DelphiFpcExeFile>$([System.IO.Path]::Combine('$(DelphiFpcExeOutput)', '$(DelphiFpcProjectName)$(DelphiFpcExeExtension)'))</DelphiFpcExeFile>
+    </PropertyGroup>
+
+    <Target Name="Build" DependsOnTargets="_DelphiFpcCompile" Returns="$(DelphiFpcExeFile)"/>
+
+    <Target Name="Make" DependsOnTargets="Build" Returns="$(DelphiFpcExeFile)"/>
+
+    <Target Name="Rebuild" DependsOnTargets="_DelphiFpcForceRebuild;_DelphiFpcCompile" Returns="$(DelphiFpcExeFile)"/>
+
+    <Target Name="Clean">
+        <ItemGroup>
+            <_DelphiFpcCleanFile Include="$(DelphiFpcDcuOutput)/*.ppu;$(DelphiFpcDcuOutput)/*.o;$(DelphiFpcDcuOutput)/*.a;$(DelphiFpcDcuOutput)/*.rsj"/>
+            <_DelphiFpcCleanFile Include="$(DelphiFpcExeFile)" Condition="Exists('$(DelphiFpcExeFile)')"/>
+        </ItemGroup>
+        <Delete Files="@(_DelphiFpcCleanFile)"/>
+    </Target>
+
+    <Target Name="Run" DependsOnTargets="Build">
+        <Exec Command="&quot;$(DelphiFpcExeFile)&quot; $(Debugger_RunParams)" WorkingDirectory="$(MSBuildProjectDirectory)" StandardOutputImportance="High"/>
+    </Target>
+
+    <Target Name="_DelphiFpcForceRebuild">
+        <PropertyGroup>
+            <DelphiFpcRebuild>true</DelphiFpcRebuild>
+        </PropertyGroup>
+    </Target>
+
+    <Target Name="_DelphiFpcCompile">
+        <ItemGroup>
+            <_DelphiFpcUnitPathSpec Include="$(DCC_UnitSearchPath)"/>
+            <_DelphiFpcUnitPath Include="@(_DelphiFpcUnitPathSpec->Replace('\', '/'))"/>
+            <_DelphiFpcUnitPath Include="@(DCCReference->'%(RootDir)%(Directory).')"/>
+            <_DelphiFpcDefine Include="$(DCC_Define)"/>
+            <_DelphiFpcNamespace Include="$(DCC_Namespace)"/>
+        </ItemGroup>
+        <PropertyGroup>
+            <_DelphiFpcArgs>-Mdelphi</_DelphiFpcArgs>
+            <_DelphiFpcArgs Condition="'$(DelphiFpcRebuild)'=='true'">$(_DelphiFpcArgs) -B</_DelphiFpcArgs>
+            <_DelphiFpcArgs Condition="'$(DCC_Optimize)'=='false'">$(_DelphiFpcArgs) -O-</_DelphiFpcArgs>
+            <_DelphiFpcArgs Condition="'$(DCC_Optimize)'!='false'">$(_DelphiFpcArgs) -O2</_DelphiFpcArgs>
+            <_DelphiFpcArgs Condition="'$(DCC_DebugInformation)'!='0' and '$(DCC_DebugInformation)'!='false'">$(_DelphiFpcArgs) -gw</_DelphiFpcArgs>
+            <_DelphiFpcArgs>$(_DelphiFpcArgs) @(_DelphiFpcDefine->'-d%(Identity)', ' ')</_DelphiFpcArgs>
+            <_DelphiFpcArgs>$(_DelphiFpcArgs) @(_DelphiFpcNamespace->'-FN%(Identity)', ' ')</_DelphiFpcArgs>
+            <_DelphiFpcArgs>$(_DelphiFpcArgs) @(_DelphiFpcUnitPath->'%(FullPath)'->Distinct()->'-Fu&quot;%(Identity)&quot;', ' ')</_DelphiFpcArgs>
+            <_DelphiFpcArgs>$(_DelphiFpcArgs) -FU&quot;$(DelphiFpcDcuOutput)&quot; -FE&quot;$(DelphiFpcExeOutput)&quot;</_DelphiFpcArgs>
+        </PropertyGroup>
+        <MakeDir Directories="$(DelphiFpcDcuOutput);$(DelphiFpcExeOutput)"/>
+        <Exec Command="&quot;$(FpcPath)&quot; $(_DelphiFpcArgs) &quot;$(MainSource)&quot;" WorkingDirectory="$(MSBuildProjectDirectory)"/>
+    </Target>
+</Project>

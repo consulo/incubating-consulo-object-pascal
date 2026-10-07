@@ -28,7 +28,7 @@ public class PasModuleStubElementType extends ILightStubElementType<PasModuleStu
 
     @Override
     public PasModuleStub createStub(LighterAST tree, LighterASTNode node, StubElement parentStub) {
-        return new PasModuleStubImpl(parentStub, "-", null, Collections.emptyList(), Collections.emptyList());
+        return new PasModuleStubImpl(parentStub, "-", null, Collections.emptyList(), Collections.emptyList(), Collections.emptyList(), Collections.emptyList());
     }
 
     @Override
@@ -39,7 +39,8 @@ public class PasModuleStubElementType extends ILightStubElementType<PasModuleStu
     @NotNull
     @Override
     public PasModuleStub createStub(@NotNull PascalModule psi, StubElement parentStub) {
-        return new PasModuleStubImpl(parentStub, psi.getName(), psi.getModuleType(), psi.getUsedUnitsPublic(), psi.getUsedUnitsPrivate());
+        return new PasModuleStubImpl(parentStub, psi.getName(), psi.getModuleType(), psi.getUsedUnitsPublic(), psi.getUsedUnitsPrivate(),
+            psi.getIncludesPublic(), psi.getIncludesPrivate());
     }
 
     @NotNull
@@ -56,6 +57,8 @@ public class PasModuleStubElementType extends ILightStubElementType<PasModuleStu
         dataStream.writeName(stub.getModuleType().name());
         StubUtil.writeStringCollection(dataStream, stub.getUsedUnitsPublic());
         StubUtil.writeStringCollection(dataStream, stub.getUsedUnitsPrivate());
+        StubUtil.writeStringCollection(dataStream, stub.getIncludesPublic());
+        StubUtil.writeStringCollection(dataStream, stub.getIncludesPrivate());
     }
 
     @NotNull
@@ -67,7 +70,11 @@ public class PasModuleStubElementType extends ILightStubElementType<PasModuleStu
         StubUtil.readStringCollection(dataStream, usedUnitsPublic);
         List<String> usedUnitsPrivate = new SmartList<>();
         StubUtil.readStringCollection(dataStream, usedUnitsPrivate);
-        return new PasModuleStubImpl(parentStub, name, type, usedUnitsPublic, usedUnitsPrivate);
+        List<String> includesPublic = new SmartList<>();
+        StubUtil.readStringCollection(dataStream, includesPublic);
+        List<String> includesPrivate = new SmartList<>();
+        StubUtil.readStringCollection(dataStream, includesPrivate);
+        return new PasModuleStubImpl(parentStub, name, type, usedUnitsPublic, usedUnitsPrivate, includesPublic, includesPrivate);
     }
 
     @Override

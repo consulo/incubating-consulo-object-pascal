@@ -9,8 +9,11 @@ module consulo.object.pascal.lazarus {
     requires consulo.application.api;
     requires consulo.application.content.api;
     requires consulo.base.icon.library;
+    requires consulo.build.ui.api;
+    requires consulo.compiler.api;
     requires consulo.component.api;
     requires consulo.configurable.api;
+    requires consulo.datacontext.api;
     requires consulo.disposer.api;
     requires consulo.document.api;
     requires consulo.external.system.api;

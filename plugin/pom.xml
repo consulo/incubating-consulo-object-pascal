@@ -51,6 +51,10 @@
                     <dependencies>
                         <dependency>consulo.nativeDev</dependency>
                         <dependency>com.intellij.xml</dependency>
+                        <dependency>consulo.msbuild</dependency>
+                        <dependency>consulo.dap</dependency>
+                        <dependency>consulo.dotnet</dependency>
+                        <dependency>consulo.csharp</dependency>
                     </dependencies>
                     <packaging>
                         <skip>${dev.mode}</skip>
@@ -79,6 +83,11 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>consulo.object.pascal.lazarus</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>consulo.object.pascal.msbuild</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

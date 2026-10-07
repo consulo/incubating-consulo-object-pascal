@@ -1,0 +1,10 @@
+program ${IDENT};
+
+{$APPTYPE CONSOLE}
+
+uses
+  SysUtils;
+
+begin
+  WriteLn('Hello from ${NAME}');
+end.

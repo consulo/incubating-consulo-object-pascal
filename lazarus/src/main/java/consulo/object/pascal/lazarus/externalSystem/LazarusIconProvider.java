@@ -19,6 +19,6 @@ public class LazarusIconProvider implements ExternalSystemIconProvider {
 
     @Override
     public Image getProjectIcon() {
-        return ObjectPascalIconGroup.pascal_16x16();
+        return ObjectPascalIconGroup.lazarus();
     }
 }

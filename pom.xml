@@ -42,6 +42,9 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>pascal</module>
+        <module>lazarus</module>
+        <module>msbuild</module>
         <module>plugin</module>
     </modules>
 </project>

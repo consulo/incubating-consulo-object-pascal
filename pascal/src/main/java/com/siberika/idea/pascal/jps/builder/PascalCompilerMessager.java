@@ -7,6 +7,9 @@ import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 
+import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -19,9 +22,14 @@ public class PascalCompilerMessager implements CompilerMessager {
     private static final List<String> SUPPRESSED_MSG_ID = Arrays.asList("1018", "10026", "F2063");
 
     private final CompileContext myContext;
+    private Path myWorkingDirectory;
 
     public PascalCompilerMessager(CompileContext context) {
         myContext = context;
+    }
+
+    public void setWorkingDirectory(Path workingDirectory) {
+        myWorkingDirectory = workingDirectory;
     }
 
     static void createMessage(CompilerMessageCategory category, String line, Matcher matcher, CompilerMessager messager) {
@@ -83,10 +91,28 @@ public class PascalCompilerMessager implements CompilerMessager {
     }
 
     private void postMessage(consulo.compiler.CompilerMessageCategory category, String msg, String path, long line, long column) {
-        String url = StringUtil.isEmpty(path) ? null : VirtualFileUtil.pathToUrl(FileUtil.toSystemIndependentName(path));
+        Path file = resolve(path);
+        String url = file != null ? VirtualFileUtil.pathToUrl(FileUtil.toSystemIndependentName(file.toString())) : null;
         myContext.newMessage(category, LocalizeValue.of(StringUtil.notNullize(msg)))
             .optionalUrl(url)
             .position((int) line, (int) column)
             .add();
+    }
+
+    public Path resolve(String path) {
+        if (StringUtil.isEmpty(path)) {
+            return null;
+        }
+        try {
+            Path file = Path.of(path.trim());
+            if (!file.isAbsolute() && myWorkingDirectory != null) {
+                file = myWorkingDirectory.resolve(file);
+            }
+            file = file.normalize();
+            return Files.isRegularFile(file) ? file : null;
+        }
+        catch (InvalidPathException e) {
+            return null;
+        }
     }
 }

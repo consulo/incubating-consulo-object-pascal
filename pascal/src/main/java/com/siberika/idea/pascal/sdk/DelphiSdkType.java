@@ -56,7 +56,7 @@ public class DelphiSdkType extends BasePascalSdkType {
     }
 
     public DelphiSdkType() {
-        super("DelphiSdkType", LocalizeValue.localizeTODO("Delphi SDK"), ObjectPascalIconGroup.pascal_16x16(), PascalCompilerFamily.DELPHI);
+        super("DelphiSdkType", LocalizeValue.localizeTODO("Delphi SDK"), ObjectPascalIconGroup.delphi(), PascalCompilerFamily.DELPHI);
         loadResources("delphi");
     }
 

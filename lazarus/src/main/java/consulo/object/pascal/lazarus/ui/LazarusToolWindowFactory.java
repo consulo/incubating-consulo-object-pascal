@@ -24,6 +24,6 @@ public class LazarusToolWindowFactory extends AbstractExternalSystemToolWindowFa
 
     @Override
     public Image getIcon() {
-        return ObjectPascalIconGroup.pascal_16x16();
+        return ObjectPascalIconGroup.lazarustoolwindow();
     }
 }

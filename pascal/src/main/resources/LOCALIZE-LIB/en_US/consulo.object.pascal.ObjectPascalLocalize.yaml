@@ -376,3 +376,15 @@ run.configuration.module.label:
     text: 'Module:'
 run.debugger.unsupported.sdk:
     text: 'Debugging needs a Free Pascal SDK: {0} does not produce DWARF debug information'
+new.project.group:
+    text: Pascal
+new.project.kind.label:
+    text: 'Kind:'
+new.project.kind.application:
+    text: Application
+new.project.kind.library:
+    text: Library
+extension.name:
+    text: Pascal
+new.project.sdk.label:
+    text: 'SDK:'

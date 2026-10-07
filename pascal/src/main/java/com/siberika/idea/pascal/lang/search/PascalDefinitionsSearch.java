@@ -10,7 +10,7 @@ import com.siberika.idea.pascal.lang.references.ResolveContext;
 import com.siberika.idea.pascal.lang.references.ResolveUtil;
 import com.siberika.idea.pascal.lang.references.resolve.Resolve;
 import com.siberika.idea.pascal.lang.references.resolve.ResolveProcessor;
-import com.siberika.idea.pascal.lang.stub.PascalStructIndex;
+import com.siberika.idea.pascal.lang.stub.PascalStructParentIndex;
 import com.siberika.idea.pascal.lang.stub.StubUtil;
 import com.siberika.idea.pascal.util.ModuleUtil;
 import com.siberika.idea.pascal.util.PsiUtil;
@@ -120,35 +120,30 @@ public class PascalDefinitionsSearch extends QueryExecutorBase<PsiElement, Defin
         final Project project = parent.getProject();
         final Set<String> processedParents = processed != null ? processed : new SmartHashSet<>();
         final List<PascalStructType> toProcessRecursive = recursive ? new SmartList<>() : null;
-        StubIndex index = StubIndex.getInstance();
         final boolean includeNonProjectItems = PsiUtil.isFromLibrary(parent);
 
         final GlobalSearchScope scope = PascalClassByNameContributor.getScope(project, includeNonProjectItems);
-        boolean result = index.processAllKeys(PascalStructIndex.KEY, new Predicate<String>() {
-                    @Override
-                    public boolean test(String key) {
-                        for (PascalStructType type : StubIndex.getElements(PascalStructIndex.KEY, key, project, scope, PascalStructType.class)) {
-                            String uname = type.getUniqueName();
-                            List<String> parents = type.getParentNames();
-                            for (String parentToCheck : parents) {
-                                if (parentToCheck.toUpperCase().endsWith(name)) {
-                                    PasEntityScope resolved = resolveParent(parent, type, parentToCheck);
-                                    if (elementsEqual(project, parent, resolved)) {
-                                        if (!processor.test(type)) {
-                                            return false;
-                                        }
-                                        if (recursive && !processedParents.contains(uname)) {
-                                            processedParents.add(uname);
-                                            toProcessRecursive.add(type);
-                                        }
-                                    }
-                                }
-                            }
+        boolean result = true;
+        candidates:
+        for (PascalStructType type : StubIndex.getElements(PascalStructParentIndex.KEY, PascalStructParentIndex.parentKey(parent.getName()), project, scope, PascalStructType.class)) {
+            String uname = type.getUniqueName();
+            List<String> parents = type.getParentNames();
+            for (String parentToCheck : parents) {
+                if (parentToCheck.toUpperCase().endsWith(name)) {
+                    PasEntityScope resolved = resolveParent(parent, type, parentToCheck);
+                    if (elementsEqual(project, parent, resolved)) {
+                        if (!processor.test(type)) {
+                            result = false;
+                            break candidates;
                         }
-                        return true;
+                        if (recursive && !processedParents.contains(uname)) {
+                            processedParents.add(uname);
+                            toProcessRecursive.add(type);
+                        }
                     }
-                },
-                scope, null);
+                }
+            }
+        }
         if (recursive) {
             for (PascalStructType type : toProcessRecursive) {
                 if (!processDescendingStructs(processedParents, type, true, processor, rCnt + 1)) {

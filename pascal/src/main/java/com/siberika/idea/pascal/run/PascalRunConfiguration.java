@@ -17,6 +17,7 @@ import consulo.nativeDev.profiler.NativeProfilableRunProfile;
 import consulo.object.pascal.debugger.PascalDebuggerSetup;
 import consulo.object.pascal.localize.ObjectPascalLocalize;
 import consulo.object.pascal.module.extension.ObjectPascalModuleExtension;
+import consulo.object.pascal.module.extension.PascalBuildModuleExtension;
 import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.cmd.ParametersListUtil;
@@ -126,7 +127,7 @@ public class PascalRunConfiguration extends ModuleBasedConfiguration<RunConfigur
         Module module = findModule(environment);
         if (module != null) {
             Path projectExecutable = ReadAction.compute(() -> {
-                ObjectPascalModuleExtension<?> extension = ModuleUtilCore.getExtension(module, ObjectPascalModuleExtension.class);
+                PascalBuildModuleExtension<?> extension = ModuleUtilCore.getExtension(module, PascalBuildModuleExtension.class);
                 return extension != null ? extension.getExecutable() : null;
             });
             if (projectExecutable != null) {

@@ -133,6 +133,7 @@ public abstract class BasePascalSdkType extends SdkType {
                                 result.putAll(entry.getValue());
                             }
                         }
+                        result.putAll(((BasePascalSdkType) id).readCompilerDefines(sdk));
                         return Collections.unmodifiableMap(result);
                     }
                 });
@@ -174,8 +175,17 @@ public abstract class BasePascalSdkType extends SdkType {
         directivesCache.invalidateAll();
     }
 
+    @NotNull
+    protected Map<String, Define> readCompilerDefines(@NotNull Sdk sdk) {
+        return Collections.emptyMap();
+    }
+
     protected void configureOptions(@NotNull Sdk sdk, PascalSdkData data, String target) {
         data.setValue(PascalSdkData.Keys.COMPILER_FAMILY.getKey(), compilerFamily);
+    }
+
+    public static boolean isConfigured(@NotNull Sdk sdk) {
+        return sdk.getSdkAdditionalData() instanceof PascalSdkData data && data.getValue(PascalSdkData.Keys.COMPILER_OPTIONS.getKey()) != null;
     }
 
     @Override
