@@ -1,0 +1,36 @@
+build.lazbuild.missing:
+    text: 'lazbuild is not found and the module has no Free Pascal SDK: install Lazarus or set a Free Pascal SDK for {0}'
+extension.name:
+    text: Lazarus
+extension.build.mode.label:
+    text: 'Build mode:'
+extension.build.mode.default:
+    text: <default>
+extension.project.file.label:
+    text: 'Project file:'
+import.sdk.label:
+    text: 'SDK:'
+project.system.name:
+    text: Lazarus
+reload.failed:
+    text: 'Cannot read Lazarus project {0}: {1}'
+resolve.status:
+    text: Reading Lazarus project {0}
+task.group.build:
+    text: build
+task.group.build.modes:
+    text: build modes
+task.build.description:
+    text: Build the project with lazbuild
+task.rebuild.description:
+    text: Rebuild the project and all its units with lazbuild
+task.build.mode.description:
+    text: Build the project in the {0} build mode
+task.lazbuild.missing:
+    text: 'lazbuild is not found: install Lazarus or add lazbuild to PATH'
+task.unknown:
+    text: 'Unknown Lazarus task: {0}'
+task.failed:
+    text: lazbuild exited with code {0}
+view.packages.node:
+    text: Required Packages
