@@ -2,10 +2,14 @@ package com.siberika.idea.pascal.jps.util;
 
 import com.siberika.idea.pascal.PascalException;
 import com.siberika.idea.pascal.jps.JpsPascalBundle;
+import consulo.application.progress.ProgressManager;
+import consulo.component.ProcessCanceledException;
 import consulo.logging.Logger;
 import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
-import consulo.process.util.CapturingProcessUtil;
+import consulo.process.ProcessHandler;
+import consulo.process.ProcessHandlerBuilder;
+import consulo.process.util.CapturingProcessAdapter;
 import consulo.process.util.ProcessOutput;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -14,6 +18,7 @@ import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Author: George Bakhtadze
@@ -24,6 +29,8 @@ public class SysUtils {
 
     public static final int LONG_TIMEOUT = 5 * 60 * 1000;
     public static final int SHORT_TIMEOUT = 5 * 1000;
+
+    private static final long WAIT_INTERVAL_MS = 50;
 
     @NotNull
     public static ProcessOutput getProcessOutput(final int timeout, @NotNull final String workDir,
@@ -50,7 +57,26 @@ public class SysUtils {
     public static ProcessOutput execute(@NotNull final GeneralCommandLine cmd,
                                         final int timeout) throws ExecutionException {
         LOG.info("Executing: " + cmd.getCommandLineString());
-        return timeout < 0 ? CapturingProcessUtil.execAndGetOutput(cmd) : CapturingProcessUtil.execAndGetOutput(cmd, timeout);
+        ProcessOutput output = new ProcessOutput();
+        ProcessHandler handler = ProcessHandlerBuilder.create(cmd).silentReader().build();
+        handler.addProcessListener(new CapturingProcessAdapter(output));
+        handler.startNotify();
+        long deadline = timeout < 0 ? Long.MAX_VALUE : System.nanoTime() + TimeUnit.MILLISECONDS.toNanos(timeout);
+        try {
+            while (!handler.waitFor(WAIT_INTERVAL_MS)) {
+                ProgressManager.checkCanceled();
+                if (System.nanoTime() >= deadline) {
+                    handler.destroyProcess();
+                    output.setTimeout();
+                    return output;
+                }
+            }
+        }
+        catch (ProcessCanceledException e) {
+            handler.destroyProcess();
+            throw e;
+        }
+        return output;
     }
 
     @Nullable

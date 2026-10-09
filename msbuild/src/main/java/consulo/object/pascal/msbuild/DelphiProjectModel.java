@@ -1,5 +1,6 @@
 package consulo.object.pascal.msbuild;
 
+import consulo.platform.PlatformOperatingSystem;
 import jakarta.annotation.Nullable;
 
 import java.nio.file.InvalidPathException;
@@ -7,7 +8,6 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -26,11 +26,11 @@ public record DelphiProjectModel(@Nullable Path mainSource,
     public static final String DCC_REFERENCE_ITEM = "DCCReference";
     public static final String DEFAULT_PLATFORM = "Win32";
 
-    private static final String DEFAULT_CONFIG = "Debug";
-    private static final String WINDOWS_PLATFORM_PREFIX = "win";
-    private static final String WINDOWS_EXECUTABLE_EXTENSION = ".exe";
+    public static final String LIBRARY_APP_TYPE = "Library";
 
-    public static DelphiProjectModel of(Path projectDir, Map<String, String> properties, boolean windowsHost) {
+    private static final String DEFAULT_CONFIG = "Debug";
+
+    public static DelphiProjectModel of(Path projectDir, Map<String, String> properties, PlatformOperatingSystem os) {
         Path mainSource = resolve(projectDir, properties.get("MainSource"));
         String config = valueOrDefault(properties.get("Config"), DEFAULT_CONFIG);
         String platform = valueOrDefault(properties.get("Platform"), DEFAULT_PLATFORM);
@@ -53,12 +53,21 @@ public record DelphiProjectModel(@Nullable Path mainSource,
             String name = mainSource.getFileName().toString();
             int dot = name.lastIndexOf('.');
             String baseName = dot > 0 ? name.substring(0, dot) : name;
-            boolean windowsTarget = platform.toLowerCase(Locale.ROOT).startsWith(WINDOWS_PLATFORM_PREFIX);
-            String extension = windowsHost && windowsTarget ? WINDOWS_EXECUTABLE_EXTENSION : "";
-            executable = (exeOutput != null ? exeOutput : projectDir).resolve(baseName + extension);
+            boolean library = LIBRARY_APP_TYPE.equalsIgnoreCase(valueOrDefault(properties.get("AppType"), ""));
+            executable = (exeOutput != null ? exeOutput : projectDir).resolve(outputFileName(baseName, library, os));
         }
 
         return new DelphiProjectModel(mainSource, config, platform, new ArrayList<>(unitSearchPath), dcuOutput, exeOutput, executable);
+    }
+
+    private static String outputFileName(String baseName, boolean library, PlatformOperatingSystem os) {
+        if (os.isWindows()) {
+            return baseName + (library ? ".dll" : ".exe");
+        }
+        if (!library) {
+            return baseName;
+        }
+        return "lib" + baseName + (os.isMac() ? ".dylib" : ".so");
     }
 
     private static String valueOrDefault(@Nullable String value, String defaultValue) {

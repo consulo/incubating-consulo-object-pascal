@@ -6,26 +6,54 @@
         <_DelphiFpcExeDir>$(DCC_ExeOutput.Replace('\', '/'))</_DelphiFpcExeDir>
         <DelphiFpcDcuOutput>$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)', '$(_DelphiFpcDcuDir)'))</DelphiFpcDcuOutput>
         <DelphiFpcExeOutput>$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)', '$(_DelphiFpcExeDir)'))</DelphiFpcExeOutput>
-        <DelphiFpcExeExtension Condition="$([MSBuild]::IsOSPlatform('Windows'))">.exe</DelphiFpcExeExtension>
-        <DelphiFpcExeFile>$([System.IO.Path]::Combine('$(DelphiFpcExeOutput)', '$(DelphiFpcProjectName)$(DelphiFpcExeExtension)'))</DelphiFpcExeFile>
+        <_DelphiFpcHostOs Condition="$([MSBuild]::IsOSPlatform('Windows'))">win</_DelphiFpcHostOs>
+        <_DelphiFpcHostOs Condition="$([MSBuild]::IsOSPlatform('OSX'))">darwin</_DelphiFpcHostOs>
+        <_DelphiFpcHostOs Condition="'$(_DelphiFpcHostOs)'==''">linux</_DelphiFpcHostOs>
     </PropertyGroup>
 
-    <Target Name="Build" DependsOnTargets="_DelphiFpcCompile" Returns="$(DelphiFpcExeFile)"/>
+    <PropertyGroup Condition="'$(DelphiFpcTargetOs)'==''">
+        <DelphiFpcTargetCpu Condition="'$(Platform)'=='Win32' and '$(_DelphiFpcHostOs)'=='win'">i386</DelphiFpcTargetCpu>
+        <DelphiFpcTargetOs Condition="'$(Platform)'=='Win32' and '$(_DelphiFpcHostOs)'=='win'">win32</DelphiFpcTargetOs>
+        <DelphiFpcTargetCpu Condition="'$(Platform)'=='Win64' and '$(_DelphiFpcHostOs)'=='win'">x86_64</DelphiFpcTargetCpu>
+        <DelphiFpcTargetOs Condition="'$(Platform)'=='Win64' and '$(_DelphiFpcHostOs)'=='win'">win64</DelphiFpcTargetOs>
+        <DelphiFpcTargetCpu Condition="'$(Platform)'=='Linux64' and '$(_DelphiFpcHostOs)'=='linux'">x86_64</DelphiFpcTargetCpu>
+        <DelphiFpcTargetOs Condition="'$(Platform)'=='Linux64' and '$(_DelphiFpcHostOs)'=='linux'">linux</DelphiFpcTargetOs>
+        <DelphiFpcTargetCpu Condition="'$(Platform)'=='OSX64' and '$(_DelphiFpcHostOs)'=='darwin'">x86_64</DelphiFpcTargetCpu>
+        <DelphiFpcTargetOs Condition="'$(Platform)'=='OSX64' and '$(_DelphiFpcHostOs)'=='darwin'">darwin</DelphiFpcTargetOs>
+        <DelphiFpcTargetCpu Condition="'$(Platform)'=='OSXARM64' and '$(_DelphiFpcHostOs)'=='darwin'">aarch64</DelphiFpcTargetCpu>
+        <DelphiFpcTargetOs Condition="'$(Platform)'=='OSXARM64' and '$(_DelphiFpcHostOs)'=='darwin'">darwin</DelphiFpcTargetOs>
+    </PropertyGroup>
 
-    <Target Name="Make" DependsOnTargets="Build" Returns="$(DelphiFpcExeFile)"/>
+    <PropertyGroup>
+        <_DelphiFpcTargetFamily>$(_DelphiFpcHostOs)</_DelphiFpcTargetFamily>
+        <_DelphiFpcTargetFamily Condition="'$(DelphiFpcTargetOs)'=='win32' or '$(DelphiFpcTargetOs)'=='win64'">win</_DelphiFpcTargetFamily>
+        <_DelphiFpcTargetFamily Condition="'$(DelphiFpcTargetOs)'=='darwin'">darwin</_DelphiFpcTargetFamily>
+        <_DelphiFpcTargetFamily Condition="'$(DelphiFpcTargetOs)'=='linux'">linux</_DelphiFpcTargetFamily>
+        <DelphiFpcLibrary Condition="'$(AppType)'=='Library'">true</DelphiFpcLibrary>
+        <DelphiFpcOutputPrefix Condition="'$(DelphiFpcLibrary)'=='true' and '$(_DelphiFpcTargetFamily)'!='win'">lib</DelphiFpcOutputPrefix>
+        <DelphiFpcOutputExtension Condition="'$(DelphiFpcLibrary)'!='true' and '$(_DelphiFpcTargetFamily)'=='win'">.exe</DelphiFpcOutputExtension>
+        <DelphiFpcOutputExtension Condition="'$(DelphiFpcLibrary)'=='true' and '$(_DelphiFpcTargetFamily)'=='win'">.dll</DelphiFpcOutputExtension>
+        <DelphiFpcOutputExtension Condition="'$(DelphiFpcLibrary)'=='true' and '$(_DelphiFpcTargetFamily)'=='darwin'">.dylib</DelphiFpcOutputExtension>
+        <DelphiFpcOutputExtension Condition="'$(DelphiFpcLibrary)'=='true' and '$(_DelphiFpcTargetFamily)'=='linux'">.so</DelphiFpcOutputExtension>
+        <DelphiFpcOutputFile>$([System.IO.Path]::Combine('$(DelphiFpcExeOutput)', '$(DelphiFpcOutputPrefix)$(DelphiFpcProjectName)$(DelphiFpcOutputExtension)'))</DelphiFpcOutputFile>
+    </PropertyGroup>
 
-    <Target Name="Rebuild" DependsOnTargets="_DelphiFpcForceRebuild;_DelphiFpcCompile" Returns="$(DelphiFpcExeFile)"/>
+    <Target Name="Build" DependsOnTargets="_DelphiFpcCompile" Returns="$(DelphiFpcOutputFile)"/>
+
+    <Target Name="Make" DependsOnTargets="Build" Returns="$(DelphiFpcOutputFile)"/>
+
+    <Target Name="Rebuild" DependsOnTargets="_DelphiFpcForceRebuild;_DelphiFpcCompile" Returns="$(DelphiFpcOutputFile)"/>
 
     <Target Name="Clean">
         <ItemGroup>
             <_DelphiFpcCleanFile Include="$(DelphiFpcDcuOutput)/*.ppu;$(DelphiFpcDcuOutput)/*.o;$(DelphiFpcDcuOutput)/*.a;$(DelphiFpcDcuOutput)/*.rsj"/>
-            <_DelphiFpcCleanFile Include="$(DelphiFpcExeFile)" Condition="Exists('$(DelphiFpcExeFile)')"/>
+            <_DelphiFpcCleanFile Include="$(DelphiFpcOutputFile)" Condition="Exists('$(DelphiFpcOutputFile)')"/>
         </ItemGroup>
         <Delete Files="@(_DelphiFpcCleanFile)"/>
     </Target>
 
-    <Target Name="Run" DependsOnTargets="Build">
-        <Exec Command="&quot;$(DelphiFpcExeFile)&quot; $(Debugger_RunParams)" WorkingDirectory="$(MSBuildProjectDirectory)" StandardOutputImportance="High"/>
+    <Target Name="Run" DependsOnTargets="Build" Condition="'$(DelphiFpcLibrary)'!='true'">
+        <Exec Command="&quot;$(DelphiFpcOutputFile)&quot; $(Debugger_RunParams)" WorkingDirectory="$(MSBuildProjectDirectory)" StandardOutputImportance="High"/>
     </Target>
 
     <Target Name="_DelphiFpcForceRebuild">
@@ -44,6 +72,8 @@
         </ItemGroup>
         <PropertyGroup>
             <_DelphiFpcArgs>-Mdelphi</_DelphiFpcArgs>
+            <_DelphiFpcArgs Condition="'$(DelphiFpcTargetCpu)'!=''">$(_DelphiFpcArgs) -P$(DelphiFpcTargetCpu)</_DelphiFpcArgs>
+            <_DelphiFpcArgs Condition="'$(DelphiFpcTargetOs)'!=''">$(_DelphiFpcArgs) -T$(DelphiFpcTargetOs)</_DelphiFpcArgs>
             <_DelphiFpcArgs Condition="'$(DelphiFpcRebuild)'=='true'">$(_DelphiFpcArgs) -B</_DelphiFpcArgs>
             <_DelphiFpcArgs Condition="'$(DCC_Optimize)'=='false'">$(_DelphiFpcArgs) -O-</_DelphiFpcArgs>
             <_DelphiFpcArgs Condition="'$(DCC_Optimize)'!='false'">$(_DelphiFpcArgs) -O2</_DelphiFpcArgs>

@@ -12,9 +12,9 @@ import com.siberika.idea.pascal.jps.util.SysUtils;
 import com.siberika.idea.pascal.module.ModuleService;
 import com.siberika.idea.pascal.sdk.BasePascalSdkType;
 import com.siberika.idea.pascal.sdk.FPCSdkType;
-import com.siberika.idea.pascal.util.DocUtil;
 import com.siberika.idea.pascal.util.StrUtil;
 import consulo.application.ApplicationManager;
+import consulo.application.progress.ProgressManager;
 import consulo.application.util.function.Computable;
 import consulo.component.ProcessCanceledException;
 import consulo.content.bundle.Sdk;
@@ -63,6 +63,7 @@ public class PPUDecompilerCache implements PascalCachingUnitDecompiler {
     }
 
     PPUDumpParser.Section getContents(@NotNull String unitName, @Nullable VirtualFile virtualFile) {
+        ProgressManager.checkCanceled();
         VirtualFile file = virtualFile;
         if (null == file) {
             file = retrieveFile(module, unitName);
@@ -71,14 +72,10 @@ public class PPUDecompilerCache implements PascalCachingUnitDecompiler {
             try {
                 String name = getKey(file.getName());
                 final Key key = new Key(file);
-                PPUDumpParser.Section section = cache.getIfPresent(key);
-                boolean needReparsePsi = null == section;
-                section = cache.get(key);
+                PPUDumpParser.Section section = cache.get(key);
                 if (section.isError()) {
                     LOG.info("ERROR: Invalidating ppu cache for key: " + name);
                     cache.invalidate(key);
-                } else if (needReparsePsi) {
-                    DocUtil.reparsePsi(module.getProject(), file);
                 }
                 return section;
             } catch (Exception e) {

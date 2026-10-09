@@ -28,6 +28,7 @@ import java.io.File;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
 @ServiceAPI(ComponentScope.MODULE)
@@ -116,7 +117,7 @@ public class ModuleService {
             return;
         }
         long currentTime = System.nanoTime();
-        if ((lastClearTimeNameFile == 0) || (checkTTL && ((currentTime - lastClearTimeNameFile) > CACHE_TTL_MS))) {
+        if ((lastClearTimeNameFile == 0) || (checkTTL && (TimeUnit.NANOSECONDS.toMillis(currentTime - lastClearTimeNameFile) > CACHE_TTL_MS))) {
             fillCache(module);
         }
     }

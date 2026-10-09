@@ -1,6 +1,7 @@
 package consulo.object.pascal.sdk;
 
 import com.siberika.idea.pascal.sdk.BasePascalSdkType;
+import consulo.content.base.BinariesOrderRootType;
 import consulo.content.bundle.Sdk;
 import consulo.content.bundle.SdkTable;
 import consulo.content.bundle.SdkTypeId;
@@ -19,30 +20,26 @@ import java.nio.file.Path;
  * @since 2026-10-07
  */
 public final class PascalModuleSdkUtil {
+    private static final String BUILTINS_FILE = "/builtins.pas";
+
     private PascalModuleSdkUtil() {
     }
 
     @Nullable
     public static Sdk findDefaultSdk(SdkTypeId... types) {
         SdkTable sdkTable = SdkTable.getInstance();
-        Sdk withHome = null;
-        Sdk fallback = null;
+        Sdk best = null;
+        int bestRank = -1;
         for (SdkTypeId type : types) {
             for (Sdk sdk : sdkTable.getSdksOfType(type)) {
-                if (hasHome(sdk)) {
-                    if (BasePascalSdkType.isConfigured(sdk)) {
-                        return sdk;
-                    }
-                    if (withHome == null) {
-                        withHome = sdk;
-                    }
-                }
-                if (fallback == null) {
-                    fallback = sdk;
+                int rank = rank(sdk);
+                if (rank > bestRank) {
+                    best = sdk;
+                    bestRank = rank;
                 }
             }
         }
-        return withHome != null ? withHome : fallback;
+        return best;
     }
 
     public static void ensureSdkEntry(ModifiableRootModel rootModel, ModuleExtensionWithSdk<?> extension) {
@@ -52,6 +49,29 @@ public final class PascalModuleSdkUtil {
             }
         }
         rootModel.addModuleExtensionSdkEntry(extension);
+    }
+
+    private static int rank(Sdk sdk) {
+        if (!hasHome(sdk)) {
+            return 0;
+        }
+        int rank = 1;
+        if (BasePascalSdkType.isConfigured(sdk)) {
+            rank += 2;
+        }
+        if (hasBuiltins(sdk)) {
+            rank += 1;
+        }
+        return rank;
+    }
+
+    private static boolean hasBuiltins(Sdk sdk) {
+        for (String url : sdk.getRootProvider().getUrls(BinariesOrderRootType.ID)) {
+            if (url.endsWith(BUILTINS_FILE)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private static boolean hasHome(Sdk sdk) {

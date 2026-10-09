@@ -7,7 +7,6 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
-import consulo.fileEditor.util.FileContentUtil;
 import consulo.language.codeStyle.CodeStyleManager;
 import consulo.language.editor.template.Template;
 import consulo.language.editor.template.TemplateBuilderFactory;
@@ -18,10 +17,8 @@ import consulo.project.Project;
 import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.UndoConfirmationPolicy;
 import consulo.util.lang.StringUtil;
-import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -179,19 +176,6 @@ public class DocUtil {
         tpl.parseSegments();
         tpl.setInline(inline);
         return tpl;
-    }
-
-    public static void reparsePsi(final Project project, final VirtualFile file) {
-        ApplicationManager.getApplication().invokeLater(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        //final FileDocumentManager documentManager = FileDocumentManager.getInstance();
-                        //((VirtualFileListener) documentManager).contentsChanged(new VirtualFileEvent(null, file, file.getName(), file.getParent()));
-                        FileContentUtil.reparseFiles(project, Collections.singleton(file), true);
-                    }
-                }
-        );
     }
 
     private static final Pattern PATTERN_TEMPLATE_VARIABLE = Pattern.compile("\\$\\w+\\$");

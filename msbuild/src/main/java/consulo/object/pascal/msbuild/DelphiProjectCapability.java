@@ -70,7 +70,7 @@ public class DelphiProjectCapability implements MSBuildProjectCapability {
         }
 
         Path projectDirPath = Path.of(projectDir.getPath());
-        DelphiProjectModel model = DelphiProjectModel.of(projectDirPath, properties, Platform.current().os().isWindows());
+        DelphiProjectModel model = DelphiProjectModel.of(projectDirPath, properties, Platform.current().os());
 
         extension.setEnabled(true);
         extension.setProjectFilePath(projectFile.getPath());
