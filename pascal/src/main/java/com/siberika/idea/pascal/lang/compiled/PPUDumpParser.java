@@ -1,6 +1,7 @@
 package com.siberika.idea.pascal.lang.compiled;
 
 import com.siberika.idea.pascal.PascalBundle;
+import consulo.application.progress.ProgressManager;
 import consulo.logging.Logger;
 import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.NotNull;
@@ -489,6 +490,7 @@ public class PPUDumpParser {
 
         @SuppressWarnings("UnusedAssignment")
         private int resolveUsed(Section sec, int pos, Object id, Object symid, int unitIndex, String prefix) {
+            ProgressManager.checkCanceled();
             String unitName = getUnit(unitIndex);
 //            pos = sec.insertText(pos, unitName + ".");
             String def = "__unresolved_" + id;
